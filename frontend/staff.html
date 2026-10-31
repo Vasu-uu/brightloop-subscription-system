@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Staff Management - Brightloop Billing &amp; Ops</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-container": "#a44100",
+            "surface-container-lowest": "#ffffff",
+            "primary": "#3525cd",
+            "on-surface-variant": "#464555",
+            "on-primary": "#ffffff",
+            "inverse-primary": "#c3c0ff",
+            "surface-variant": "#dce2f7",
+            "on-surface": "#141b2b",
+            "error": "#ba1a1a",
+            "on-primary-container": "#dad7ff",
+            "surface-container-highest": "#dce2f7",
+            "surface-dim": "#d3daef",
+            "on-tertiary-container": "#ffd2be",
+            "secondary": "#712ae2",
+            "secondary-fixed-dim": "#d2bbff",
+            "inverse-surface": "#293040",
+            "tertiary-fixed": "#ffdbcc",
+            "secondary-fixed": "#eaddff",
+            "on-tertiary-fixed": "#351000",
+            "primary-fixed": "#e2dfff",
+            "secondary-container": "#8a4cfc",
+            "surface-tint": "#4d44e3",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#edf0ff",
+            "tertiary-fixed-dim": "#ffb695",
+            "on-secondary-container": "#fffbff",
+            "on-tertiary-fixed-variant": "#7b2f00",
+            "on-tertiary": "#ffffff",
+            "tertiary": "#7e3000",
+            "outline-variant": "#c7c4d8",
+            "background": "#f9f9ff",
+            "on-primary-fixed": "#0f0069",
+            "on-error": "#ffffff",
+            "surface-container-low": "#f1f3ff",
+            "on-secondary": "#ffffff",
+            "error-container": "#ffdad6",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-primary-fixed-variant": "#3323cc",
+            "outline": "#777587",
+            "primary-container": "#4f46e5",
+            "on-secondary-fixed": "#25005a",
+            "on-background": "#141b2b",
+            "surface-container": "#e9edff",
+            "surface-bright": "#f9f9ff",
+            "on-secondary-fixed-variant": "#5a00c6",
+            "surface": "#f9f9ff",
+            "surface-container-high": "#e1e8fd"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "gutter-sm": "1rem",
+            "space-sm": "0.5rem",
+            "margin-sm": "1rem",
+            "space-xs": "0.25rem",
+            "margin": "2rem",
+            "space-2xs": "0.125rem",
+            "gutter": "1.5rem",
+            "space-lg": "1rem",
+            "space-2xl": "2rem"
+          },
+          "fontFamily": {
+            "code-table": ["Inter"],
+            "metric-numeral": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-uppercase": ["Inter"],
+            "display-hero": ["Inter"],
+            "body-default": ["Inter"],
+            "body-medium": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "headline-md": ["Inter"],
+            "headline-sm": ["Inter"],
+            "label-default": ["Inter"]
+          },
+          "fontSize": {
+            "code-table": ["13px", {"lineHeight": "18px", "letterSpacing": "0.0em", "fontWeight": "400"}],
+            "metric-numeral": ["28px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+            "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.025em", "fontWeight": "600"}],
+            "label-uppercase": ["11px", {"lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600"}],
+            "display-hero": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+            "body-default": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400"}],
+            "body-medium": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "500"}],
+            "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+            "headline-lg-mobile": ["22px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+            "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+            "headline-sm": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.015em", "fontWeight": "600"}],
+            "label-default": ["12px", {"lineHeight": "16px", "letterSpacing": "0.0em", "fontWeight": "500"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex selection:bg-primary selection:text-on-primary">
+<!-- ================= SIDEBAR NAVIGATION (Shared Component) ================= -->
+<aside class="fixed top-0 left-0 h-screen w-60 bg-surface-container-lowest border-r border-outline-variant shadow-sm z-40 flex flex-col justify-between p-4">
+<!-- Top Brand & Nav Section -->
+<div class="flex flex-col gap-4">
+<!-- Brand Header -->
+<div class="flex items-center gap-3 px-1 py-1">
+<div class="h-9 w-9 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[20px]" data-icon="all_inclusive">all_inclusive</span>
+</div>
+<div class="flex flex-col">
+<span class="text-headline-md font-headline-md font-extrabold text-primary leading-tight">Brightloop</span>
+<span class="text-label-default font-label-default text-on-surface-variant font-medium">Billing &amp; Ops</span>
+</div>
+</div>
+<!-- Quick Action CTA -->
+<button class="w-full h-9 rounded-lg bg-surface-container hover:bg-surface-container-low text-primary border border-outline-variant/60 flex items-center justify-center gap-2 text-label-default font-label-default font-medium transition-colors duration-150 active:scale-[0.99]">
+<span class="material-symbols-outlined text-[16px]" data-icon="add">add</span>
+<span>Create Product</span>
+</button>
+<!-- Primary Tabs -->
+<nav class="flex flex-col gap-1 mt-1">
+<!-- 1. Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-label-default font-label-default" href="index.html">
+<span class="material-symbols-outlined text-[18px]" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- 2. Products -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-label-default font-label-default" href="products.html">
+<span class="material-symbols-outlined text-[18px]" data-icon="inventory_2">inventory_2</span>
+<span>Products</span>
+</a>
+<!-- 3. Subscription Plans -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-label-default font-label-default" href="subscription.html">
+<span class="material-symbols-outlined text-[18px]" data-icon="subscriptions">subscriptions</span>
+<span>Subscription Plans</span>
+</a>
+<!-- 4. Taxes -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-label-default font-label-default" href="tax.html">
+<span class="material-symbols-outlined text-[18px]" data-icon="receipt_long">receipt_long</span>
+<span>Taxes</span>
+</a>
+<!-- 5. Discounts -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-label-default font-label-default" href="discount.html">
+<span class="material-symbols-outlined text-[18px]" data-icon="loyalty">loyalty</span>
+<span>Discounts</span>
+</a>
+<!-- 6. Staff Management (ACTIVE NAV ITEM) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container text-primary font-medium transition-colors duration-150 active:scale-[0.99] text-label-default font-label-default shadow-xs border border-primary-fixed" href="staff.html">
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="badge" style="font-variation-settings: 'FILL' 1;">badge</span>
+<span class="font-medium">Staff Management</span>
+</a>
+</nav>
+</div>
+<!-- Bottom System & Profile Tabs -->
+<div class="flex flex-col gap-1 pt-3 border-t border-outline-variant/60">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-label-default font-label-default" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-label-default font-label-default" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="help">help</span>
+<span>Help &amp; Support</span>
+</a>
+<!-- Environment Release Badge -->
+<div class="mt-2 px-3 py-2 rounded-lg bg-surface-container-low/70 border border-outline-variant/40 flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+<span class="text-label-uppercase font-label-uppercase text-on-surface-variant text-[10px]">v2.14.0 Production</span>
+</div>
+<span class="material-symbols-outlined text-[14px] text-outline" data-icon="check_circle">check_circle</span>
+</div>
+</div>
+</aside>
+<!-- ================= MAIN WRAPPER ================= -->
+<div class="w-[calc(100%-15rem)] ml-60 flex flex-col min-h-screen">
+<!-- ================= TOP NAVIGATION BAR (Shared Component) ================= -->
+<header class="sticky top-0 right-0 z-30 w-full bg-surface-container-lowest border-b border-outline-variant shadow-sm h-14 px-6 flex items-center justify-between">
+<!-- Search Input with ⌘K -->
+<div class="flex items-center w-96 relative">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[18px]" data-icon="search">search</span>
+<input class="w-full h-9 pl-9 pr-12 text-body-default font-body-default bg-surface border border-outline-variant rounded-lg text-on-surface placeholder:text-on-surface-variant/70 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 transition-all text-xs" placeholder="Search team members, emails, roles (⌘K)..." type="text"/>
+<kbd class="absolute right-2.5 px-1.5 py-0.5 text-[10px] font-code-table font-semibold text-on-surface-variant bg-surface-container border border-outline-variant rounded">⌘K</kbd>
+</div>
+<!-- Right Trailing Cluster -->
+<div class="flex items-center gap-3">
+<!-- Live Production Pill Indicator -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-primary border border-outline-variant text-label-default font-label-default">
+<span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="font-medium text-xs">Live Production</span>
+</div>
+<!-- Currency Selector -->
+<button class="h-9 px-2.5 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-on-surface flex items-center gap-1.5 text-label-default font-label-default transition-colors">
+<span class="font-semibold text-xs">INR (₹)</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant" data-icon="arrow_drop_down">arrow_drop_down</span>
+</button>
+<div class="h-4 w-px bg-outline-variant/80"></div>
+<!-- Trailing Icon Actions -->
+<!-- Storefront -->
+<button class="h-9 w-9 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="Storefront Gateway">
+<span class="material-symbols-outlined text-[18px]" data-icon="storefront">storefront</span>
+</button>
+<!-- Notifications with badge -->
+<button class="relative h-9 w-9 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="Notifications">
+<span class="material-symbols-outlined text-[18px]" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-error border-2 border-surface-container-lowest"></span>
+</button>
+<div class="h-4 w-px bg-outline-variant/80"></div>
+<!-- Admin Profile Avatar -->
+<div class="flex items-center gap-2 pl-1 cursor-pointer group">
+<div class="relative h-8 w-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-xs font-semibold ring-2 ring-surface-container">
+<span>AM</span>
+<span class="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-emerald-500 ring-1 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col text-left">
+<span class="text-label-default font-label-default font-semibold text-on-surface group-hover:text-primary transition-colors leading-tight">Alex Morgan</span>
+<span class="text-[10px] text-on-surface-variant">Super Admin</span>
+</div>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</header>
+<!-- ================= CONTENT CANVAS ================= -->
+<main class="flex-1 p-8 max-w-[1600px] w-full mx-auto space-y-6">
+<!-- Breadcrumbs & Header -->
+<section class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<!-- Breadcrumb trail -->
+<div class="flex items-center gap-1.5 text-label-default font-label-default text-on-surface-variant mb-1">
+<span class="hover:text-on-surface cursor-pointer">Billing &amp; Ops</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary font-medium">Staff Management</span>
+</div>
+<h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Staff &amp; Access Control</h1>
+<p class="text-body-default font-body-default text-on-surface-variant mt-0.5">
+            Manage team member permissions, invite administrative users, and enforce role-based access control (RBAC).
+          </p>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-3 shrink-0">
+<!-- Export Audit Log (Secondary Outline) -->
+<button class="h-9 px-3.5 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-on-surface shadow-xs flex items-center gap-2 text-label-default font-label-default font-medium transition-colors active:scale-[0.99]">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant" data-icon="download">download</span>
+<span>Export Audit Log</span>
+</button>
+<!-- + Invite Staff Member (Primary Button) -->
+<button class="h-9 px-4 rounded-lg bg-primary-container hover:bg-primary text-on-primary shadow-xs flex items-center gap-2 text-label-default font-label-default font-semibold transition-all active:scale-[0.99]">
+<span class="material-symbols-outlined text-[18px]" data-icon="person_add">person_add</span>
+<span>+ Invite Staff Member</span>
+</button>
+</div>
+</section>
+<!-- Metric / KPI Cards (Row of 4) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Card 1: Total Staff Members -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-xs flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<span class="text-label-uppercase font-label-uppercase text-on-surface-variant uppercase tracking-wider">Total Staff Members</span>
+<div class="h-8 w-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="badge">badge</span>
+</div>
+</div>
+<div class="mt-2">
+<span class="text-metric-numeral font-metric-numeral text-on-surface">18</span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 text-label-default font-label-default text-on-surface-variant border-t border-outline-variant/40 pt-2">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="domain">domain</span>
+<span>Across 4 departments</span>
+</div>
+</div>
+<!-- Card 2: Active Sessions (Now) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-xs flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<span class="text-label-uppercase font-label-uppercase text-on-surface-variant uppercase tracking-wider">Active Sessions (Now)</span>
+<div class="h-8 w-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="verified_user">verified_user</span>
+</div>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-metric-numeral font-metric-numeral text-on-surface">7</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-100/70 text-emerald-800">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1 animate-ping"></span> Live
+            </span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 text-label-default font-label-default text-on-surface-variant border-t border-outline-variant/40 pt-2">
+<span class="material-symbols-outlined text-[14px] text-emerald-600" data-icon="shield">shield</span>
+<span>All 2FA compliant</span>
+</div>
+</div>
+<!-- Card 3: Pending Invites -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-xs flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<span class="text-label-uppercase font-label-uppercase text-on-surface-variant uppercase tracking-wider">Pending Invites</span>
+<div class="h-8 w-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="schedule">schedule</span>
+</div>
+</div>
+<div class="mt-2">
+<span class="text-metric-numeral font-metric-numeral text-on-surface">3</span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 text-label-default font-label-default text-on-surface-variant border-t border-outline-variant/40 pt-2">
+<span class="material-symbols-outlined text-[14px] text-amber-600" data-icon="timer">timer</span>
+<span>Expires within 7 days</span>
+</div>
+</div>
+<!-- Card 4: Security Posture -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-xs flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<span class="text-label-uppercase font-label-uppercase text-on-surface-variant uppercase tracking-wider">Security Posture</span>
+<div class="h-8 w-8 rounded-lg bg-primary-container/10 text-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="lock">lock</span>
+</div>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-metric-numeral font-metric-numeral text-on-surface">100%</span>
+<span class="text-xs text-emerald-700 font-medium">Optimal</span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 text-label-default font-label-default text-on-surface-variant border-t border-outline-variant/40 pt-2">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="gpp_good">gpp_good</span>
+<span>MFA enforced company-wide</span>
+</div>
+</div>
+</section>
+<!-- Filter Tabs & Controls -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-xs p-4 space-y-4">
+<!-- Filter Tabs -->
+<div class="flex items-center gap-1 overflow-x-auto pb-1 border-b border-outline-variant/60">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-primary font-medium text-label-default font-label-default shrink-0">
+            All Members <span class="ml-1 text-xs opacity-80">(18)</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors text-label-default font-label-default shrink-0">
+            Super Admins <span class="ml-1 text-xs text-on-surface-variant/70">(2)</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors text-label-default font-label-default shrink-0">
+            Billing &amp; Ops <span class="ml-1 text-xs text-on-surface-variant/70">(6)</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors text-label-default font-label-default shrink-0">
+            Finance Leads <span class="ml-1 text-xs text-on-surface-variant/70">(4)</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors text-label-default font-label-default shrink-0">
+            Support Specialists <span class="ml-1 text-xs text-on-surface-variant/70">(6)</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg text-amber-800 bg-amber-50 hover:bg-amber-100 transition-colors text-label-default font-label-default shrink-0 ml-auto">
+            Pending Invites <span class="ml-1 text-xs font-semibold">(3)</span>
+</button>
+</div>
+<!-- Toolbar: Search Box & Dropdown Selectors -->
+<div class="flex flex-col lg:flex-row items-center justify-between gap-3">
+<!-- Search box -->
+<div class="relative w-full lg:w-80">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]" data-icon="search">search</span>
+<input class="w-full h-9 pl-9 pr-3 text-body-default font-body-default bg-surface border border-outline-variant rounded-lg text-on-surface placeholder:text-on-surface-variant/70 text-xs focus:ring-1 focus:ring-primary focus:border-primary" placeholder="Search by name, email, or department..." type="text"/>
+</div>
+<!-- Secondary Filters & Actions -->
+<div class="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-end">
+<!-- Role Selector -->
+<select class="h-9 px-3 text-xs bg-surface border border-outline-variant rounded-lg text-on-surface focus:ring-primary focus:border-primary">
+<option>Role: All Roles</option>
+<option>Super Admin</option>
+<option>Billing Ops Lead</option>
+<option>Finance Lead</option>
+<option>Support Specialist</option>
+</select>
+<!-- 2FA Status -->
+<select class="h-9 px-3 text-xs bg-surface border border-outline-variant rounded-lg text-on-surface focus:ring-primary focus:border-primary">
+<option>2FA Status: All</option>
+<option>Hardware Key (WebAuthn)</option>
+<option>Authenticator App (TOTP)</option>
+<option>Pending Setup</option>
+</select>
+<!-- Sort By -->
+<select class="h-9 px-3 text-xs bg-surface border border-outline-variant rounded-lg text-on-surface focus:ring-primary focus:border-primary">
+<option>Sort: Recently Active</option>
+<option>Sort: Name (A-Z)</option>
+<option>Sort: Role Hierarchy</option>
+</select>
+<div class="h-4 w-px bg-outline-variant/60 hidden sm:block"></div>
+<!-- Quick Action Shortcut Buttons -->
+<button class="h-9 px-3 rounded-lg border border-outline-variant bg-surface hover:bg-surface-container-low text-on-surface-variant text-label-default font-label-default flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="tune">tune</span>
+<span>Batch Role Update</span>
+</button>
+<button class="h-9 px-3 rounded-lg border border-outline-variant bg-surface hover:bg-surface-container-low text-on-surface-variant text-label-default font-label-default flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="send">send</span>
+<span>Resend Invites</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Main Staff Directory Table -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-xs overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="h-9 bg-[#F8F9FC] border-b border-outline-variant text-label-uppercase font-label-uppercase text-on-surface-variant">
+<th class="px-6 py-2 w-72">Member Name</th>
+<th class="px-4 py-2 w-44">Role &amp; Department</th>
+<th class="px-4 py-2">Access Scope</th>
+<th class="px-4 py-2 w-48">2FA &amp; Auth Status</th>
+<th class="px-4 py-2 w-40">Last Active</th>
+<th class="px-4 py-2 w-32">Status</th>
+<th class="px-6 py-2 text-right w-24">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#F1F5F9] text-body-default font-body-default">
+<!-- ROW 1: Alex Morgan -->
+<tr class="h-14 hover:bg-[#F8FAFC] transition-colors group">
+<td class="px-6 py-3">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-semibold text-xs shrink-0 ring-1 ring-outline-variant">
+                      AM
+                    </div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-medium text-on-surface text-sm">Alex Morgan</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-surface-container text-primary border border-primary-fixed">You</span>
+</div>
+<span class="text-xs text-on-surface-variant">alex.morgan@brightloop.io</span>
+</div>
+</div>
+</td>
+<td class="px-4 py-3">
+<div class="flex flex-col items-start gap-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary-container/10 text-primary border border-primary/20">
+                      Super Admin
+                    </span>
+<span class="text-[11px] text-on-surface-variant">Engineering &amp; Ops</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-1.5 text-xs text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="lock_open">lock_open</span>
+<span class="font-medium">Full Read &amp; Write Access (All Modules)</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-1.5 text-xs text-emerald-800 font-medium">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="gpp_good">gpp_good</span>
+<span>Enforced &amp; Active</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-1.5 text-xs text-on-surface">
+<span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+<span>Just now (Current)</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                    Active
+                  </span>
+</td>
+<td class="px-6 py-3 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="h-7 w-7 rounded hover:bg-surface-container text-on-surface-variant hover:text-primary flex items-center justify-center transition-colors" title="Edit Permissions">
+<span class="material-symbols-outlined text-[16px]" data-icon="edit">edit</span>
+</button>
+<button class="h-7 w-7 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="More Options">
+<span class="material-symbols-outlined text-[16px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 2: Priya Sharma -->
+<tr class="h-14 hover:bg-[#F8FAFC] transition-colors group">
+<td class="px-6 py-3">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-semibold text-xs shrink-0 ring-1 ring-outline-variant">
+                      PS
+                    </div>
+<div class="flex flex-col">
+<span class="font-medium text-on-surface text-sm">Priya Sharma</span>
+<span class="text-xs text-on-surface-variant">priya.s@brightloop.io</span>
+</div>
+</div>
+</td>
+<td class="px-4 py-3">
+<div class="flex flex-col items-start gap-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
+                      Billing Ops Lead
+                    </span>
+<span class="text-[11px] text-on-surface-variant">Revenue Operations</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<span class="text-xs text-on-surface font-code-table">Plans, Products, Discounts (RW); Taxes (Read)</span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-1.5 text-xs text-on-surface font-medium">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="key">key</span>
+<span>Hardware Key (WebAuthn)</span>
+</div>
+</td>
+<td class="px-4 py-3 text-xs text-on-surface-variant">
+                  18 mins ago
+                </td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                    Active
+                  </span>
+</td>
+<td class="px-6 py-3 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="h-7 w-7 rounded hover:bg-surface-container text-on-surface-variant hover:text-primary flex items-center justify-center transition-colors" title="Edit Permissions">
+<span class="material-symbols-outlined text-[16px]" data-icon="edit">edit</span>
+</button>
+<button class="h-7 w-7 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="More Options">
+<span class="material-symbols-outlined text-[16px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 3: David Chen -->
+<tr class="h-14 hover:bg-[#F8FAFC] transition-colors group">
+<td class="px-6 py-3">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-semibold text-xs shrink-0 ring-1 ring-outline-variant">
+                      DC
+                    </div>
+<div class="flex flex-col">
+<span class="font-medium text-on-surface text-sm">David Chen</span>
+<span class="text-xs text-on-surface-variant">david.chen@brightloop.io</span>
+</div>
+</div>
+</td>
+<td class="px-4 py-3">
+<div class="flex flex-col items-start gap-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                      Finance Lead
+                    </span>
+<span class="text-[11px] text-on-surface-variant">Accounting &amp; Tax</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<span class="text-xs text-on-surface font-code-table">Taxes, Revenue Invoicing, Exports (RW)</span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-1.5 text-xs text-on-surface font-medium">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant" data-icon="phone_android">phone_android</span>
+<span>Authenticator App</span>
+</div>
+</td>
+<td class="px-4 py-3 text-xs text-on-surface-variant">
+                  2 hours ago
+                </td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                    Active
+                  </span>
+</td>
+<td class="px-6 py-3 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="h-7 w-7 rounded hover:bg-surface-container text-on-surface-variant hover:text-primary flex items-center justify-center transition-colors" title="Edit Permissions">
+<span class="material-symbols-outlined text-[16px]" data-icon="edit">edit</span>
+</button>
+<button class="h-7 w-7 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="More Options">
+<span class="material-symbols-outlined text-[16px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 4: Marcus Vance -->
+<tr class="h-14 hover:bg-[#F8FAFC] transition-colors group">
+<td class="px-6 py-3">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-semibold text-xs shrink-0 ring-1 ring-outline-variant">
+                      MV
+                    </div>
+<div class="flex flex-col">
+<span class="font-medium text-on-surface text-sm">Marcus Vance</span>
+<span class="text-xs text-on-surface-variant">m.vance@brightloop.io</span>
+</div>
+</div>
+</td>
+<td class="px-4 py-3">
+<div class="flex flex-col items-start gap-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                      Customer Support
+                    </span>
+<span class="text-[11px] text-on-surface-variant">Customer Success</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<span class="text-xs text-on-surface font-code-table">Read Only: Subscriptions &amp; Customers</span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-1.5 text-xs text-on-surface font-medium">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant" data-icon="sms">sms</span>
+<span>SMS / App OTP</span>
+</div>
+</td>
+<td class="px-4 py-3 text-xs text-on-surface-variant">
+                  Yesterday, 17:42
+                </td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                    Active
+                  </span>
+</td>
+<td class="px-6 py-3 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="h-7 w-7 rounded hover:bg-surface-container text-on-surface-variant hover:text-primary flex items-center justify-center transition-colors" title="Edit Permissions">
+<span class="material-symbols-outlined text-[16px]" data-icon="edit">edit</span>
+</button>
+<button class="h-7 w-7 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="More Options">
+<span class="material-symbols-outlined text-[16px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 5: Elena Rostova (Pending Invite) -->
+<tr class="h-14 bg-amber-50/20 hover:bg-amber-50/40 transition-colors group">
+<td class="px-6 py-3">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-semibold text-xs shrink-0 ring-1 ring-amber-300">
+                      ER
+                    </div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-medium text-on-surface text-sm">Elena Rostova</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800">Invited</span>
+</div>
+<span class="text-xs text-on-surface-variant">elena.r@brightloop.io</span>
+</div>
+</div>
+</td>
+<td class="px-4 py-3">
+<div class="flex flex-col items-start gap-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 border border-amber-300">
+                      Billing Specialist
+                    </span>
+<span class="text-[11px] text-on-surface-variant">Billing Operations</span>
+</div>
+</td>
+<td class="px-4 py-3">
+<span class="text-xs text-on-surface font-code-table">Discounts &amp; Invoicing (RW)</span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center gap-1.5 text-xs text-amber-700">
+<span class="material-symbols-outlined text-[16px] text-amber-600" data-icon="hourglass_empty">hourglass_empty</span>
+<span>Not Setup Yet</span>
+</div>
+</td>
+<td class="px-4 py-3 text-xs text-amber-800">
+                  Invite sent 2 days ago
+                </td>
+<td class="px-4 py-3">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 border border-amber-300">
+<span class="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                    Pending Invite
+                  </span>
+</td>
+<td class="px-6 py-3 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="h-7 px-2 rounded bg-surface border border-outline-variant text-primary hover:bg-surface-container text-xs font-medium transition-colors" title="Resend Invite">
+                      Resend
+                    </button>
+<button class="h-7 w-7 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="More Options">
+<span class="material-symbols-outlined text-[16px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination Footer -->
+<div class="h-12 px-6 bg-surface-container-lowest border-t border-outline-variant/60 flex items-center justify-between text-xs text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span>Showing <strong class="text-on-surface font-semibold">1 to 5</strong> of <strong class="text-on-surface font-semibold">18</strong> members</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 rounded border border-outline-variant bg-surface hover:bg-surface-container-low disabled:opacity-50 text-on-surface-variant" disabled="">
+              Previous
+            </button>
+<span class="px-2 font-medium text-on-surface">Page 1 of 4</span>
+<button class="px-2.5 py-1 rounded border border-outline-variant bg-surface hover:bg-surface-container-low text-on-surface">
+              Next
+            </button>
+</div>
+</div>
+</section>
+<!-- Secondary Section (2-Column Modular Cards) -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Left Card: Role-Based Access Control Matrix -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-xs flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant/60">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="admin_panel_settings">admin_panel_settings</span>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Role-Based Access Control (RBAC) Roles</h3>
+</div>
+<span class="text-xs text-on-surface-variant bg-surface-container px-2 py-0.5 rounded font-mono">4 Predefined</span>
+</div>
+<!-- Predefined Roles Matrix -->
+<div class="mt-4 space-y-3">
+<!-- Super Admin -->
+<div class="p-3 rounded-lg border border-outline-variant/60 bg-surface/50 hover:bg-surface transition-colors flex items-start gap-3">
+<div class="h-7 w-7 rounded bg-primary-container/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="security">security</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="text-sm font-semibold text-on-surface">Super Admin</span>
+<span class="text-[11px] text-primary font-medium">2 Active Users</span>
+</div>
+<p class="text-xs text-on-surface-variant mt-0.5">
+                    Unlimited tenant control, billing gateway reconfiguration, API keys, and webhook credentials management.
+                  </p>
+</div>
+</div>
+<!-- Billing Ops -->
+<div class="p-3 rounded-lg border border-outline-variant/60 bg-surface/50 hover:bg-surface transition-colors flex items-start gap-3">
+<div class="h-7 w-7 rounded bg-purple-50 text-purple-700 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="payments">payments</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="text-sm font-semibold text-on-surface">Billing Ops</span>
+<span class="text-[11px] text-on-surface-variant font-medium">6 Active Users</span>
+</div>
+<p class="text-xs text-on-surface-variant mt-0.5">
+                    Full lifecycle management for Products, Plans, Coupons, Proration schedules, and Invoice generation.
+                  </p>
+</div>
+</div>
+<!-- Finance Lead -->
+<div class="p-3 rounded-lg border border-outline-variant/60 bg-surface/50 hover:bg-surface transition-colors flex items-start gap-3">
+<div class="h-7 w-7 rounded bg-blue-50 text-blue-700 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="receipt">receipt</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="text-sm font-semibold text-on-surface">Finance Lead</span>
+<span class="text-[11px] text-on-surface-variant font-medium">4 Active Users</span>
+</div>
+<p class="text-xs text-on-surface-variant mt-0.5">
+                    Tax compliance jurisdiction rules, GST/VAT reconciliation, read/export access to accounting ledger.
+                  </p>
+</div>
+</div>
+<!-- Support Agent -->
+<div class="p-3 rounded-lg border border-outline-variant/60 bg-surface/50 hover:bg-surface transition-colors flex items-start gap-3">
+<div class="h-7 w-7 rounded bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="support_agent">support_agent</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="text-sm font-semibold text-on-surface">Support Agent</span>
+<span class="text-[11px] text-on-surface-variant font-medium">6 Active Users</span>
+</div>
+<p class="text-xs text-on-surface-variant mt-0.5">
+                    Customer subscription lookups, manual cancellation assistance, and read-only diagnostic telemetry.
+                  </p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-outline-variant/60 flex items-center justify-between">
+<span class="text-xs text-on-surface-variant">Custom permissions require Enterprise plan</span>
+<a class="text-xs font-semibold text-primary hover:underline flex items-center gap-1" href="#">
+              Configure Custom Roles &amp; Permissions →
+            </a>
+</div>
+</div>
+<!-- Right Card: Security & Authentication Policies -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-xs flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant/60">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="vpn_key">vpn_key</span>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Security &amp; Authentication Policies</h3>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1"></span> Enforced
+              </span>
+</div>
+<!-- Policies List -->
+<div class="mt-4 space-y-4">
+<!-- Policy 1: Multi-Factor Authentication (MFA / 2FA) Toggle -->
+<div class="flex items-center justify-between p-3 rounded-lg border border-outline-variant/60 bg-surface/50">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="phonelink_lock">phonelink_lock</span>
+</div>
+<div>
+<span class="text-sm font-semibold text-on-surface">Enforce Multi-Factor Authentication (MFA / 2FA)</span>
+<p class="text-xs text-on-surface-variant">Mandatory WebAuthn or TOTP code on every login attempt.</p>
+</div>
+</div>
+<!-- Toggle Switch (Checked/Active) -->
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" disabled="" type="checkbox"/>
+<div class="w-11 h-6 bg-primary peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</div>
+</div>
+<!-- Policy 2: Session Inactivity Timeout -->
+<div class="flex items-center justify-between p-3 rounded-lg border border-outline-variant/60 bg-surface/50">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-lg bg-surface-container text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="alarm">alarm</span>
+</div>
+<div>
+<span class="text-sm font-semibold text-on-surface">Session Inactivity Timeout</span>
+<p class="text-xs text-on-surface-variant">Automatic session invalidation after non-interaction.</p>
+</div>
+</div>
+<span class="text-xs font-mono font-medium text-on-surface px-2.5 py-1 bg-surface-container-lowest border border-outline-variant rounded">
+                  12 Hours of inactivity
+                </span>
+</div>
+<!-- Policy 3: Single Sign-On (SSO / SAML) -->
+<div class="flex items-center justify-between p-3 rounded-lg border border-outline-variant/60 bg-surface/50">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-lg bg-surface-container text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="hub">hub</span>
+</div>
+<div>
+<span class="text-sm font-semibold text-on-surface">Single Sign-On (SSO / SAML 2.0)</span>
+<p class="text-xs text-on-surface-variant">Identity federation provider active.</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-emerald-700 font-medium">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+<span>Connected (Okta / Google Workspace)</span>
+</div>
+</div>
+<!-- Policy 4: IP Allowlist -->
+<div class="flex items-center justify-between p-3 rounded-lg border border-outline-variant/60 bg-surface/50">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-lg bg-surface-container text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="lan">lan</span>
+</div>
+<div>
+<span class="text-sm font-semibold text-on-surface">Staff IP Restrictions</span>
+<p class="text-xs text-on-surface-variant">Restrict administrative dashboard access to company VPN.</p>
+</div>
+</div>
+<span class="text-xs font-mono font-medium text-on-surface px-2.5 py-1 bg-surface-container-lowest border border-outline-variant rounded">
+                  3 CIDR blocks configured
+                </span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-outline-variant/60 flex items-center justify-between">
+<span class="text-xs text-on-surface-variant">Last audited by Security Ops 4 hours ago</span>
+<a class="text-xs font-semibold text-primary hover:underline flex items-center gap-1" href="#">
+              Manage Org Security Settings →
+            </a>
+</div>
+</div>
+</section>
+<!-- Bottom / Footer Compliance Banner -->
+<footer class="bg-surface-container/60 border border-outline-variant rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="policy">policy</span>
+</div>
+<div>
+<h4 class="text-body-medium font-body-medium text-on-surface font-semibold text-sm">Audit Trail Logging Active</h4>
+<p class="text-xs text-on-surface-variant mt-0.5">
+              All admin actions, role escalations, and sensitive customer data exports are immutably logged for SOC2 Type II and ISO27001 compliance standards.
+            </p>
+</div>
+</div>
+<a class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-lowest hover:bg-surface border border-outline-variant text-primary text-xs font-semibold shadow-xs transition-colors" href="#">
+<span>View Access Logs</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</footer>
+</main>
+</div>
+</body></html>

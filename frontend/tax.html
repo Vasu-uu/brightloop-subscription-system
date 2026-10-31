@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Brightloop - Tax Management &amp; Compliance</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-high": "#e1e8fd",
+            "surface-container-highest": "#dce2f7",
+            "outline-variant": "#c7c4d8",
+            "surface-bright": "#f9f9ff",
+            "secondary-fixed-dim": "#d2bbff",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-container": "#fffbff",
+            "error": "#ba1a1a",
+            "on-tertiary-container": "#ffd2be",
+            "on-primary-container": "#dad7ff",
+            "primary": "#3525cd",
+            "on-primary-fixed": "#0f0069",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-surface": "#141b2b",
+            "secondary": "#712ae2",
+            "on-secondary-fixed-variant": "#5a00c6",
+            "on-error-container": "#93000a",
+            "tertiary": "#7e3000",
+            "outline": "#777587",
+            "on-error": "#ffffff",
+            "tertiary-fixed-dim": "#ffb695",
+            "tertiary-container": "#a44100",
+            "surface": "#f9f9ff",
+            "primary-fixed-dim": "#c3c0ff",
+            "surface-dim": "#d3daef",
+            "background": "#f9f9ff",
+            "on-background": "#141b2b",
+            "on-primary": "#ffffff",
+            "surface-container-low": "#f1f3ff",
+            "inverse-surface": "#293040",
+            "surface-variant": "#dce2f7",
+            "primary-container": "#4f46e5",
+            "on-tertiary-fixed": "#351000",
+            "inverse-primary": "#c3c0ff",
+            "on-secondary-fixed": "#25005a",
+            "inverse-on-surface": "#edf0ff",
+            "primary-fixed": "#e2dfff",
+            "secondary-fixed": "#eaddff",
+            "surface-container": "#e9edff",
+            "on-tertiary-fixed-variant": "#7b2f00",
+            "on-tertiary": "#ffffff",
+            "secondary-container": "#8a4cfc",
+            "on-surface-variant": "#464555",
+            "error-container": "#ffdad6",
+            "tertiary-fixed": "#ffdbcc",
+            "surface-tint": "#4d44e3",
+            "on-secondary": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xl": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-md": "0.75rem",
+            "margin-sm": "1rem",
+            "gutter-sm": "1rem",
+            "gutter": "1.5rem",
+            "space-2xs": "0.125rem",
+            "margin": "2rem",
+            "space-2xl": "2rem",
+            "space-xs": "0.25rem",
+            "space-lg": "1rem"
+          },
+          "fontFamily": {
+            "body-default": ["Inter"],
+            "label-default": ["Inter"],
+            "headline-md": ["Inter"],
+            "headline-lg": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-sm": ["Inter"],
+            "code-table": ["Inter"],
+            "metric-numeral": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "body-medium": ["Inter"],
+            "display-hero": ["Inter"],
+            "label-uppercase": ["Inter"]
+          },
+          "fontSize": {
+            "body-default": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "label-default": ["12px", { "lineHeight": "16px", "letterSpacing": "0.0em", "fontWeight": "500" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "code-table": ["13px", { "lineHeight": "18px", "letterSpacing": "0.0em", "fontWeight": "400" }],
+            "metric-numeral": ["28px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "headline-lg-mobile": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-medium": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "500" }],
+            "display-hero": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+            "label-uppercase": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F8FAFC;
+      color: #0F172A;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    .metric-card-shadow {
+      box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased flex min-h-screen">
+<!-- ==================== SHARED COMPONENT: SideNavBar ==================== -->
+<aside class="fixed top-0 left-0 h-screen w-60 bg-surface-container-lowest flex flex-col justify-between p-4 border-r border-outline-variant z-40 shadow-sm">
+<!-- Top Brand / Workspace Section -->
+<div class="space-y-6">
+<div class="flex items-center gap-3 px-1 pt-1">
+<div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center text-white shadow-sm ring-2 ring-primary/10">
+<span class="material-symbols-outlined text-[20px]" data-icon="token">token</span>
+</div>
+<div>
+<h1 class="text-headline-sm font-headline-sm text-on-surface tracking-tight leading-none">Brightloop</h1>
+<p class="text-label-default font-label-default text-outline mt-1 leading-none">Billing &amp; Ops</p>
+</div>
+</div>
+<!-- Quick Action CTA -->
+<div>
+<button class="w-full h-9 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-primary font-body-medium text-body-default flex items-center justify-center gap-2 border border-outline-variant/60 active:scale-[0.99] transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+<span>Create Product</span>
+</button>
+</div>
+<!-- Main Navigation Links -->
+<nav class="space-y-1">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="index.html">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span class="text-label-default font-label-default">Dashboard</span>
+</a>
+<!-- Products -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="products.html">
+<span class="material-symbols-outlined text-[20px]" data-icon="inventory_2">inventory_2</span>
+<span class="text-label-default font-label-default">Products</span>
+</a>
+<!-- Subscription Plans -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="subscription.html">
+<span class="material-symbols-outlined text-[20px]" data-icon="subscriptions">subscriptions</span>
+<span class="text-label-default font-label-default">Subscription Plans</span>
+</a>
+<!-- Taxes (ACTIVE NAVIGATION ITEM) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container text-primary font-medium active:scale-[0.99] transition-all shadow-sm" href="tax.html">
+<span class="material-symbols-outlined text-[20px] text-primary" data-icon="receipt_long">receipt_long</span>
+<span class="text-label-default font-label-default font-semibold text-primary">Taxes</span>
+</a>
+<!-- Discounts -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="discount.html">
+<span class="material-symbols-outlined text-[20px]" data-icon="loyalty">loyalty</span>
+<span class="text-label-default font-label-default">Discounts</span>
+</a>
+<!-- Staff Management -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="staff.html">
+<span class="material-symbols-outlined text-[20px]" data-icon="badge">badge</span>
+<span class="text-label-default font-label-default">Staff Management</span>
+</a>
+</nav>
+</div>
+<!-- Footer Links -->
+<div class="pt-4 border-t border-outline-variant/60 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span class="text-label-default font-label-default">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="help">help</span>
+<span class="text-label-default font-label-default">Help &amp; Support</span>
+</a>
+<!-- Environment Indicator -->
+<div class="mt-3 px-3 py-2 bg-surface-container-low rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20"></span>
+<span class="text-label-default font-label-default text-on-surface font-medium">Cloud Gateway</span>
+</div>
+<span class="text-[11px] font-label-uppercase text-outline font-semibold">v2.4.9</span>
+</div>
+</div>
+</aside>
+<!-- ==================== MAIN CONTENT WRAPPER ==================== -->
+<div class="flex-1 ml-60 flex flex-col min-w-0">
+<!-- ==================== SHARED COMPONENT: TopNavBar ==================== -->
+<header class="sticky top-0 right-0 z-30 w-full h-14 bg-surface-container-lowest border-b border-outline-variant flex items-center justify-between px-6 shadow-sm">
+<!-- Left: Command Search -->
+<div class="flex items-center gap-4 w-96">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]" data-icon="search">search</span>
+<input class="w-full h-9 pl-9 pr-12 rounded-lg bg-surface-bright border border-outline-variant text-body-default font-body-default placeholder:text-outline text-on-surface focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary/10 transition-all text-xs" placeholder="Search tax rules, jurisdictions, SAC codes (⌘K)..." type="text"/>
+<kbd class="absolute right-2.5 top-1/2 -translate-y-1/2 border border-outline-variant bg-surface-container-low px-1.5 py-0.5 rounded text-[10px] text-outline font-mono">⌘K</kbd>
+</div>
+</div>
+<!-- Right: Controls & Profile Cluster -->
+<div class="flex items-center gap-3">
+<!-- Environment Badge -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-default font-label-default font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          Production
+        </span>
+<!-- Currency Selector Dropdown (INR Active) -->
+<div class="relative">
+<button class="h-8 px-2.5 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-on-surface text-label-default font-label-default font-semibold flex items-center gap-1.5 transition-colors">
+<span class="w-4 h-3 rounded-xs bg-orange-500/10 border border-orange-400/30 flex items-center justify-center text-[9px] font-bold text-orange-600">IN</span>
+<span>INR (₹)</span>
+<span class="material-symbols-outlined text-[16px] text-outline" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+<div class="h-4 w-px bg-outline-variant mx-1"></div>
+<!-- Storefront Trailing Action -->
+<button class="w-8 h-8 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container-low flex items-center justify-center transition-colors" title="View Storefront">
+<span class="material-symbols-outlined text-[20px]" data-icon="storefront">storefront</span>
+</button>
+<!-- Notifications Trailing Action -->
+<button class="w-8 h-8 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container-low flex items-center justify-center relative transition-colors" title="Notifications">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-primary ring-2 ring-surface-container-lowest"></span>
+</button>
+<div class="h-4 w-px bg-outline-variant mx-1"></div>
+<!-- Admin Profile -->
+<div class="flex items-center gap-2 pl-1 cursor-pointer">
+<div class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center font-semibold text-xs ring-1 ring-primary/20">
+            AP
+          </div>
+<div class="text-left hidden lg:block">
+<p class="text-label-default font-label-default font-medium text-on-surface leading-tight">Admin Profile</p>
+<p class="text-[11px] text-outline leading-tight">Finance Lead</p>
+</div>
+<span class="material-symbols-outlined text-[16px] text-outline hidden lg:block" data-icon="unfold_more">unfold_more</span>
+</div>
+</div>
+</header>
+<!-- ==================== MAIN WORKSPACE ==================== -->
+<main class="p-8 max-w-[1520px] w-full mx-auto space-y-6">
+<!-- Breadcrumbs & Page Header -->
+<section class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+<div>
+<!-- Breadcrumb -->
+<nav class="flex items-center gap-2 text-label-default font-label-default text-outline mb-1.5">
+<span class="hover:text-on-surface transition-colors cursor-pointer">Billing &amp; Ops</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary font-medium">Taxes</span>
+</nav>
+<!-- Title & Subtitle -->
+<h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Tax Management &amp; Compliance</h1>
+<p class="text-body-default font-body-default text-on-surface-variant mt-1 max-w-3xl">
+            Configure jurisdictional tax rules, automated GST/VAT rates, HSN/SAC codes, and tax exemption workflows.
+          </p>
+</div>
+<!-- Page Actions -->
+<div class="flex items-center gap-3 self-start md:self-auto shrink-0">
+<button class="h-9 px-3.5 rounded-lg bg-surface-container-lowest border border-outline-variant hover:border-outline text-on-surface font-body-medium text-body-default flex items-center gap-2 shadow-sm transition-all active:scale-[0.99]">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant" data-icon="file_download">file_download</span>
+<span>Export Tax Summary</span>
+</button>
+<button class="h-9 px-4 rounded-lg bg-primary-container hover:bg-primary text-white font-body-medium text-body-default flex items-center gap-2 shadow-sm transition-all active:scale-[0.99] ring-1 ring-white/20">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+<span>+ Create Tax Rate</span>
+</button>
+</div>
+</section>
+<!-- ==================== 4 KPI CARDS ==================== -->
+<section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+<!-- Card 1: Active Tax Jurisdictions -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/80 metric-card-shadow flex flex-col justify-between hover:border-outline transition-all">
+<div class="flex items-start justify-between">
+<span class="text-label-uppercase font-label-uppercase text-outline font-semibold tracking-wider">ACTIVE JURISDICTIONS</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container-low text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="public">public</span>
+</div>
+</div>
+<div class="mt-3">
+<div class="text-metric-numeral font-metric-numeral font-bold text-on-surface">14</div>
+<div class="flex items-center gap-1.5 mt-1 text-label-default font-label-default text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>Across 4 regions</span>
+</div>
+</div>
+</div>
+<!-- Card 2: Tax Collected (MTD) -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/80 metric-card-shadow flex flex-col justify-between hover:border-outline transition-all">
+<div class="flex items-start justify-between">
+<span class="text-label-uppercase font-label-uppercase text-outline font-semibold tracking-wider">TAX COLLECTED (MTD)</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container-low text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="receipt_long">receipt_long</span>
+</div>
+</div>
+<div class="mt-3">
+<div class="text-metric-numeral font-metric-numeral font-bold text-on-surface">₹86,400</div>
+<div class="flex items-center gap-1.5 mt-1 text-label-default font-label-default">
+<span class="inline-flex items-center gap-0.5 text-emerald-700 font-semibold text-xs">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+                +11.2% MoM
+              </span>
+<span class="text-outline text-xs">vs. last month</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Default Statutory Rate -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/80 metric-card-shadow flex flex-col justify-between hover:border-outline transition-all">
+<div class="flex items-start justify-between">
+<span class="text-label-uppercase font-label-uppercase text-outline font-semibold tracking-wider">DEFAULT STATUTORY RATE</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container-low text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="percent">percent</span>
+</div>
+</div>
+<div class="mt-3">
+<div class="text-metric-numeral font-metric-numeral font-bold text-on-surface">18% GST</div>
+<div class="flex items-center gap-1.5 mt-1 text-label-default font-label-default text-on-surface-variant truncate">
+<span class="material-symbols-outlined text-[14px] text-outline" data-icon="category">category</span>
+<span class="truncate">SAC 998313 SaaS services</span>
+</div>
+</div>
+</div>
+<!-- Card 4: Active Exemption Certificates -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/80 metric-card-shadow flex flex-col justify-between hover:border-outline transition-all">
+<div class="flex items-start justify-between">
+<span class="text-label-uppercase font-label-uppercase text-outline font-semibold tracking-wider">EXEMPTION CERTIFICATES</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container-low text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="verified_user">verified_user</span>
+</div>
+</div>
+<div class="mt-3">
+<div class="text-metric-numeral font-metric-numeral font-bold text-on-surface">38</div>
+<div class="flex items-center gap-1.5 mt-1 text-label-default font-label-default text-on-surface-variant truncate">
+<span class="material-symbols-outlined text-[14px] text-emerald-600" data-icon="security">security</span>
+<span class="truncate">B2B reverse charge &amp; SEZ</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== TABS & FILTER BAR CONTAINER ==================== -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 shadow-sm overflow-hidden">
+<!-- Navigation Tabs -->
+<div class="flex items-center justify-between border-b border-outline-variant px-5 overflow-x-auto custom-scroll">
+<div class="flex space-x-6">
+<button class="h-12 border-b-2 border-primary text-primary font-semibold text-body-default font-body-default flex items-center gap-2 whitespace-nowrap">
+<span>All Tax Rates</span>
+<span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-surface-container text-primary">14</span>
+</button>
+<button class="h-12 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-body-default text-body-default flex items-center gap-2 whitespace-nowrap transition-colors">
+<span>India GST</span>
+<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-surface-container-low text-outline">6</span>
+</button>
+<button class="h-12 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-body-default text-body-default flex items-center gap-2 whitespace-nowrap transition-colors">
+<span>International VAT &amp; Sales Tax</span>
+<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-surface-container-low text-outline">8</span>
+</button>
+<button class="h-12 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-body-default text-body-default flex items-center gap-2 whitespace-nowrap transition-colors">
+<span>Exemptions &amp; SEZ</span>
+<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-surface-container-low text-outline">38</span>
+</button>
+<button class="h-12 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-body-default text-body-default flex items-center gap-2 whitespace-nowrap transition-colors">
+<span>Tax Audit Logs</span>
+</button>
+</div>
+<!-- Quick rule toggle -->
+<div class="hidden lg:flex items-center gap-2 text-label-default font-label-default text-outline shrink-0">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="sync">sync</span>
+<span>Auto-sync with Central Board: 2h ago</span>
+</div>
+</div>
+<!-- Filter and Search Bar -->
+<div class="p-4 bg-surface-container-lowest flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant/60">
+<div class="flex flex-wrap items-center gap-2.5 flex-1 min-w-[280px]">
+<!-- Jurisdictional Search -->
+<div class="relative min-w-[260px] flex-1 max-w-sm">
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-outline text-[18px]" data-icon="search">search</span>
+<input class="w-full h-8 pl-8 pr-3 rounded-lg border border-outline-variant bg-surface-container-lowest text-xs text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary" placeholder="Search jurisdiction, rate, or SAC code..." type="text"/>
+</div>
+<!-- Country Filter Dropdown -->
+<div class="relative">
+<select class="h-8 pl-2.5 pr-8 rounded-lg border border-outline-variant bg-surface-container-lowest text-xs font-medium text-on-surface appearance-none focus:outline-none focus:border-primary-container cursor-pointer">
+<option>Country: All Jurisdictions</option>
+<option>India (GSTIN)</option>
+<option>European Union (OSS)</option>
+<option>United States (Nexus)</option>
+<option>United Kingdom (HMRC)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline text-[16px] pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+<!-- Tax Type Dropdown -->
+<div class="relative">
+<select class="h-8 pl-2.5 pr-8 rounded-lg border border-outline-variant bg-surface-container-lowest text-xs font-medium text-on-surface appearance-none focus:outline-none focus:border-primary-container cursor-pointer">
+<option>Treatment: All Types</option>
+<option>Exclusive</option>
+<option>Inclusive</option>
+<option>Reverse Charge</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline text-[16px] pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+<!-- Status Dropdown -->
+<div class="relative">
+<select class="h-8 pl-2.5 pr-8 rounded-lg border border-outline-variant bg-surface-container-lowest text-xs font-medium text-on-surface appearance-none focus:outline-none focus:border-primary-container cursor-pointer">
+<option>Status: Active Only</option>
+<option>All Statuses</option>
+<option>Scheduled</option>
+<option>Draft</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline text-[16px] pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Secondary Actions / Density / Columns -->
+<div class="flex items-center gap-2">
+<button class="h-8 px-2.5 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-xs font-medium text-on-surface flex items-center gap-1.5 transition-colors" title="Adjust table columns">
+<span class="material-symbols-outlined text-[16px] text-outline" data-icon="view_column">view_column</span>
+<span>Columns</span>
+</button>
+<button class="h-8 px-2.5 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-xs font-medium text-on-surface flex items-center gap-1.5 transition-colors" title="Sort Order">
+<span class="material-symbols-outlined text-[16px] text-outline" data-icon="swap_vert">swap_vert</span>
+<span>Rate (High to Low)</span>
+</button>
+</div>
+</div>
+<!-- ==================== PRIMARY DATA TABLE ==================== -->
+<div class="overflow-x-auto custom-scroll">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="h-9 bg-[#F8F9FC] border-b border-outline-variant text-[11px] font-label-uppercase text-outline tracking-wider select-none">
+<th class="w-10 px-4 text-center">
+<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20 cursor-pointer" type="checkbox"/>
+</th>
+<th class="px-4 font-semibold text-on-surface-variant">Tax Name &amp; Jurisdiction</th>
+<th class="px-4 font-semibold text-on-surface-variant">Country / Region</th>
+<th class="px-4 font-semibold text-right text-on-surface-variant">Rate (%)</th>
+<th class="px-4 font-semibold text-on-surface-variant">Tax Treatment</th>
+<th class="px-4 font-semibold text-on-surface-variant">Applicable Products / Plans</th>
+<th class="px-4 font-semibold text-on-surface-variant">Tax ID / Registration No.</th>
+<th class="px-4 font-semibold text-on-surface-variant">Status</th>
+<th class="w-16 px-4 text-right font-semibold text-on-surface-variant">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-body-default font-body-default text-on-surface">
+<!-- Row 1: Intra-state GST -->
+<tr class="h-12 hover:bg-slate-50/80 transition-colors">
+<td class="px-4 text-center">
+<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20 cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="account_balance">account_balance</span>
+<div>
+<span class="font-semibold text-on-surface">CGST + SGST (Standard Intra-State)</span>
+<span class="text-[11px] text-outline block">State Code: 27 (Maharashtra)</span>
+</div>
+</div>
+</td>
+<td class="px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-low text-xs font-medium text-on-surface">
+<span class="text-xs">🇮🇳</span> India
+                  </span>
+</td>
+<td class="px-4 text-right font-semibold font-code-table">
+                  18.00% <span class="text-xs text-outline font-normal font-sans">(9% + 9%)</span>
+</td>
+<td class="px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                    Exclusive
+                  </span>
+</td>
+<td class="px-4 text-on-surface-variant text-xs">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> All Recurring SaaS
+                  </span>
+</td>
+<td class="px-4 font-code-table text-xs text-outline font-mono">
+                  27AABCU9603R1ZM
+                </td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200/60">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+                  </span>
+</td>
+<td class="px-4 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded hover:bg-surface-container-low text-outline hover:text-on-surface transition-colors" title="Edit Rule">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-low text-outline hover:text-on-surface transition-colors" title="More Options">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Inter-state IGST -->
+<tr class="h-12 hover:bg-slate-50/80 transition-colors">
+<td class="px-4 text-center">
+<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20 cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="domain">domain</span>
+<div>
+<span class="font-semibold text-on-surface">IGST (Inter-State SaaS)</span>
+<span class="text-[11px] text-outline block">National Cross-border Supply</span>
+</div>
+</div>
+</td>
+<td class="px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-low text-xs font-medium text-on-surface">
+<span class="text-xs">🇮🇳</span> India
+                  </span>
+</td>
+<td class="px-4 text-right font-semibold font-code-table">
+                  18.00%
+                </td>
+<td class="px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                    Exclusive
+                  </span>
+</td>
+<td class="px-4 text-on-surface-variant text-xs">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Cloud Gateway &amp; APIs
+                  </span>
+</td>
+<td class="px-4 font-code-table text-xs text-outline font-mono">
+                  27AABCU9603R1ZM
+                </td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200/60">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+                  </span>
+</td>
+<td class="px-4 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded hover:bg-surface-container-low text-outline hover:text-on-surface transition-colors" title="Edit Rule">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-low text-outline hover:text-on-surface transition-colors" title="More Options">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: EU VAT -->
+<tr class="h-12 hover:bg-slate-50/80 transition-colors">
+<td class="px-4 text-center">
+<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20 cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-blue-600" data-icon="language">language</span>
+<div>
+<span class="font-semibold text-on-surface">EU VAT Digital Services</span>
+<span class="text-[11px] text-outline block">One-Stop-Shop (OSS Scheme)</span>
+</div>
+</div>
+</td>
+<td class="px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-low text-xs font-medium text-on-surface">
+<span class="text-xs">🇪🇺</span> European Union
+                  </span>
+</td>
+<td class="px-4 text-right font-semibold font-code-table">
+                  21.00% <span class="text-xs text-outline font-normal font-sans">(MOSS)</span>
+</td>
+<td class="px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                    Inclusive
+                  </span>
+</td>
+<td class="px-4 text-on-surface-variant text-xs">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Support Add-ons
+                  </span>
+</td>
+<td class="px-4 font-code-table text-xs text-outline font-mono">
+                  EU372009142
+                </td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200/60">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+                  </span>
+</td>
+<td class="px-4 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded hover:bg-surface-container-low text-outline hover:text-on-surface transition-colors" title="Edit Rule">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-low text-outline hover:text-on-surface transition-colors" title="More Options">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: US Sales Tax -->
+<tr class="h-12 hover:bg-slate-50/80 transition-colors">
+<td class="px-4 text-center">
+<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20 cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-amber-600" data-icon="flag">flag</span>
+<div>
+<span class="font-semibold text-on-surface">US Sales Tax (California Nexus)</span>
+<span class="text-[11px] text-outline block">Economic threshold $100k+</span>
+</div>
+</div>
+</td>
+<td class="px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-low text-xs font-medium text-on-surface">
+<span class="text-xs">🇺🇸</span> United States
+                  </span>
+</td>
+<td class="px-4 text-right font-semibold font-code-table">
+                  8.25%
+                </td>
+<td class="px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                    Exclusive
+                  </span>
+</td>
+<td class="px-4 text-on-surface-variant text-xs">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Custom Contracts
+                  </span>
+</td>
+<td class="px-4 font-code-table text-xs text-outline font-mono">
+                  N/A - Nexus
+                </td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200/60">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+                  </span>
+</td>
+<td class="px-4 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded hover:bg-surface-container-low text-outline hover:text-on-surface transition-colors" title="Edit Rule">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-low text-outline hover:text-on-surface transition-colors" title="More Options">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: UK VAT Digital Goods -->
+<tr class="h-12 hover:bg-slate-50/80 transition-colors">
+<td class="px-4 text-center">
+<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20 cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-purple-600" data-icon="local_mall">local_mall</span>
+<div>
+<span class="font-semibold text-on-surface">UK VAT Digital Goods</span>
+<span class="text-[11px] text-outline block">HMRC Foreign Merchant Protocol</span>
+</div>
+</div>
+</td>
+<td class="px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-low text-xs font-medium text-on-surface">
+<span class="text-xs">🇬🇧</span> United Kingdom
+                  </span>
+</td>
+<td class="px-4 text-right font-semibold font-code-table">
+                  20.00%
+                </td>
+<td class="px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200">
+                    Reverse Charge
+                  </span>
+</td>
+<td class="px-4 text-on-surface-variant text-xs">
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> All Recurring SaaS
+                  </span>
+</td>
+<td class="px-4 font-code-table text-xs text-outline font-mono">
+                  GB982341201
+                </td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200/60">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+                  </span>
+</td>
+<td class="px-4 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded hover:bg-surface-container-low text-outline hover:text-on-surface transition-colors" title="Edit Rule">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-low text-outline hover:text-on-surface transition-colors" title="More Options">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination Footer -->
+<div class="p-3.5 bg-surface-container-lowest border-t border-outline-variant/60 flex items-center justify-between text-xs text-outline">
+<div>
+            Showing <span class="font-semibold text-on-surface">1</span> to <span class="font-semibold text-on-surface">5</span> of <span class="font-semibold text-on-surface">14</span> tax rates
+          </div>
+<div class="flex items-center gap-1">
+<button class="px-2.5 py-1 rounded border border-outline-variant bg-surface-container-lowest text-on-surface disabled:opacity-40" disabled="">Previous</button>
+<button class="px-2.5 py-1 rounded bg-surface-container text-primary font-semibold border border-primary/20">1</button>
+<button class="px-2.5 py-1 rounded border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-on-surface">2</button>
+<button class="px-2.5 py-1 rounded border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-on-surface">3</button>
+<button class="px-2.5 py-1 rounded border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-on-surface">Next</button>
+</div>
+</div>
+</section>
+<!-- ==================== SECONDARY SECTION: DUAL CARDS ==================== -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Card A: Statutory HSN / SAC Code Directory Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-5 shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-surface-container-low text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="menu_book">menu_book</span>
+</div>
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Statutory HSN / SAC Directory</h3>
+<p class="text-label-default font-label-default text-outline">Pre-configured SaaS &amp; digital supply tax classification codes</p>
+</div>
+</div>
+<button class="text-xs font-semibold text-primary hover:underline flex items-center gap-1">
+<span>+ Add Code</span>
+</button>
+</div>
+<!-- List of SAC codes -->
+<div class="space-y-2.5">
+<!-- SAC 1 -->
+<div class="flex items-center justify-between p-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest hover:bg-surface-container-low/40 transition-colors">
+<div class="flex items-center gap-3">
+<span class="font-mono text-xs font-bold px-2 py-1 rounded bg-surface-container-low text-primary border border-outline-variant/40">
+                  998313
+                </span>
+<div>
+<h4 class="text-body-medium font-body-medium text-on-surface">Information Technology Software Services</h4>
+<p class="text-xs text-outline">Standard SaaS subscriptions, API usage, cloud licensing</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xs font-semibold text-on-surface">18.00% GST</span>
+<button class="p-1 rounded text-outline hover:text-primary hover:bg-surface-container" title="Edit SAC Code">
+<span class="material-symbols-outlined text-[16px]" data-icon="edit">edit</span>
+</button>
+</div>
+</div>
+<!-- SAC 2 -->
+<div class="flex items-center justify-between p-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest hover:bg-surface-container-low/40 transition-colors">
+<div class="flex items-center gap-3">
+<span class="font-mono text-xs font-bold px-2 py-1 rounded bg-surface-container-low text-primary border border-outline-variant/40">
+                  998314
+                </span>
+<div>
+<h4 class="text-body-medium font-body-medium text-on-surface">Cloud Hosting &amp; Infrastructure Provisioning</h4>
+<p class="text-xs text-outline">Compute workloads, managed database tiers, dedicated clusters</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xs font-semibold text-on-surface">18.00% GST</span>
+<button class="p-1 rounded text-outline hover:text-primary hover:bg-surface-container" title="Edit SAC Code">
+<span class="material-symbols-outlined text-[16px]" data-icon="edit">edit</span>
+</button>
+</div>
+</div>
+<!-- SAC 3 -->
+<div class="flex items-center justify-between p-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest hover:bg-surface-container-low/40 transition-colors">
+<div class="flex items-center gap-3">
+<span class="font-mono text-xs font-bold px-2 py-1 rounded bg-surface-container-low text-primary border border-outline-variant/40">
+                  998315
+                </span>
+<div>
+<h4 class="text-body-medium font-body-medium text-on-surface">Data Processing &amp; Analytics Services</h4>
+<p class="text-xs text-outline">Telemetry ingestion, reporting pipelines, data export tokens</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xs font-semibold text-on-surface">18.00% GST</span>
+<button class="p-1 rounded text-outline hover:text-primary hover:bg-surface-container" title="Edit SAC Code">
+<span class="material-symbols-outlined text-[16px]" data-icon="edit">edit</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card B: Tax Automation & Integration Gateway Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/80 p-5 shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-surface-container-low text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="hub">hub</span>
+</div>
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Tax Automation &amp; Gateways</h3>
+<p class="text-label-default font-label-default text-outline">External engines and automated B2B reverse charge routing</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> All Engines Operational
+            </span>
+</div>
+<div class="space-y-3">
+<!-- Engine 1 -->
+<div class="flex items-center justify-between p-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-md bg-indigo-50 border border-indigo-200 flex items-center justify-center text-primary font-bold text-xs">
+                  IN
+                </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-body-medium font-body-medium text-on-surface">Brightloop Native GST Engine</span>
+<span class="text-[10px] font-semibold uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded">Connected</span>
+</div>
+<p class="text-xs text-outline">Real-time GSTR-1 invoice ledger generation &amp; state sorting</p>
+</div>
+</div>
+<button class="h-7 px-2.5 rounded border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-xs font-medium text-on-surface">
+                Configure
+              </button>
+</div>
+<!-- Engine 2 -->
+<div class="flex items-center justify-between p-3 rounded-lg border border-outline-variant/60 bg-surface-container-lowest">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-md bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 font-bold text-xs">
+                  AV
+                </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-body-medium font-body-medium text-on-surface">Stripe Tax / Avalara Connector</span>
+<span class="text-[10px] font-semibold uppercase bg-blue-100 text-blue-800 px-1.5 py-0.2 rounded">Active Sync</span>
+</div>
+<p class="text-xs text-outline">International cross-border nexus rules and automated VAT OSS filings</p>
+</div>
+</div>
+<button class="h-7 px-2.5 rounded border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-xs font-medium text-on-surface">
+                Settings
+              </button>
+</div>
+<!-- Reverse Charge & GSTIN verification Toggle Row -->
+<div class="flex items-center justify-between p-3 rounded-lg border border-dashed border-outline-variant bg-surface-container-low/40">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] text-primary" data-icon="domain_verification">domain_verification</span>
+<div>
+<span class="text-xs font-semibold text-on-surface block">Automated B2B Reverse Charge with GSTIN Verification</span>
+<span class="text-[11px] text-outline">Instantly marks tax-exempt on valid verified corporate GSTIN</span>
+</div>
+</div>
+<!-- Simulated Toggle -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== FOOTER COMPLIANCE BANNER ==================== -->
+<section class="bg-surface-container-lowest rounded-xl border border-primary/20 p-4 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-surface-container-lowest via-surface-container-low/30 to-surface-container/20">
+<div class="flex items-center gap-3.5">
+<div class="w-9 h-9 rounded-lg bg-primary-container/10 text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]" data-icon="gavel">gavel</span>
+</div>
+<div>
+<h4 class="text-body-medium font-body-medium text-on-surface font-semibold">Automated GSTIN Verification &amp; B2B Invoicing Rules</h4>
+<p class="text-label-default font-label-default text-outline mt-0.5">
+              Validated business GSTINs automatically receive e-invoices, IRN hash generation, and reverse-charge classification without manual approval.
+            </p>
+</div>
+</div>
+<a class="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-on-primary-fixed-variant whitespace-nowrap self-start md:self-auto py-1" href="#">
+<span>Configure Invoicing Compliance</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</section>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Brightloop - Subscription Plans</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Inter Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-fixed": "#351000",
+            "on-error": "#ffffff",
+            "on-secondary-container": "#fffbff",
+            "on-primary": "#ffffff",
+            "on-surface-variant": "#464555",
+            "outline-variant": "#c7c4d8",
+            "surface-tint": "#4d44e3",
+            "surface-container-low": "#f1f3ff",
+            "on-background": "#141b2b",
+            "on-tertiary-container": "#ffd2be",
+            "primary": "#3525cd",
+            "on-error-container": "#93000a",
+            "primary-fixed": "#e2dfff",
+            "on-secondary": "#ffffff",
+            "surface-container": "#e9edff",
+            "surface-container-lowest": "#ffffff",
+            "secondary-container": "#8a4cfc",
+            "on-tertiary": "#ffffff",
+            "surface-dim": "#d3daef",
+            "secondary": "#712ae2",
+            "on-primary-fixed": "#0f0069",
+            "on-primary-fixed-variant": "#3323cc",
+            "tertiary": "#7e3000",
+            "tertiary-container": "#a44100",
+            "on-primary-container": "#dad7ff",
+            "tertiary-fixed": "#ffdbcc",
+            "surface": "#f9f9ff",
+            "inverse-surface": "#293040",
+            "surface-container-highest": "#dce2f7",
+            "inverse-primary": "#c3c0ff",
+            "secondary-fixed-dim": "#d2bbff",
+            "secondary-fixed": "#eaddff",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#ffb695",
+            "on-surface": "#141b2b",
+            "outline": "#777587",
+            "surface-bright": "#f9f9ff",
+            "on-tertiary-fixed-variant": "#7b2f00",
+            "inverse-on-surface": "#edf0ff",
+            "background": "#f9f9ff",
+            "primary-fixed-dim": "#c3c0ff",
+            "surface-container-high": "#e1e8fd",
+            "on-secondary-fixed-variant": "#5a00c6",
+            "primary-container": "#4f46e5",
+            "on-secondary-fixed": "#25005a",
+            "error": "#ba1a1a",
+            "surface-variant": "#dce2f7"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xl": "1.5rem",
+            "gutter-sm": "1rem",
+            "space-md": "0.75rem",
+            "margin-sm": "1rem",
+            "gutter": "1.5rem",
+            "space-lg": "1rem",
+            "space-sm": "0.5rem",
+            "space-2xs": "0.125rem",
+            "margin": "2rem",
+            "space-xs": "0.25rem",
+            "space-2xl": "2rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Inter"],
+            "headline-md": ["Inter"],
+            "headline-sm": ["Inter"],
+            "body-medium": ["Inter"],
+            "display-hero": ["Inter"],
+            "body-default": ["Inter"],
+            "headline-lg": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "label-default": ["Inter"],
+            "label-uppercase": ["Inter"],
+            "metric-numeral": ["Inter"],
+            "code-table": ["Inter"]
+          },
+          "fontSize": {
+            "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+            "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+            "headline-sm": ["16px", {"lineHeight": "24px", "letterSpacing": "-0.015em", "fontWeight": "600"}],
+            "body-medium": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "500"}],
+            "display-hero": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+            "body-default": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400"}],
+            "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.025em", "fontWeight": "600"}],
+            "headline-lg-mobile": ["22px", {"lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+            "label-default": ["12px", {"lineHeight": "16px", "letterSpacing": "0.0em", "fontWeight": "500"}],
+            "label-uppercase": ["11px", {"lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600"}],
+            "metric-numeral": ["28px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+            "code-table": ["13px", {"lineHeight": "18px", "letterSpacing": "0.0em", "fontWeight": "400"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c7c4d8;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased flex min-h-screen">
+<!-- COLLATERAL SIDEBAR NAVIGATION (Shared Component: SideNavBar) -->
+<aside class="flex flex-col justify-between h-full w-60 p-4 border-r border-outline-variant fixed left-0 top-0 z-40 bg-surface-container-lowest shadow-sm">
+<!-- Top Brand & Nav Section -->
+<div class="flex flex-col space-y-6">
+<!-- Brand Anchor -->
+<div class="flex items-center gap-3 px-2 pt-1">
+<div class="h-9 w-9 rounded-lg bg-primary-container text-on-primary flex items-center justify-center font-extrabold shadow-sm">
+<span class="material-symbols-outlined" data-icon="polyline">polyline</span>
+</div>
+<div>
+<h1 class="text-headline-sm font-headline-sm font-extrabold text-primary leading-tight tracking-tight">Brightloop</h1>
+<p class="text-label-default font-label-default text-on-surface-variant">Billing &amp; Ops</p>
+</div>
+</div>
+<!-- Quick Action CTA -->
+<button class="w-full flex items-center justify-center gap-2 bg-primary-container hover:bg-primary text-on-primary py-2 px-3 rounded-lg text-body-medium font-body-medium shadow-sm transition-all duration-150 active:scale-[0.99]">
+<span class="material-symbols-outlined text-[18px]" data-icon="add_circle">add_circle</span>
+<span>Create Product</span>
+</button>
+<!-- Primary Navigation Links -->
+<nav class="flex flex-col space-y-1">
+<!-- 1. Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-body-medium font-body-medium" href="index.html">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- 2. Products -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-body-medium font-body-medium" href="products.html">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>Products</span>
+</a>
+<!-- 3. Subscription Plans (ACTIVE per intent & hierarchy) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container text-primary font-medium transition-colors duration-150 active:scale-[0.99] text-body-medium font-body-medium shadow-xs" href="subscription.html">
+<span class="material-symbols-outlined fill-icon text-primary" data-icon="subscriptions">subscriptions</span>
+<span>Subscription Plans</span>
+</a>
+<!-- 4. Taxes -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-body-medium font-body-medium" href="tax.html">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span>Taxes</span>
+</a>
+<!-- 5. Discounts -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-body-medium font-body-medium" href="discount.html">
+<span class="material-symbols-outlined" data-icon="loyalty">loyalty</span>
+<span>Discounts</span>
+</a>
+<!-- 6. Staff Management -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-body-medium font-body-medium" href="staff.html">
+<span class="material-symbols-outlined" data-icon="badge">badge</span>
+<span>Staff Management</span>
+</a>
+</nav>
+</div>
+<!-- Sidebar Bottom / Footer Tabs -->
+<div class="flex flex-col space-y-1 border-t border-outline-variant pt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-body-medium font-body-medium" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99] text-body-medium font-body-medium" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Help &amp; Support</span>
+</a>
+<div class="px-3 pt-3 flex items-center justify-between text-label-default font-label-default text-outline">
+<span>v2.14.0 Production</span>
+<span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+</div>
+</div>
+</aside>
+<!-- MAIN CANVAS WRAPPER (Offset by sidebar width 240px / 15rem) -->
+<div class="flex-1 ml-60 flex flex-col min-w-0">
+<!-- TOP NAVBAR (Shared Component: TopNavBar) -->
+<header class="sticky top-0 right-0 z-30 w-full bg-surface-container-lowest border-b border-outline-variant shadow-sm h-14">
+<div class="flex items-center justify-between h-14 px-6 w-full">
+<!-- Search bar on left -->
+<div class="flex items-center w-full max-w-md">
+<div class="relative w-full">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-outline">
+<span class="material-symbols-outlined text-[18px]" data-icon="search">search</span>
+</span>
+<input class="w-full h-9 pl-9 pr-4 bg-surface text-body-default font-body-default placeholder:text-outline border border-outline-variant rounded-lg focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 transition-all" placeholder="Search plans, tiers, billing cycles..." type="text"/>
+</div>
+</div>
+<!-- Trailing Actions Cluster -->
+<div class="flex items-center gap-3 ml-4">
+<!-- Live Environment Tag -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-surface-container rounded-full border border-outline-variant text-label-default font-label-default text-primary">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+<span>Production</span>
+</div>
+<!-- Currency Selector Pill -->
+<div class="inline-flex items-center gap-1 px-2.5 py-1 bg-surface-container-lowest rounded-lg border border-outline-variant text-label-default font-label-default text-on-surface cursor-pointer hover:bg-surface-container-low transition-colors">
+<span class="font-semibold text-primary">INR</span>
+<span class="text-outline">₹</span>
+<span class="material-symbols-outlined text-[16px] text-outline" data-icon="expand_more">expand_more</span>
+</div>
+<!-- Trailing Icon Actions -->
+<button aria-label="Notifications" class="relative p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-primary-container ring-2 ring-surface-container-lowest"></span>
+</button>
+<button aria-label="Storefront" class="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+</button>
+<!-- Divider -->
+<div class="h-6 w-px bg-outline-variant"></div>
+<!-- Admin Profile Action -->
+<div class="flex items-center gap-2 pl-1 cursor-pointer group">
+<div class="h-8 w-8 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-bold text-label-default border border-outline-variant shadow-xs">
+              AD
+            </div>
+<div class="hidden lg:flex flex-col text-left">
+<span class="text-label-default font-label-default text-on-surface font-semibold group-hover:text-primary transition-colors">Admin Profile</span>
+<span class="text-[10px] text-outline leading-none">FinOps SuperAdmin</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="unfold_more">unfold_more</span>
+</div>
+</div>
+</div>
+</header>
+<!-- MAIN CONTENT CANVAS -->
+<main class="flex-1 p-8 max-w-[1600px] w-full mx-auto space-y-6">
+<!-- Breadcrumbs & Page Header Section -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-outline-variant pb-6">
+<div>
+<!-- Breadcrumb -->
+<nav class="flex items-center gap-2 text-label-default font-label-default text-outline mb-1.5">
+<span>Billing &amp; Ops</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary font-medium">Subscription Plans</span>
+</nav>
+<h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Subscription Plans</h1>
+<p class="text-body-default font-body-default text-on-surface-variant mt-0.5">
+            Configure billing cadences, pricing tiers, entitlement quotas, and linked products.
+          </p>
+</div>
+<!-- Header Action CTAs -->
+<div class="flex items-center gap-3">
+<button class="inline-flex items-center gap-2 bg-surface-container-lowest text-on-surface border border-outline-variant rounded-lg px-3.5 py-2 text-body-medium font-body-medium shadow-sm hover:bg-surface-container-low hover:border-outline transition-all active:scale-[0.99]">
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="download">download</span>
+<span>Export Matrix</span>
+</button>
+<button class="inline-flex items-center gap-2 bg-primary-container text-on-primary rounded-lg px-4 py-2 text-body-medium font-body-medium shadow-sm hover:bg-primary transition-all active:scale-[0.99]">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+<span>Create Plan</span>
+</button>
+</div>
+</div>
+<!-- KPI METRIC SUMMARY CARDS (4-Column Bento Row) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Metric 1: Total Active Plans -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm hover:border-outline transition-all">
+<div class="flex items-center justify-between">
+<span class="text-label-uppercase font-label-uppercase text-on-surface-variant">TOTAL ACTIVE PLANS</span>
+<div class="h-8 w-8 rounded-lg bg-surface-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="layers">layers</span>
+</div>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="text-metric-numeral font-metric-numeral text-on-surface">8</span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 text-label-default font-label-default text-emerald-600">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+<span class="font-medium">+2 this quarter</span>
+</div>
+</div>
+<!-- Metric 2: Active Subscribers -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm hover:border-outline transition-all">
+<div class="flex items-center justify-between">
+<span class="text-label-uppercase font-label-uppercase text-on-surface-variant">ACTIVE SUBSCRIBERS</span>
+<div class="h-8 w-8 rounded-lg bg-surface-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="group">group</span>
+</div>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="text-metric-numeral font-metric-numeral text-on-surface">1,248</span>
+</div>
+<div class="mt-2 text-label-default font-label-default text-on-surface-variant">
+<span>94.2% on recurring cycles</span>
+</div>
+</div>
+<!-- Metric 3: MRR Attribution -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm hover:border-outline transition-all">
+<div class="flex items-center justify-between">
+<span class="text-label-uppercase font-label-uppercase text-on-surface-variant">MRR ATTRIBUTION</span>
+<div class="h-8 w-8 rounded-lg bg-surface-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="credit_card">credit_card</span>
+</div>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="text-metric-numeral font-metric-numeral text-on-surface">₹4,80,000</span>
+</div>
+<div class="mt-2 flex items-center gap-1.5 text-label-default font-label-default text-emerald-600">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+<span class="font-medium">+14.8% MoM</span>
+</div>
+</div>
+<!-- Metric 4: Avg Plan ARPU -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm hover:border-outline transition-all">
+<div class="flex items-center justify-between">
+<span class="text-label-uppercase font-label-uppercase text-on-surface-variant">AVG. PLAN ARPU</span>
+<div class="h-8 w-8 rounded-lg bg-surface-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="trending_up">trending_up</span>
+</div>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="text-metric-numeral font-metric-numeral text-on-surface">₹3,846</span>
+</div>
+<div class="mt-2 text-label-default font-label-default text-on-surface-variant">
+<span>Across standard &amp; custom tiers</span>
+</div>
+</div>
+</div>
+<!-- VIEW CONTROLS & FILTERING SUITE -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm space-y-4">
+<!-- View mode tabs & Switcher -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant pb-3.5">
+<div class="flex items-center gap-1">
+<button class="px-3.5 py-1.5 rounded-lg text-body-medium font-body-medium bg-surface-container text-primary shadow-xs">
+              All Plans (8)
+            </button>
+<button class="px-3.5 py-1.5 rounded-lg text-body-medium font-body-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">
+              Recurring (6)
+            </button>
+<button class="px-3.5 py-1.5 rounded-lg text-body-medium font-body-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">
+              Usage-Based (2)
+            </button>
+<button class="px-3.5 py-1.5 rounded-lg text-body-medium font-body-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">
+              Archived (1)
+            </button>
+</div>
+<!-- View Layout Toggle (Grid vs Table) -->
+<div class="flex items-center bg-surface-container-low p-1 rounded-lg border border-outline-variant self-start sm:self-auto">
+<button class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-lowest shadow-xs text-label-default font-label-default text-primary">
+<span class="material-symbols-outlined text-[16px]" data-icon="grid_view">grid_view</span>
+<span>Grid View</span>
+</button>
+<button class="flex items-center gap-1.5 px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface text-label-default font-label-default transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="table_rows">table_rows</span>
+<span>Table View</span>
+</button>
+</div>
+</div>
+<!-- Filter and Search Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+<!-- Search within Plans -->
+<div class="lg:col-span-2 relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-outline">
+<span class="material-symbols-outlined text-[18px]" data-icon="filter_list">filter_list</span>
+</span>
+<input class="w-full h-9 pl-9 pr-3 bg-surface-container-lowest text-body-default font-body-default border border-outline-variant rounded-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" placeholder="Filter by plan name, SKU or code..." type="text"/>
+</div>
+<!-- Interval Dropdown Filter -->
+<div>
+<select class="w-full h-9 px-3 bg-surface-container-lowest text-body-default font-body-default border border-outline-variant rounded-lg focus:outline-none focus:border-primary-container">
+<option>Billing Interval: All</option>
+<option>Monthly</option>
+<option>Annual (Save 16%)</option>
+<option>Quarterly</option>
+</select>
+</div>
+<!-- Linked Product Dropdown Filter -->
+<div>
+<select class="w-full h-9 px-3 bg-surface-container-lowest text-body-default font-body-default border border-outline-variant rounded-lg focus:outline-none focus:border-primary-container">
+<option>Linked Product: All</option>
+<option>Cloud API Gateway</option>
+<option>Dedicated Cluster</option>
+<option>Enterprise Suite</option>
+<option>Support Add-on</option>
+</select>
+</div>
+<!-- Sort Order Dropdown -->
+<div>
+<select class="w-full h-9 px-3 bg-surface-container-lowest text-body-default font-body-default border border-outline-variant rounded-lg focus:outline-none focus:border-primary-container">
+<option>Sort: MRR: High to Low</option>
+<option>MRR: Low to High</option>
+<option>Subscribers: Most to Least</option>
+<option>Recently Modified</option>
+</select>
+</div>
+</div>
+</div>
+<!-- HIGHLIGHTED PLAN TIERS (Bento Cards Grid) -->
+<div>
+<div class="flex items-center justify-between mb-3 px-1">
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Flagship Billing Tiers</h2>
+<span class="text-label-default font-label-default text-outline">Standard public matrix catalog</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+<!-- Card 1: Starter Tier -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm hover:border-outline hover:-translate-y-0.5 transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Starter Tier</h3>
+<p class="text-label-default font-label-default text-outline mt-0.5">PLAN-STR-01</p>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-default font-label-default bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5"></span>Active
+                </span>
+</div>
+<!-- Pricing Display -->
+<div class="mt-4 pb-4 border-b border-outline-variant">
+<div class="flex items-baseline gap-1">
+<span class="text-metric-numeral font-metric-numeral text-on-surface">₹1,999</span>
+<span class="text-body-default font-body-default text-outline">/ month</span>
+</div>
+<p class="text-label-default font-label-default text-on-surface-variant mt-1">
+                  or ₹19,990/yr <span class="text-primary font-medium">(Save 16%)</span>
+</p>
+</div>
+<!-- Linked Product & Subscriber count -->
+<div class="py-3 border-b border-outline-variant text-label-default font-label-default space-y-1.5">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Linked Product:</span>
+<span class="font-medium text-on-surface">Cloud API Gateway</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Subscribers:</span>
+<span class="font-semibold text-primary">412 active</span>
+</div>
+</div>
+<!-- Features / Quotas -->
+<div class="pt-3 space-y-2 text-body-default font-body-default">
+<p class="text-label-uppercase font-label-uppercase text-outline">Entitlements</p>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-default">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>50,000 requests/mo</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-default">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>3 team seats</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-default">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>Community support</span>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-6 pt-3 border-t border-outline-variant">
+<button class="w-full py-2 px-3 rounded-lg border border-outline-variant hover:bg-surface-container-low text-on-surface text-body-medium font-body-medium flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+<span>Edit Plan</span>
+</button>
+</div>
+</div>
+<!-- Card 2: Growth Tier (POPULAR BADGE) -->
+<div class="bg-surface-container-lowest border-2 border-primary-container rounded-xl p-5 shadow-sm hover:-translate-y-0.5 transition-all flex flex-col justify-between relative ring-2 ring-primary-container/10">
+<!-- Popular Badge Flag -->
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-container text-on-primary px-3 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="star">star</span>
+<span>Popular Choice</span>
+</div>
+<div>
+<div class="flex items-start justify-between mt-1">
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Growth Tier</h3>
+<p class="text-label-default font-label-default text-outline mt-0.5">PLAN-GRW-02</p>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-default font-label-default bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5"></span>Active
+                </span>
+</div>
+<!-- Pricing Display -->
+<div class="mt-4 pb-4 border-b border-outline-variant">
+<div class="flex items-baseline gap-1">
+<span class="text-metric-numeral font-metric-numeral text-on-surface">₹4,999</span>
+<span class="text-body-default font-body-default text-outline">/ month</span>
+</div>
+<p class="text-label-default font-label-default text-on-surface-variant mt-1">
+                  or ₹49,990/yr <span class="text-primary font-medium">(Save 16%)</span>
+</p>
+</div>
+<!-- Linked Product & Subscriber count -->
+<div class="py-3 border-b border-outline-variant text-label-default font-label-default space-y-1.5">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Linked Product:</span>
+<span class="font-medium text-on-surface truncate ml-2">Gateway + Cluster</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Subscribers:</span>
+<span class="font-semibold text-primary">628 active</span>
+</div>
+</div>
+<!-- Features / Quotas -->
+<div class="pt-3 space-y-2 text-body-default font-body-default">
+<p class="text-label-uppercase font-label-uppercase text-outline">Entitlements</p>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-default">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>500,000 requests/mo</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-default">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>10 team seats</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-default">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>Priority 24/7 SLA</span>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-6 pt-3 border-t border-outline-variant">
+<button class="w-full py-2 px-3 rounded-lg bg-primary-container hover:bg-primary text-on-primary text-body-medium font-body-medium flex items-center justify-center gap-1.5 shadow-sm transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+<span>Edit Plan</span>
+</button>
+</div>
+</div>
+<!-- Card 3: Enterprise Pro -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm hover:border-outline hover:-translate-y-0.5 transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Enterprise Pro</h3>
+<p class="text-label-default font-label-default text-outline mt-0.5">PLAN-ENT-09</p>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-default font-label-default bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5"></span>Active
+                </span>
+</div>
+<!-- Pricing Display -->
+<div class="mt-4 pb-4 border-b border-outline-variant">
+<div class="flex items-baseline gap-1">
+<span class="text-metric-numeral font-metric-numeral text-on-surface">₹14,999</span>
+<span class="text-body-default font-body-default text-outline">/ month</span>
+</div>
+<p class="text-label-default font-label-default text-on-surface-variant mt-1">
+                  or ₹1,49,990/yr <span class="text-primary font-medium">(Save 16%)</span>
+</p>
+</div>
+<!-- Linked Product & Subscriber count -->
+<div class="py-3 border-b border-outline-variant text-label-default font-label-default space-y-1.5">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Linked Product:</span>
+<span class="font-medium text-on-surface">Enterprise Suite</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Subscribers:</span>
+<span class="font-semibold text-primary">184 active</span>
+</div>
+</div>
+<!-- Features / Quotas -->
+<div class="pt-3 space-y-2 text-body-default font-body-default">
+<p class="text-label-uppercase font-label-uppercase text-outline">Entitlements</p>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-default">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>Unlimited requests</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-default">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>Custom seats &amp; SSO</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-default">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>99.99% uptime SLA</span>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-6 pt-3 border-t border-outline-variant">
+<button class="w-full py-2 px-3 rounded-lg border border-outline-variant hover:bg-surface-container-low text-on-surface text-body-medium font-body-medium flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+<span>Edit Plan</span>
+</button>
+</div>
+</div>
+<!-- Card 4: Add-on Support SLA -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm hover:border-outline hover:-translate-y-0.5 transition-all flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Add-on Support</h3>
+<p class="text-label-default font-label-default text-outline mt-0.5">ADDON-SLA-03</p>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-default font-label-default bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5"></span>Active
+                </span>
+</div>
+<!-- Pricing Display -->
+<div class="mt-4 pb-4 border-b border-outline-variant">
+<div class="flex items-baseline gap-1">
+<span class="text-metric-numeral font-metric-numeral text-on-surface">₹2,500</span>
+<span class="text-body-default font-body-default text-outline">/ month</span>
+</div>
+<p class="text-label-default font-label-default text-on-surface-variant mt-1">
+                  Recurring add-on entitlement
+                </p>
+</div>
+<!-- Linked Product & Subscriber count -->
+<div class="py-3 border-b border-outline-variant text-label-default font-label-default space-y-1.5">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Linked Product:</span>
+<span class="font-medium text-on-surface">Support Desk SLA</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>Subscribers:</span>
+<span class="font-semibold text-primary">24 active</span>
+</div>
+</div>
+<!-- Features / Quotas -->
+<div class="pt-3 space-y-2 text-body-default font-body-default">
+<p class="text-label-uppercase font-label-uppercase text-outline">Entitlements</p>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-default">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>1h response time SLA</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-default">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>Slack channel connect</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-label-default">
+<span class="material-symbols-outlined text-[16px] text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>Dedicated tech engineer</span>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-6 pt-3 border-t border-outline-variant">
+<button class="w-full py-2 px-3 rounded-lg border border-outline-variant hover:bg-surface-container-low text-on-surface text-body-medium font-body-medium flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+<span>Edit Plan</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- DETAILED COMPREHENSIVE PLANS DATA TABLE -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
+<div class="px-5 py-4 border-b border-outline-variant flex items-center justify-between flex-wrap gap-2">
+<div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Plan Inventory &amp; Cadence Matrix</h2>
+<p class="text-label-default font-label-default text-outline mt-0.5">Full audit record of published tiers, code keys, and billing cycles</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="text-label-default font-label-default text-primary hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="tune">tune</span>
+<span>Customize Columns</span>
+</button>
+</div>
+</div>
+<!-- Table Container with Horizontal Scroll -->
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface border-b border-outline-variant text-label-uppercase font-label-uppercase text-on-surface-variant h-9">
+<th class="w-10 px-4 py-2 text-center">
+<input class="rounded border-outline-variant text-primary-container focus:ring-primary-container/20 h-4 w-4" type="checkbox"/>
+</th>
+<th class="px-4 py-2 font-semibold">Plan Name &amp; Code</th>
+<th class="px-4 py-2 font-semibold">Linked Product</th>
+<th class="px-4 py-2 font-semibold">Billing Cadence</th>
+<th class="px-4 py-2 font-semibold text-right">Base Pricing</th>
+<th class="px-4 py-2 font-semibold text-right">Active Subscribers</th>
+<th class="px-4 py-2 font-semibold text-right">Monthly Revenue (MRR)</th>
+<th class="px-4 py-2 font-semibold text-center">Trial Period</th>
+<th class="px-4 py-2 font-semibold">Status</th>
+<th class="px-4 py-2 font-semibold text-center w-16">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/60 text-body-default font-body-default">
+<!-- Row 1: Starter Monthly -->
+<tr class="hover:bg-surface-container-low/60 transition-colors h-12">
+<td class="px-4 py-2 text-center">
+<input class="rounded border-outline-variant text-primary-container focus:ring-primary-container/20 h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-4 py-2">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Starter Monthly</span>
+<span class="text-code-table font-code-table text-outline">PLAN-STR-MTH</span>
+</div>
+</td>
+<td class="px-4 py-2 text-on-surface-variant font-medium">Cloud API Gateway</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                    Monthly
+                  </span>
+</td>
+<td class="px-4 py-2 text-right font-medium text-on-surface">₹1,999</td>
+<td class="px-4 py-2 text-right font-code-table font-medium text-on-surface">320</td>
+<td class="px-4 py-2 text-right font-medium text-primary font-code-table">₹6,39,680</td>
+<td class="px-4 py-2 text-center text-on-surface-variant text-label-default">14 Days</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-default font-label-default bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5"></span>Active
+                  </span>
+</td>
+<td class="px-4 py-2 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-outline hover:text-on-surface transition-colors" title="Plan Options">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Growth Monthly -->
+<tr class="hover:bg-surface-container-low/60 transition-colors h-12">
+<td class="px-4 py-2 text-center">
+<input class="rounded border-outline-variant text-primary-container focus:ring-primary-container/20 h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-4 py-2">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Growth Monthly</span>
+<span class="text-code-table font-code-table text-outline">PLAN-GRW-MTH</span>
+</div>
+</td>
+<td class="px-4 py-2 text-on-surface-variant font-medium">Gateway + Dedicated Cluster</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                    Monthly
+                  </span>
+</td>
+<td class="px-4 py-2 text-right font-medium text-on-surface">₹4,999</td>
+<td class="px-4 py-2 text-right font-code-table font-medium text-on-surface">492</td>
+<td class="px-4 py-2 text-right font-medium text-primary font-code-table">₹24,59,508</td>
+<td class="px-4 py-2 text-center text-on-surface-variant text-label-default">14 Days</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-default font-label-default bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5"></span>Active
+                  </span>
+</td>
+<td class="px-4 py-2 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-outline hover:text-on-surface transition-colors" title="Plan Options">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Enterprise Annual -->
+<tr class="hover:bg-surface-container-low/60 transition-colors h-12">
+<td class="px-4 py-2 text-center">
+<input class="rounded border-outline-variant text-primary-container focus:ring-primary-container/20 h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-4 py-2">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Enterprise Annual</span>
+<span class="text-code-table font-code-table text-outline">PLAN-ENT-ANN</span>
+</div>
+</td>
+<td class="px-4 py-2 text-on-surface-variant font-medium">Enterprise Suite</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-purple-50 text-purple-700 border border-purple-200">
+                    Annual
+                  </span>
+</td>
+<td class="px-4 py-2 text-right font-medium text-on-surface">₹1,49,990</td>
+<td class="px-4 py-2 text-right font-code-table font-medium text-on-surface">184</td>
+<td class="px-4 py-2 text-right font-medium text-primary font-code-table">₹22,99,846</td>
+<td class="px-4 py-2 text-center text-on-surface-variant text-label-default">30 Days</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-default font-label-default bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5"></span>Active
+                  </span>
+</td>
+<td class="px-4 py-2 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-outline hover:text-on-surface transition-colors" title="Plan Options">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Webhook Relay Tier 1 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors h-12">
+<td class="px-4 py-2 text-center">
+<input class="rounded border-outline-variant text-primary-container focus:ring-primary-container/20 h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-4 py-2">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Webhook Relay Tier 1</span>
+<span class="text-code-table font-code-table text-outline">PLAN-WHK-01</span>
+</div>
+</td>
+<td class="px-4 py-2 text-on-surface-variant font-medium">Event Stream Relay</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                    Metered / Mo
+                  </span>
+</td>
+<td class="px-4 py-2 text-right font-medium text-on-surface">₹899</td>
+<td class="px-4 py-2 text-right font-code-table font-medium text-on-surface">228</td>
+<td class="px-4 py-2 text-right font-medium text-primary font-code-table">₹2,04,972</td>
+<td class="px-4 py-2 text-center text-on-surface-variant text-label-default">7 Days</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-default font-label-default bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5"></span>Active
+                  </span>
+</td>
+<td class="px-4 py-2 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-outline hover:text-on-surface transition-colors" title="Plan Options">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: Analytics Add-on (Draft / In Review) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors h-12">
+<td class="px-4 py-2 text-center">
+<input class="rounded border-outline-variant text-primary-container focus:ring-primary-container/20 h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-4 py-2">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Analytics Add-on</span>
+<span class="text-code-table font-code-table text-outline">ADDON-ANL-PRO</span>
+</div>
+</td>
+<td class="px-4 py-2 text-on-surface-variant font-medium">BI Stream Module</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                    Monthly
+                  </span>
+</td>
+<td class="px-4 py-2 text-right font-medium text-on-surface">₹1,499</td>
+<td class="px-4 py-2 text-right font-code-table font-medium text-on-surface">12</td>
+<td class="px-4 py-2 text-right font-medium text-primary font-code-table">₹17,988</td>
+<td class="px-4 py-2 text-center text-on-surface-variant text-label-default">None</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-default font-label-default bg-slate-100 text-slate-700 border border-slate-300">
+<span class="h-1.5 w-1.5 rounded-full bg-slate-400 mr-1.5"></span>Draft
+                  </span>
+</td>
+<td class="px-4 py-2 text-center">
+<button class="p-1 rounded hover:bg-surface-container text-outline hover:text-on-surface transition-colors" title="Plan Options">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Controls -->
+<div class="px-5 py-3 border-t border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-3 bg-surface-container-lowest">
+<span class="text-label-default font-label-default text-outline">
+            Showing <span class="font-semibold text-on-surface">1-5</span> of <span class="font-semibold text-on-surface">8</span> plans
+          </span>
+<div class="flex items-center gap-1.5">
+<button class="px-3 py-1.5 rounded-lg border border-outline-variant text-label-default font-label-default text-on-surface-variant hover:bg-surface-container-low transition-colors disabled:opacity-50" disabled="">
+              Previous
+            </button>
+<button class="h-8 w-8 rounded-lg bg-primary-container text-on-primary text-label-default font-label-default font-semibold shadow-xs">
+              1
+            </button>
+<button class="h-8 w-8 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-low text-label-default font-label-default transition-colors">
+              2
+            </button>
+<button class="px-3 py-1.5 rounded-lg border border-outline-variant text-label-default font-label-default text-on-surface-variant hover:bg-surface-container-low transition-colors">
+              Next
+            </button>
+</div>
+</div>
+</div>
+<!-- BOTTOM HELPER INFO BANNER (Audit & Proration Guidance) -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+<div class="flex items-start gap-3">
+<div class="p-2 rounded-lg bg-surface-container-lowest text-primary border border-outline-variant shadow-xs mt-0.5 md:mt-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="info">info</span>
+</div>
+<div>
+<h4 class="text-body-medium font-body-medium text-on-surface font-semibold">Proration &amp; Invoicing Rules</h4>
+<p class="text-body-default font-body-default text-on-surface-variant mt-0.5">
+              Upgrades and downgrades calculate pro-rata credit automatically based on cycle anchor dates. Mid-cycle upgrades generate an instant credit line.
+            </p>
+</div>
+</div>
+<a class="inline-flex items-center gap-1.5 text-body-medium font-body-medium text-primary hover:text-primary-container font-semibold whitespace-nowrap pl-11 md:pl-0 transition-colors" href="#">
+<span>Configure Proration Settings</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</main>
+</div>
+<!-- Interactive script for demo triggers -->
+<script>
+    // Lightweight row checkbox toggler
+    const mainCheckbox = document.querySelector('thead input[type="checkbox"]');
+    if (mainCheckbox) {
+      mainCheckbox.addEventListener('change', (e) => {
+        const rows = document.querySelectorAll('tbody input[type="checkbox"]');
+        rows.forEach(cb => cb.checked = e.target.checked);
+      });
+    }
+  </script>
+</body></html>

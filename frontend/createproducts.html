@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Brightloop - Edit Product: Cloud API Gateway</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "surface-container-low": "#f1f3ff",
+          "error": "#ba1a1a",
+          "on-surface-variant": "#464555",
+          "primary-fixed": "#e2dfff",
+          "on-primary-fixed": "#0f0069",
+          "tertiary-container": "#a44100",
+          "on-error-container": "#93000a",
+          "on-tertiary-fixed": "#351000",
+          "surface-container": "#e9edff",
+          "on-secondary": "#ffffff",
+          "surface-container-highest": "#dce2f7",
+          "surface-variant": "#dce2f7",
+          "primary-fixed-dim": "#c3c0ff",
+          "secondary-fixed": "#eaddff",
+          "on-secondary-container": "#fffbff",
+          "on-primary-fixed-variant": "#3323cc",
+          "on-secondary-fixed": "#25005a",
+          "secondary": "#712ae2",
+          "surface": "#f9f9ff",
+          "surface-tint": "#4d44e3",
+          "inverse-on-surface": "#edf0ff",
+          "background": "#f9f9ff",
+          "on-secondary-fixed-variant": "#5a00c6",
+          "inverse-primary": "#c3c0ff",
+          "outline": "#777587",
+          "secondary-fixed-dim": "#d2bbff",
+          "secondary-container": "#8a4cfc",
+          "surface-container-high": "#e1e8fd",
+          "on-tertiary": "#ffffff",
+          "on-primary-container": "#dad7ff",
+          "on-primary": "#ffffff",
+          "surface-bright": "#f9f9ff",
+          "surface-container-lowest": "#ffffff",
+          "on-background": "#141b2b",
+          "outline-variant": "#c7c4d8",
+          "error-container": "#ffdad6",
+          "surface-dim": "#d3daef",
+          "on-error": "#ffffff",
+          "on-tertiary-container": "#ffd2be",
+          "primary-container": "#4f46e5",
+          "tertiary-fixed": "#ffdbcc",
+          "tertiary-fixed-dim": "#ffb695",
+          "on-surface": "#141b2b",
+          "primary": "#3525cd",
+          "tertiary": "#7e3000",
+          "inverse-surface": "#293040",
+          "on-tertiary-fixed-variant": "#7b2f00"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-xl": "1.5rem",
+          "space-xs": "0.25rem",
+          "space-sm": "0.5rem",
+          "space-lg": "1rem",
+          "margin-sm": "1rem",
+          "space-md": "0.75rem",
+          "margin": "2rem",
+          "space-2xl": "2rem",
+          "gutter": "1.5rem",
+          "gutter-sm": "1rem",
+          "space-2xs": "0.125rem"
+        },
+        "fontFamily": {
+          "metric-numeral": ["Inter"],
+          "code-table": ["Inter"],
+          "headline-lg": ["Inter"],
+          "body-default": ["Inter"],
+          "body-medium": ["Inter"],
+          "body-lg": ["Inter"],
+          "label-default": ["Inter"],
+          "headline-lg-mobile": ["Inter"],
+          "label-uppercase": ["Inter"],
+          "display-hero": ["Inter"],
+          "headline-sm": ["Inter"],
+          "headline-md": ["Inter"]
+        },
+        "fontSize": {
+          "metric-numeral": ["28px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+          "code-table": ["13px", { "lineHeight": "18px", "letterSpacing": "0.0em", "fontWeight": "400" }],
+          "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+          "body-default": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+          "body-medium": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "500" }],
+          "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+          "label-default": ["12px", { "lineHeight": "16px", "letterSpacing": "0.0em", "fontWeight": "500" }],
+          "headline-lg-mobile": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+          "label-uppercase": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+          "display-hero": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+          "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+          "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+        }
+      }
+    }
+  }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c7c4d8;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased font-body-default text-body-default min-h-screen flex flex-col">
+<!-- ================= SIDEBAR NAVIGATION ================= -->
+<!-- Anchored from Shared Components JSON: SideNavBar, fixed 240px (w-60) -->
+<aside class="fixed top-0 left-0 h-screen w-60 bg-surface-container-lowest border-r border-outline-variant shadow-sm z-40 flex flex-col justify-between p-4">
+<div class="flex flex-col gap-6">
+<!-- Brand Logo / Header -->
+<div class="flex items-center gap-3 px-2 pt-1">
+<div class="w-9 h-9 rounded-lg bg-primary-container text-white flex items-center justify-center font-extrabold shadow-sm">
+<span class="material-symbols-outlined text-xl">bolt</span>
+</div>
+<div class="flex flex-col">
+<span class="text-headline-md font-headline-md font-extrabold text-primary leading-tight">Brightloop</span>
+<span class="text-label-default font-label-default text-on-surface-variant">Billing &amp; Ops</span>
+</div>
+</div>
+<!-- Action Button CTA -->
+<button class="w-full flex items-center justify-center gap-2 py-2 px-3 bg-surface-container-low hover:bg-surface-container text-primary font-body-medium text-body-medium rounded-lg border border-outline-variant/60 transition-colors duration-150 active:scale-[0.99]">
+<span class="material-symbols-outlined text-lg">add</span>
+<span>Create Product</span>
+</button>
+<!-- Main Navigation Links -->
+<nav class="flex flex-col gap-1">
+<!-- 0: Dashboard (Inactive) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="index.html">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="text-body-default font-body-default">Dashboard</span>
+</a>
+<!-- 1: Products (ACTIVE - Intent Lock for Edit Product) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container text-primary font-medium active:scale-[0.99] border border-outline-variant/40" href="products.html">
+<span class="material-symbols-outlined text-xl text-primary" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="text-body-default font-body-medium">Products</span>
+</a>
+<!-- 2: Subscription Plans (Inactive) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="subscription.html">
+<span class="material-symbols-outlined text-xl">subscriptions</span>
+<span class="text-body-default font-body-default">Subscription Plans</span>
+</a>
+<!-- 3: Taxes (Inactive) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="tax.html">
+<span class="material-symbols-outlined text-xl">receipt_long</span>
+<span class="text-body-default font-body-default">Taxes</span>
+</a>
+<!-- 4: Discounts (Inactive) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="discount.html">
+<span class="material-symbols-outlined text-xl">loyalty</span>
+<span class="text-body-default font-body-default">Discounts</span>
+</a>
+<!-- 5: Staff Management (Inactive) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="staff.html">
+<span class="material-symbols-outlined text-xl">badge</span>
+<span class="text-body-default font-body-default">Staff Management</span>
+</a>
+</nav>
+</div>
+<!-- Footer Nav -->
+<div class="flex flex-col gap-1 border-t border-outline-variant pt-3">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="text-body-default font-body-default">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]" href="#">
+<span class="material-symbols-outlined text-xl">help</span>
+<span class="text-body-default font-body-default">Help &amp; Support</span>
+</a>
+<div class="mt-2 px-3 py-2 bg-surface-container-low/80 rounded-lg flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-label-uppercase font-label-uppercase text-on-surface-variant">API STATUS</span>
+<span class="text-label-default font-label-default text-primary flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 99.98% Healthy
+          </span>
+</div>
+<span class="material-symbols-outlined text-sm text-on-surface-variant">monitoring</span>
+</div>
+</div>
+</aside>
+<!-- ================= TOP APP BAR ================= -->
+<!-- Anchored from Shared Components JSON: TopNavBar, fixed/sticky width calc -->
+<header class="sticky top-0 right-0 z-30 w-[calc(100%-15rem)] ml-60 bg-surface-container-lowest border-b border-outline-variant shadow-sm h-14 px-6 flex items-center justify-between">
+<!-- Left: Search Bar -->
+<div class="flex items-center gap-4 w-96">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+<input class="w-full pl-9 pr-10 py-1.5 bg-surface-container-low/70 border border-outline-variant rounded-lg text-body-default font-body-default placeholder:text-on-surface-variant/70 focus:bg-surface-container-lowest" placeholder="Search products, SKUs, webhooks..." type="text"/>
+<div class="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5 border border-outline-variant bg-surface-container-lowest px-1.5 py-0.5 rounded text-[10px] font-medium text-outline">
+          ⌘K
+        </div>
+</div>
+</div>
+<!-- Right Actions -->
+<div class="flex items-center gap-3">
+<!-- Trailing Action: Environment Badge -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-low text-primary border border-outline-variant/60 font-body-medium text-label-default">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span>Production</span>
+</div>
+<!-- Icon Actions -->
+<button class="p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors relative">
+<span class="material-symbols-outlined text-xl">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">storefront</span>
+</button>
+<div class="h-5 w-px bg-outline-variant mx-1"></div>
+<!-- User Profile / Trailing Primary Action -->
+<div class="flex items-center gap-2.5 pl-1 cursor-pointer hover:bg-surface-container-low p-1.5 rounded-lg transition-colors">
+<img class="w-8 h-8 rounded-full border border-outline-variant object-cover" data-alt="A clean, modern corporate headshot photograph of an operations director in a minimal studio setting with neutral gray background and soft directional lighting. The subject has an approachable yet confident professional expression, wearing a tailored navy blazer and crisp white shirt in high-contrast light-mode style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3qx2SWfHtJGJa0LnCGiUPEVMg5ZXER_P92QXEl_usmGYA8o5kBRXjLJl3Zp25VguW6cJ6szoz0jA06gnF8VNisuRPyClwnIrDbVyJMzE3GGvLUOXCIBYbgp3jovTVkH8EOwgvShqN-sBnTfoNNadUb8TefTJT5K1XBKe0D4Os8NRfd1ARtpp6Jxm9QmTYCwqOELOD0Hfe5YGVxLLokk5wod6EU4U8kifUp8c6SZs"/>
+<div class="flex flex-col text-left">
+<span class="text-body-default font-body-medium text-on-surface leading-tight">Admin Profile</span>
+<span class="text-label-default font-label-default text-on-surface-variant">Lead Financial Ops</span>
+</div>
+<span class="material-symbols-outlined text-outline text-lg ml-0.5">expand_more</span>
+</div>
+</div>
+</header>
+<!-- ================= MAIN CONTENT CANVAS ================= -->
+<main class="w-[calc(100%-15rem)] ml-60 flex-1 p-8 bg-background">
+<div class="max-w-[1520px] mx-auto flex flex-col gap-6">
+<!-- SECTION 1: Breadcrumb, Title & Top Action Bar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-outline-variant pb-6">
+<div class="flex flex-col gap-1.5">
+<!-- Breadcrumb Hierarchy -->
+<nav class="flex items-center gap-2 text-label-default font-label-default text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="#">Products</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Cloud API Gateway</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-on-surface font-body-medium">Edit Details</span>
+</nav>
+<!-- Headline and Badges -->
+<div class="flex items-center flex-wrap gap-3">
+<h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Cloud API Gateway</h1>
+<!-- Status Badge: Active -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-label-default font-label-default bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Active
+            </span>
+<!-- SKU Identifier Badge -->
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-label-default font-code-table bg-surface-container-high text-on-surface-variant border border-outline-variant">
+              SKU: PROD-API-01
+            </span>
+<span class="text-label-default font-label-default text-on-surface-variant border-l border-outline-variant pl-3">
+              Last synced 14 mins ago by automated webhook
+            </span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-2.5 self-start md:self-auto">
+<button class="px-3 py-1.5 text-body-default font-body-medium text-error hover:bg-error-container/40 rounded-lg border border-transparent hover:border-error/20 transition-all duration-150 flex items-center gap-1.5" onclick="document.getElementById('dangerZoneModal').classList.remove('hidden')" title="Delete product permanently" type="button">
+<span class="material-symbols-outlined text-base">delete</span>
+<span>Delete</span>
+</button>
+<button class="px-3.5 py-1.5 bg-surface-container-lowest hover:bg-surface-container-low text-on-surface rounded-lg border border-outline-variant shadow-sm transition-all duration-150 font-body-medium text-body-default active:scale-[0.99]" type="button">
+            Discard Changes
+          </button>
+<button class="px-3.5 py-1.5 bg-surface-container-lowest hover:bg-surface-container-low text-on-surface rounded-lg border border-outline-variant shadow-sm transition-all duration-150 font-body-medium text-body-default flex items-center gap-1.5 active:scale-[0.99]" type="button">
+<span class="material-symbols-outlined text-base text-outline">visibility</span>
+<span>Preview</span>
+</button>
+<button class="px-4 py-1.5 bg-primary-container hover:bg-[#4338CA] text-white rounded-lg shadow-sm font-body-medium text-body-default flex items-center gap-1.5 transition-all duration-150 active:scale-[0.99] shadow-[0_1px_2px_rgba(79,70,229,0.3)]" type="button">
+<span class="material-symbols-outlined text-base">check</span>
+<span>Save &amp; Publish Product</span>
+</button>
+</div>
+</div>
+<!-- SECTION 2: Main Form 2-Column Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+<!-- ================= LEFT COLUMN: PRIMARY CONFIG (8 cols) ================= -->
+<div class="xl:col-span-8 flex flex-col gap-6">
+<!-- CARD 1: Basic Information -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm">
+<div class="flex items-center justify-between pb-4 mb-5 border-b border-outline-variant/60">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">info</span>
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Basic Information</h2>
+</div>
+<span class="text-label-default font-label-default text-outline">Core catalog identity</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Product Name Input -->
+<div class="flex flex-col gap-1.5">
+<label class="text-label-default font-label-default text-on-surface" for="prod_name">
+                  Product Name <span class="text-error">*</span>
+</label>
+<input class="h-9 px-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-body-default font-body-default text-on-surface focus:border-primary-container" id="prod_name" type="text" value="Cloud API Gateway"/>
+</div>
+<!-- Product Slug / Handle -->
+<div class="flex flex-col gap-1.5">
+<label class="text-label-default font-label-default text-on-surface" for="prod_slug">
+                  Product Handle / Slug <span class="text-error">*</span>
+</label>
+<div class="relative flex items-center">
+<span class="absolute left-3 text-label-default font-label-default text-outline select-none">api.brightloop.io/p/</span>
+<input class="h-9 pl-44 pr-3 w-full bg-surface-container-lowest border border-outline-variant rounded-lg text-body-default font-code-table text-on-surface focus:border-primary-container" id="prod_slug" type="text" value="cloud-api-gateway"/>
+</div>
+</div>
+</div>
+<!-- Product Type Tabs / Radio Grid -->
+<div class="mt-5 flex flex-col gap-2">
+<label class="text-label-default font-label-default text-on-surface">
+                Product Type &amp; Fulfillment Model <span class="text-error">*</span>
+</label>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+<!-- Option 1: Selected Recurring Subscription -->
+<label class="relative flex flex-col p-3 rounded-lg border-2 border-primary-container bg-surface-container-low/50 cursor-pointer transition-all">
+<input checked="" class="sr-only" name="prod_type" type="radio" value="recurring"/>
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary text-xl">autorenew</span>
+<span class="w-4 h-4 rounded-full border-4 border-primary-container bg-surface-container-lowest"></span>
+</div>
+<span class="mt-2 text-body-default font-body-medium text-on-surface">Recurring Subscription</span>
+<span class="text-[11px] leading-tight text-on-surface-variant mt-0.5">Billed periodically on cadence</span>
+</label>
+<!-- Option 2: One-time Payment -->
+<label class="relative flex flex-col p-3 rounded-lg border border-outline-variant hover:border-outline bg-surface-container-lowest cursor-pointer transition-all">
+<input class="sr-only" name="prod_type" type="radio" value="onetime"/>
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-outline text-xl">payments</span>
+<span class="w-4 h-4 rounded-full border border-outline-variant bg-surface-container-lowest"></span>
+</div>
+<span class="mt-2 text-body-default font-body-medium text-on-surface">One-time Payment</span>
+<span class="text-[11px] leading-tight text-on-surface-variant mt-0.5">Fixed perpetual invoice</span>
+</label>
+<!-- Option 3: Metered / Usage-based -->
+<label class="relative flex flex-col p-3 rounded-lg border border-outline-variant hover:border-outline bg-surface-container-lowest cursor-pointer transition-all">
+<input class="sr-only" name="prod_type" type="radio" value="metered"/>
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-outline text-xl">speed</span>
+<span class="w-4 h-4 rounded-full border border-outline-variant bg-surface-container-lowest"></span>
+</div>
+<span class="mt-2 text-body-default font-body-medium text-on-surface">Metered / Usage-based</span>
+<span class="text-[11px] leading-tight text-on-surface-variant mt-0.5">Calculated by event telemetry</span>
+</label>
+<!-- Option 4: Add-on Service -->
+<label class="relative flex flex-col p-3 rounded-lg border border-outline-variant hover:border-outline bg-surface-container-lowest cursor-pointer transition-all">
+<input class="sr-only" name="prod_type" type="radio" value="addon"/>
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-outline text-xl">extension</span>
+<span class="w-4 h-4 rounded-full border border-outline-variant bg-surface-container-lowest"></span>
+</div>
+<span class="mt-2 text-body-default font-body-medium text-on-surface">Add-on Service</span>
+<span class="text-[11px] leading-tight text-on-surface-variant mt-0.5">Attached to base contract</span>
+</label>
+</div>
+</div>
+<!-- Description / Rich Textarea -->
+<div class="mt-5 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="text-label-default font-label-default text-on-surface" for="prod_desc">
+                  Description &amp; Billing Specifications
+                </label>
+<div class="flex items-center gap-1 text-label-default text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">code</span>
+<span>Markdown Enabled</span>
+</div>
+</div>
+<!-- Mini Editor Toolbar -->
+<div class="border border-outline-variant rounded-lg overflow-hidden focus-within:border-primary-container">
+<div class="bg-surface-container-low/70 px-3 py-1.5 border-b border-outline-variant flex items-center gap-2">
+<button class="p-1 hover:bg-surface-container rounded text-on-surface-variant" type="button"><span class="material-symbols-outlined text-sm">format_bold</span></button>
+<button class="p-1 hover:bg-surface-container rounded text-on-surface-variant" type="button"><span class="material-symbols-outlined text-sm">format_italic</span></button>
+<button class="p-1 hover:bg-surface-container rounded text-on-surface-variant" type="button"><span class="material-symbols-outlined text-sm">link</span></button>
+<button class="p-1 hover:bg-surface-container rounded text-on-surface-variant" type="button"><span class="material-symbols-outlined text-sm">format_list_bulleted</span></button>
+<button class="p-1 hover:bg-surface-container rounded text-on-surface-variant" type="button"><span class="material-symbols-outlined text-sm">terminal</span></button>
+<div class="h-4 w-px bg-outline-variant mx-1"></div>
+<span class="text-[11px] font-label-uppercase text-outline">Internal Customer Facing Invoice Notes</span>
+</div>
+<textarea class="w-full p-3 border-0 bg-surface-container-lowest text-body-default font-body-default text-on-surface focus:ring-0 leading-relaxed" id="prod_desc" rows="4">High-throughput enterprise API gateway proxy offering dynamic rate limiting, token authentication, and distributed DDoS mitigation. Billed based on base commitment tier with automatic overage metering. Includes 99.99% uptime SLA guarantee, multi-region routing, and SOC2 certified audit streams.</textarea>
+</div>
+</div>
+</section>
+<!-- CARD 2: Pricing & Financials -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm">
+<div class="flex items-center justify-between pb-4 mb-5 border-b border-outline-variant/60">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">currency_rupee</span>
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Pricing &amp; Financials</h2>
+</div>
+<span class="text-label-default font-label-default text-outline">General ledger &amp; ledger accounts</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Currency selector -->
+<div class="flex flex-col gap-1.5">
+<label class="text-label-default font-label-default text-on-surface" for="currency_sel">Default Currency</label>
+<div class="relative">
+<select class="h-9 w-full pl-3 pr-8 bg-surface-container-lowest border border-outline-variant rounded-lg text-body-default font-body-default text-on-surface focus:border-primary-container" id="currency_sel">
+<option selected="">INR (₹) - Indian Rupee</option>
+<option>USD ($) - US Dollar</option>
+<option>EUR (€) - Euro</option>
+<option>GBP (£) - British Pound</option>
+</select>
+</div>
+</div>
+<!-- Base Sales Price -->
+<div class="flex flex-col gap-1.5">
+<label class="text-label-default font-label-default text-on-surface" for="base_price">Base Sales Price</label>
+<div class="relative flex items-center">
+<span class="absolute left-3 text-body-default text-outline select-none">₹</span>
+<input class="h-9 pl-7 pr-3 w-full bg-surface-container-lowest border border-outline-variant rounded-lg text-body-default font-code-table text-on-surface focus:border-primary-container" id="base_price" type="text" value="14,999"/>
+<span class="absolute right-3 text-label-default text-outline select-none">/mo</span>
+</div>
+</div>
+<!-- Unit Cost Price -->
+<div class="flex flex-col gap-1.5">
+<label class="text-label-default font-label-default text-on-surface" for="cost_price">Unit Cost Price (COGS)</label>
+<div class="relative flex items-center">
+<span class="absolute left-3 text-body-default text-outline select-none">₹</span>
+<input class="h-9 pl-7 pr-3 w-full bg-surface-container-lowest border border-outline-variant rounded-lg text-body-default font-code-table text-on-surface focus:border-primary-container" id="cost_price" type="text" value="2,400"/>
+<span class="absolute right-3 text-label-default text-outline select-none">/mo</span>
+</div>
+</div>
+</div>
+<!-- Tax Configuration Row -->
+<div class="mt-4 pt-4 border-t border-outline-variant/60 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+<div class="flex flex-col gap-1.5">
+<label class="text-label-default font-label-default text-on-surface" for="tax_cat">Tax Category &amp; GST Schedule</label>
+<select class="h-9 w-full px-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-body-default font-body-default text-on-surface focus:border-primary-container" id="tax_cat">
+<option selected="">Standard Digital SaaS 18% GST</option>
+<option>Zero Rated / Export Services (0% GST)</option>
+<option>Domestic IT Services Reduced (12% GST)</option>
+<option>Exempt Transaction</option>
+</select>
+</div>
+<!-- Inclusive / Exclusive Toggle Card -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low/60 border border-outline-variant">
+<div class="flex flex-col">
+<span class="text-body-default font-body-medium text-on-surface">Tax Treatment</span>
+<span class="text-label-default font-label-default text-on-surface-variant">Tax inclusive on final checkout</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- CARD 3: Dynamic Product Variants Editor -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-outline-variant/60">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">tune</span>
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Product Variants &amp; Pricing Tiers</h2>
+</div>
+<p class="text-label-default font-label-default text-on-surface-variant mt-0.5">
+                  Configure dynamic entitlement quotas, per-tier SKUs, and custom rates.
+                </p>
+</div>
+<!-- + Add Variant Button -->
+<button class="px-3.5 py-1.5 bg-surface-container text-primary hover:bg-primary-fixed border border-outline-variant rounded-lg text-body-default font-body-medium flex items-center gap-1.5 transition-colors self-start sm:self-auto active:scale-[0.99]" onclick="alert('Variant creation drawer ready. Add custom SKU parameter.')" type="button">
+<span class="material-symbols-outlined text-base">add</span>
+<span>Add Variant</span>
+</button>
+</div>
+<!-- Variant Matrix Table -->
+<div class="overflow-x-auto custom-scrollbar border border-outline-variant rounded-lg">
+<table class="w-full text-left border-collapse min-w-[700px]">
+<thead>
+<tr class="h-9 bg-surface-container-low text-label-uppercase font-label-uppercase text-on-surface-variant border-b border-outline-variant">
+<th class="w-8 px-2 text-center"></th>
+<th class="px-3">Variant Name</th>
+<th class="px-3">SKU</th>
+<th class="px-3 text-right">Sales Price</th>
+<th class="px-3 text-right">Cost Price</th>
+<th class="px-3">Quota / Limits</th>
+<th class="px-3 text-center">Status</th>
+<th class="w-12 px-2 text-center"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/50 text-body-default">
+<!-- Row 1: Developer Tier -->
+<tr class="h-12 hover:bg-surface-container-low/40 transition-colors group">
+<td class="text-center text-outline cursor-grab">
+<span class="material-symbols-outlined text-base group-hover:text-on-surface">drag_indicator</span>
+</td>
+<td class="px-3 font-body-medium text-on-surface">
+<input class="h-7 px-2 w-36 bg-transparent border border-transparent hover:border-outline-variant focus:border-primary-container focus:bg-surface-container-lowest rounded text-body-default font-body-medium" type="text" value="Developer Tier"/>
+</td>
+<td class="px-3 font-code-table text-on-surface-variant">
+<input class="h-7 px-2 w-36 bg-transparent border border-transparent hover:border-outline-variant focus:border-primary-container focus:bg-surface-container-lowest rounded text-code-table" type="text" value="PROD-API-01-DEV"/>
+</td>
+<td class="px-3 text-right font-code-table font-medium text-on-surface">
+<div class="inline-flex items-center justify-end">
+<span class="text-outline mr-0.5">₹</span>
+<input class="h-7 px-1.5 w-20 text-right bg-transparent border border-transparent hover:border-outline-variant focus:border-primary-container focus:bg-surface-container-lowest rounded font-code-table font-medium" type="text" value="4,999"/>
+</div>
+</td>
+<td class="px-3 text-right font-code-table text-on-surface-variant">
+<div class="inline-flex items-center justify-end">
+<span class="text-outline mr-0.5">₹</span>
+<input class="h-7 px-1.5 w-16 text-right bg-transparent border border-transparent hover:border-outline-variant focus:border-primary-container focus:bg-surface-container-lowest rounded font-code-table" type="text" value="800"/>
+</div>
+</td>
+<td class="px-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-default bg-surface-container text-primary font-medium">
+<span class="material-symbols-outlined text-xs">bolt</span>
+                        100k calls/mo
+                      </span>
+</td>
+<td class="px-3 text-center">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-default font-label-default bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        Active
+                      </span>
+</td>
+<td class="px-2 text-center">
+<button class="p-1 hover:text-error text-outline transition-colors rounded" title="Delete variant">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Business Tier -->
+<tr class="h-12 hover:bg-surface-container-low/40 transition-colors group">
+<td class="text-center text-outline cursor-grab">
+<span class="material-symbols-outlined text-base group-hover:text-on-surface">drag_indicator</span>
+</td>
+<td class="px-3 font-body-medium text-on-surface">
+<input class="h-7 px-2 w-36 bg-transparent border border-transparent hover:border-outline-variant focus:border-primary-container focus:bg-surface-container-lowest rounded text-body-default font-body-medium" type="text" value="Business Tier"/>
+</td>
+<td class="px-3 font-code-table text-on-surface-variant">
+<input class="h-7 px-2 w-36 bg-transparent border border-transparent hover:border-outline-variant focus:border-primary-container focus:bg-surface-container-lowest rounded text-code-table" type="text" value="PROD-API-01-BIZ"/>
+</td>
+<td class="px-3 text-right font-code-table font-medium text-on-surface">
+<div class="inline-flex items-center justify-end">
+<span class="text-outline mr-0.5">₹</span>
+<input class="h-7 px-1.5 w-20 text-right bg-transparent border border-transparent hover:border-outline-variant focus:border-primary-container focus:bg-surface-container-lowest rounded font-code-table font-medium" type="text" value="14,999"/>
+</div>
+</td>
+<td class="px-3 text-right font-code-table text-on-surface-variant">
+<div class="inline-flex items-center justify-end">
+<span class="text-outline mr-0.5">₹</span>
+<input class="h-7 px-1.5 w-16 text-right bg-transparent border border-transparent hover:border-outline-variant focus:border-primary-container focus:bg-surface-container-lowest rounded font-code-table" type="text" value="2,400"/>
+</div>
+</td>
+<td class="px-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-default bg-surface-container text-primary font-medium">
+<span class="material-symbols-outlined text-xs">bolt</span>
+                        1M calls/mo
+                      </span>
+</td>
+<td class="px-3 text-center">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-default font-label-default bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        Active
+                      </span>
+</td>
+<td class="px-2 text-center">
+<button class="p-1 hover:text-error text-outline transition-colors rounded" title="Delete variant">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Enterprise Dedicated -->
+<tr class="h-12 hover:bg-surface-container-low/40 transition-colors group">
+<td class="text-center text-outline cursor-grab">
+<span class="material-symbols-outlined text-base group-hover:text-on-surface">drag_indicator</span>
+</td>
+<td class="px-3 font-body-medium text-on-surface">
+<input class="h-7 px-2 w-36 bg-transparent border border-transparent hover:border-outline-variant focus:border-primary-container focus:bg-surface-container-lowest rounded text-body-default font-body-medium" type="text" value="Enterprise Dedicated"/>
+</td>
+<td class="px-3 font-code-table text-on-surface-variant">
+<input class="h-7 px-2 w-36 bg-transparent border border-transparent hover:border-outline-variant focus:border-primary-container focus:bg-surface-container-lowest rounded text-code-table" type="text" value="PROD-API-01-ENT"/>
+</td>
+<td class="px-3 text-right font-code-table font-medium text-on-surface">
+<div class="inline-flex items-center justify-end">
+<span class="text-outline mr-0.5">₹</span>
+<input class="h-7 px-1.5 w-20 text-right bg-transparent border border-transparent hover:border-outline-variant focus:border-primary-container focus:bg-surface-container-lowest rounded font-code-table font-medium" type="text" value="39,999"/>
+</div>
+</td>
+<td class="px-3 text-right font-code-table text-on-surface-variant">
+<div class="inline-flex items-center justify-end">
+<span class="text-outline mr-0.5">₹</span>
+<input class="h-7 px-1.5 w-16 text-right bg-transparent border border-transparent hover:border-outline-variant focus:border-primary-container focus:bg-surface-container-lowest rounded font-code-table" type="text" value="6,500"/>
+</div>
+</td>
+<td class="px-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-default bg-purple-50 text-secondary font-medium border border-purple-200">
+<span class="material-symbols-outlined text-xs">all_inclusive</span>
+                        Unlimited
+                      </span>
+</td>
+<td class="px-3 text-center">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-default font-label-default bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        Active
+                      </span>
+</td>
+<td class="px-2 text-center">
+<button class="p-1 hover:text-error text-outline transition-colors rounded" title="Delete variant">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Variant Matrix Summary Banner -->
+<div class="mt-3 p-3 bg-surface-container-low/60 rounded-lg flex items-center justify-between border border-outline-variant/60">
+<span class="text-label-default font-label-default text-on-surface-variant flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-primary">info</span>
+                Drag items to rearrange priority sequence in checkout dropdowns and customer portal.
+              </span>
+<span class="text-label-default font-body-medium text-on-surface">3 Active Tiers Configured</span>
+</div>
+</section>
+</div>
+<!-- ================= RIGHT COLUMN: METADATA & CONTROLS (4 cols) ================= -->
+<div class="xl:col-span-4 flex flex-col gap-6">
+<!-- CARD: Publishing Status -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm">
+<div class="flex items-center justify-between pb-3 mb-4 border-b border-outline-variant/60">
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Publishing Status</h3>
+<span class="material-symbols-outlined text-outline text-lg">public</span>
+</div>
+<div class="flex flex-col gap-2.5">
+<label class="flex items-center justify-between p-2.5 rounded-lg border border-primary-container bg-surface-container-low/60 cursor-pointer">
+<div class="flex items-center gap-2.5">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+<div class="flex flex-col">
+<span class="text-body-default font-body-medium text-on-surface">Active (Live)</span>
+<span class="text-label-default text-on-surface-variant">Visible in customer checkout &amp; API</span>
+</div>
+</div>
+<input checked="" class="text-primary-container focus:ring-primary-container" name="prod_state" type="radio"/>
+</label>
+<label class="flex items-center justify-between p-2.5 rounded-lg border border-outline-variant hover:border-outline bg-surface-container-lowest cursor-pointer">
+<div class="flex items-center gap-2.5">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+<div class="flex flex-col">
+<span class="text-body-default font-body-medium text-on-surface">Draft</span>
+<span class="text-label-default text-on-surface-variant">Only visible to administrators</span>
+</div>
+</div>
+<input class="text-primary-container focus:ring-primary-container" name="prod_state" type="radio"/>
+</label>
+<label class="flex items-center justify-between p-2.5 rounded-lg border border-outline-variant hover:border-outline bg-surface-container-lowest cursor-pointer">
+<div class="flex items-center gap-2.5">
+<span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+<div class="flex flex-col">
+<span class="text-body-default font-body-medium text-on-surface">Scheduled Rollout</span>
+<span class="text-label-default text-on-surface-variant">Automated release at future date</span>
+</div>
+</div>
+<input class="text-primary-container focus:ring-primary-container" name="prod_state" type="radio"/>
+</label>
+</div>
+<div class="mt-4 pt-3 border-t border-outline-variant/60 flex items-center justify-between text-label-default text-on-surface-variant">
+<span>Sales Channel Availability</span>
+<span class="font-body-medium text-primary">Web Store, API, Invoicing</span>
+</div>
+</section>
+<!-- CARD: Tax & Accounting Codes -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm">
+<div class="flex items-center justify-between pb-3 mb-4 border-b border-outline-variant/60">
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Tax &amp; Accounting Codes</h3>
+<span class="material-symbols-outlined text-outline text-lg">account_balance</span>
+</div>
+<div class="flex flex-col gap-3.5">
+<div class="flex flex-col gap-1.5">
+<label class="text-label-default font-label-default text-on-surface" for="hsn_code">
+                  HSN / SAC Code (Statutory)
+                </label>
+<div class="relative">
+<input class="h-9 px-3 w-full bg-surface-container-lowest border border-outline-variant rounded-lg text-body-default font-code-table text-on-surface focus:border-primary-container" id="hsn_code" type="text" value="998313"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-outline">IT &amp; SaaS Services</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-label-default font-label-default text-on-surface" for="gl_account">
+                  General Ledger Revenue Account
+                </label>
+<select class="h-9 w-full px-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-body-default font-body-default text-on-surface focus:border-primary-container" id="gl_account">
+<option selected="">4010 - SaaS Subscription Revenue</option>
+<option>4020 - Professional Engineering Services</option>
+<option>4030 - Platform Usage Overages</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-label-default font-label-default text-on-surface" for="cost_center">
+                  Cost Center / Entity
+                </label>
+<select class="h-9 w-full px-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-body-default font-body-default text-on-surface focus:border-primary-container" id="cost_center">
+<option selected="">CC-09: Cloud Infrastructure &amp; APIs</option>
+<option>CC-02: Enterprise Solutions</option>
+</select>
+</div>
+</div>
+</section>
+<!-- CARD: Linked Subscription Plans -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm">
+<div class="flex items-center justify-between pb-3 mb-4 border-b border-outline-variant/60">
+<div class="flex items-center gap-2">
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Linked Subscription Plans</h3>
+<span class="inline-flex items-center px-2 py-0.2 rounded-full text-label-default bg-surface-container text-primary font-medium">3</span>
+</div>
+<span class="material-symbols-outlined text-outline text-lg">lan</span>
+</div>
+<p class="text-label-default font-label-default text-on-surface-variant mb-3">
+              This core product definition is packaged into the following recurring billing bundles:
+            </p>
+<div class="flex flex-col gap-2">
+<!-- Linked Plan 1 -->
+<div class="flex items-center justify-between p-2.5 rounded-lg border border-outline-variant bg-surface-container-low/30 hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-lg">stars</span>
+<div class="flex flex-col">
+<span class="text-body-default font-body-medium text-on-surface">Starter Plan</span>
+<span class="text-[11px] text-on-surface-variant">Associated to Dev Tier</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-base">arrow_forward</span>
+</div>
+<!-- Linked Plan 2 -->
+<div class="flex items-center justify-between p-2.5 rounded-lg border border-outline-variant bg-surface-container-low/30 hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-lg">rocket_launch</span>
+<div class="flex flex-col">
+<span class="text-body-default font-body-medium text-on-surface">Growth Plan</span>
+<span class="text-[11px] text-on-surface-variant">Associated to Business Tier</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-base">arrow_forward</span>
+</div>
+<!-- Linked Plan 3 -->
+<div class="flex items-center justify-between p-2.5 rounded-lg border border-outline-variant bg-surface-container-low/30 hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-secondary text-lg">corporate_fare</span>
+<div class="flex flex-col">
+<span class="text-body-default font-body-medium text-on-surface">Enterprise Plan</span>
+<span class="text-[11px] text-on-surface-variant">Associated to Enterprise Dedicated</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-base">arrow_forward</span>
+</div>
+</div>
+<button class="mt-4 w-full py-1.5 px-3 bg-surface-container-lowest hover:bg-surface-container-low border border-outline-variant text-on-surface font-body-medium text-label-default rounded-lg transition-colors flex items-center justify-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-sm">link</span>
+<span>Manage Bundle Attachments</span>
+</button>
+</section>
+<!-- CARD: Danger Zone Card -->
+<section class="bg-surface-container-lowest rounded-xl border border-red-200 p-6 shadow-sm">
+<div class="flex items-center gap-2 text-error mb-2">
+<span class="material-symbols-outlined text-xl">warning</span>
+<h3 class="text-headline-sm font-headline-sm">Danger Zone</h3>
+</div>
+<p class="text-label-default font-label-default text-on-surface-variant leading-relaxed mb-4">
+              Deleting this product will immediately break active checkout links. Existing recurring customer subscriptions will remain intact until next billing cycle renewal.
+            </p>
+<button class="w-full py-2 px-3 bg-red-50 hover:bg-red-100 text-error border border-red-200 hover:border-red-300 font-body-medium text-body-default rounded-lg transition-colors flex items-center justify-center gap-1.5" onclick="document.getElementById('dangerZoneModal').classList.remove('hidden')" type="button">
+<span class="material-symbols-outlined text-base">delete_forever</span>
+<span>Delete this product</span>
+</button>
+</section>
+</div>
+</div>
+</div>
+</main>
+<!-- ================= CONFIRMATION MODAL: DANGER ZONE (Interactive State) ================= -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4" id="dangerZoneModal">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl max-w-md w-full p-6 shadow-xl relative animate-in fade-in zoom-in-95 duration-150">
+<div class="w-10 h-10 rounded-full bg-red-100 text-error flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-2xl">warning</span>
+</div>
+<h4 class="text-headline-md font-headline-md text-on-surface mb-1">Delete Cloud API Gateway?</h4>
+<p class="text-body-default font-body-default text-on-surface-variant mb-4">
+        This action cannot be undone. All 3 dynamic variants (<span class="font-code-table text-on-surface">PROD-API-01-DEV, BIZ, ENT</span>) and customer portal references will be permanently decommissioned.
+      </p>
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant/60 mb-5">
+<span class="text-label-default text-on-surface-variant block mb-1">Type confirmation phrase to proceed:</span>
+<input class="w-full h-8 px-2.5 text-body-default font-code-table bg-surface-container-lowest border border-outline-variant rounded focus:border-error" placeholder="delete cloud-api-gateway" type="text"/>
+</div>
+<div class="flex items-center justify-end gap-2.5">
+<button class="px-4 py-1.5 text-body-default font-body-medium text-on-surface hover:bg-surface-container-low rounded-lg border border-outline-variant transition-colors" onclick="document.getElementById('dangerZoneModal').classList.add('hidden')" type="button">
+          Cancel
+        </button>
+<button class="px-4 py-1.5 text-body-default font-body-medium bg-error hover:bg-[#DC2626] text-white rounded-lg transition-colors shadow-sm" onclick="document.getElementById('dangerZoneModal').classList.add('hidden'); alert('Product Cloud API Gateway deleted.');" type="button">
+          Confirm Permanent Deletion
+        </button>
+</div>
+</div>
+</div>
+</body></html>
