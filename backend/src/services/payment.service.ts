@@ -18,8 +18,8 @@ export async function recordPayment(input: {
   }
   return prisma.$transaction(async tx => {
     const rows = await tx.$queryRaw<Array<{ id: number; total: Prisma.Decimal; amountPaid: Prisma.Decimal; status: InvoiceStatus }>>`
-      SELECT id, total, "amountPaid", status
-      FROM "Invoice"
+      SELECT id, total, amountPaid, status
+      FROM Invoice
       WHERE id = ${input.invoiceId}
       FOR UPDATE
     `;

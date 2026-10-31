@@ -2,15 +2,15 @@ import { Router } from "express";
 import { Prisma, Role } from "@prisma/client";
 import { prisma } from "../../lib/prisma";
 import { requireAuth, requireRole } from "../../shared/auth";
-import { sendData, sendError, parsePagination } from "../../shared";
-import { AppError } from "../../shared/AppError";
+import { sendData, sendError } from "../../shared";
 import { recordPayment } from "../../services/payment.service";
 import { createPaymentSchema, paymentListQuerySchema } from "./payments.schemas";
 
-const router = Router();
-router.use(requireAuth, requireRole(Role.ADMIN, Role.STAFF));
+// Mounted at /api/v1/payments.
+export const paymentsRouter = Router();
+paymentsRouter.use(requireAuth, requireRole(Role.ADMIN, Role.STAFF));
 
-router.post("/payments", async (req, res, next) => {
+paymentsRouter.post("/", async (req, res, next) => {
   try {
     const parsed = createPaymentSchema.safeParse(req.body);
     if (!parsed.success) return sendError(res, 400, "VALIDATION_ERROR", "Invalid payment.", parsed.error.flatten().fieldErrors as Record<string, string>);
@@ -19,7 +19,7 @@ router.post("/payments", async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-router.get("/payments", async (req, res, next) => {
+paymentsRouter.get("/", async (req, res, next) => {
   try {
     const parsed = paymentListQuerySchema.safeParse(req.query);
     if (!parsed.success) return sendError(res, 400, "VALIDATION_ERROR", "Invalid query parameters.");
@@ -35,16 +35,3 @@ router.get("/payments", async (req, res, next) => {
     return sendData(res, data, { page, pageSize, total, totalPages: Math.ceil(total / pageSize) });
   } catch (error) { next(error); }
 });
-
-router.get("/invoices/:id/payments", async (req, res, next) => {
-  try {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id) || id <= 0) throw new AppError(400, "VALIDATION_ERROR", "Invalid invoice id.");
-    const invoice = await prisma.invoice.findUnique({ where: { id }, select: { id: true } });
-    if (!invoice) throw new AppError(404, "NOT_FOUND", "Invoice not found.");
-    const payments = await prisma.payment.findMany({ where: { invoiceId: id }, orderBy: { paymentDate: "desc" } });
-    return sendData(res, payments);
-  } catch (error) { next(error); }
-});
-
-export default router;

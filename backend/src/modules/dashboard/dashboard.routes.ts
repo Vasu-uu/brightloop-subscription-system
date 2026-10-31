@@ -16,17 +16,17 @@ router.get("/summary", async (_req, res, next) => {
       prisma.subscription.count({ where: { status: "ACTIVE" } }),
       prisma.payment.aggregate({ _sum: { amount: true } }),
       prisma.$queryRaw<Array<{ overdueCount: bigint; overdueAmount: Prisma.Decimal }>>`
-        SELECT COUNT(*)::bigint AS "overdueCount",
-               COALESCE(SUM(total - "amountPaid"), 0) AS "overdueAmount"
-        FROM "Invoice"
-        WHERE status = 'CONFIRMED' AND "amountPaid" < total AND "dueDate" < ${today}
+        SELECT CAST(COUNT(*) AS UNSIGNED) AS overdueCount,
+               COALESCE(SUM(total - amountPaid), 0) AS overdueAmount
+        FROM Invoice
+        WHERE status = 'CONFIRMED' AND amountPaid < total AND dueDate < ${today}
       `,
       prisma.payment.aggregate({ where: { paymentDate: { gte: monthStart, lte: today } }, _sum: { amount: true } }),
     ]);
     const owed = await prisma.$queryRaw<Array<{ totalOutstanding: Prisma.Decimal | null }>>`
-      SELECT COALESCE(SUM(total - "amountPaid"), 0) AS "totalOutstanding"
-      FROM "Invoice"
-      WHERE status = 'CONFIRMED' AND "amountPaid" < total
+      SELECT COALESCE(SUM(total - amountPaid), 0) AS totalOutstanding
+      FROM Invoice
+      WHERE status = 'CONFIRMED' AND amountPaid < total
     `;
     const overdueAmount = Number(overdueStats[0]?.overdueAmount ?? 0);
     const overdueCount = Number(overdueStats[0]?.overdueCount ?? 0);
@@ -45,12 +45,12 @@ router.get("/revenue-by-month", async (req, res, next) => {
   try {
     const months = Math.min(24, Math.max(1, Number(req.query.months ?? 12)));
     const rows = await prisma.$queryRaw<Array<{ month: string; revenue: Prisma.Decimal }>>`
-      SELECT TO_CHAR(date_trunc('month', "paymentDate"), 'YYYY-MM') AS month,
+      SELECT DATE_FORMAT(paymentDate, '%Y-%m') AS month,
              COALESCE(SUM(amount), 0) AS revenue
-      FROM "Payment"
-      WHERE "paymentDate" >= date_trunc('month', CURRENT_DATE) - (${months - 1} * INTERVAL '1 month')
-      GROUP BY date_trunc('month', "paymentDate")
-      ORDER BY date_trunc('month', "paymentDate") ASC
+      FROM Payment
+      WHERE paymentDate >= DATE_SUB(DATE_FORMAT(CURDATE(), '%Y-%m-01'), INTERVAL ${months - 1} MONTH)
+      GROUP BY DATE_FORMAT(paymentDate, '%Y-%m')
+      ORDER BY DATE_FORMAT(paymentDate, '%Y-%m') ASC
     `;
     return sendData(res, rows.map(row => ({ month: row.month, revenue: Number(row.revenue) })));
   } catch (error) { next(error); }
@@ -66,7 +66,7 @@ router.get("/invoices", async (req, res, next) => {
     const where: Prisma.InvoiceWhereInput = {
       ...dateFilter,
       ...(payment === "paid" ? { status: "PAID" } : payment === "outstanding" ? { status: "CONFIRMED" } : { status: "CONFIRMED", dueDate: { lt: today } }),
-      ...(search ? { OR: [{ number: { contains: search, mode: "insensitive" } }, { customer: { name: { contains: search, mode: "insensitive" } } }] } : {}),
+      ...(search ? { OR: [{ number: { contains: search } }, { customer: { name: { contains: search } } }] } : {}),
     };
     const [data, total] = await prisma.$transaction([
       prisma.invoice.findMany({ where, include: { customer: true, subscription: { include: { plan: true } } }, orderBy: { dueDate: "asc" }, skip: (page - 1) * pageSize, take: pageSize }),
