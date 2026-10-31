@@ -1,79 +1,309 @@
 # Brightloop Subscription System
 
-Subscription management and recurring billing platform: plans, subscriptions,
-auto-generated invoices, discounts and taxes, payments, customer portal and
-finance dashboard.
+A full-stack platform that runs the whole life of a subscription business: **products and plans → quotations → subscriptions → automated recurring invoices → discounts and taxes → payments → customer portal → finance reporting**.
 
-## Stack
+Three roles (Admin, Staff, Customer), server-side pagination everywhere, idempotent billing, and a responsive light/dark UI.
 
-- **Backend**: Node.js, Express, Prisma ORM, MySQL, JWT auth, zod validation, pdfkit.
-- **Frontend**: React 18, Vite, Tailwind CSS, React Router, Axios.
+![Finance dashboard](docs/screenshots/dashboard-light.png)
 
-## Getting started
+<p align="center">
+  <img src="docs/screenshots/dashboard-dark.png" width="49%" alt="Dashboard, dark mode" />
+  <img src="docs/screenshots/subscription-detail-light.png" width="49%" alt="Subscription detail with status stepper" />
+</p>
 
-### 1. Database
+---
 
-Create a MySQL database and set `DATABASE_URL` in `backend/.env` (copy from
-`backend/.env.example`):
+## Table of contents
 
-```
-DATABASE_URL="mysql://user:password@localhost:3306/brightloop"
-```
+1. [Features](#features)
+2. [Screenshots](#screenshots)
+3. [Tech stack](#tech-stack)
+4. [Quick start](#quick-start)
+5. [Configuration](#configuration)
+6. [Dev logins](#dev-logins)
+7. [How billing works](#how-billing-works)
+8. [Business rules](#business-rules)
+9. [API reference](#api-reference)
+10. [Project structure](#project-structure)
+11. [Data model](#data-model)
+12. [Performance](#performance)
+13. [Troubleshooting](#troubleshooting)
 
-### 2. Backend
+---
+
+## Features
+
+**Catalog and rules**
+- Products with variants (e.g. brand *Odoo* adds 560 to the price), taxes, and plans (daily / weekly / monthly / yearly) with minimum quantity, availability window, and per-plan toggles for auto-close, early close, pause and renew.
+- Discounts: fixed or percentage, minimum purchase / quantity, start and end dates, usage limit, targeting specific products or subscriptions. They apply to the next invoice automatically and stop when expired or exhausted.
+
+**Quotations and subscriptions**
+- Quotation templates (plan + lines + validity in days) that spawn subscriptions in one call.
+- Concurrency-safe numbering (`SUB-00001`, `INV-00001`, never reused).
+- Strict status flow `DRAFT → QUOTATION → CONFIRMED → ACTIVE → CLOSED`, one step at a time, with early close only where the plan allows it.
+- Pause, resume and renew, gated by plan flags.
+
+**Billing and invoices**
+- One-click (or scheduled) billing run that creates every missed period, in batches, with a database-level guarantee that nothing is billed twice.
+- Invoice lifecycle: confirm, cancel, send, print and PDF download.
+- Totals follow `total = subtotal − discountTotal + taxTotal`, computed per line.
+
+**Payments and reporting**
+- Record payments (cash, card, UPI, bank transfer, cheque) with row-level locking so concurrent payments can never overpay.
+- Finance dashboard: active subscriptions, revenue, outstanding, overdue, revenue by month, and paid / outstanding / overdue invoice tabs.
+- Customer portal: customers see only their own subscriptions and invoices and can pay online (simulated gateway).
+
+**Security**
+- JWT auth, bcrypt password hashing, strict password policy, role-based access on every route, hashed single-use password-reset tokens (1 hour expiry), customers get `404` (not `403`) for other customers' records.
+
+**UI**
+- Light and dark theme (persisted, no flash on load), skeleton loaders, animated lists and toasts, icon navigation, accessible focus states, print-friendly invoice view.
+
+---
+
+## Screenshots
+
+| Sign in | Create account |
+|---|---|
+| ![Login](docs/screenshots/login-light.png) | ![Signup](docs/screenshots/signup.png) |
+
+| Quotation templates | Template editor |
+|---|---|
+| ![Templates](docs/screenshots/templates.png) | ![Template form](docs/screenshots/template-form.png) |
+
+| Subscriptions | Subscription detail and status stepper |
+|---|---|
+| ![Subscriptions](docs/screenshots/subscriptions.png) | ![Subscription detail](docs/screenshots/subscription-detail-light.png) |
+
+| Invoices | Invoice detail (print / PDF / record payment) |
+|---|---|
+| ![Invoices](docs/screenshots/invoices.png) | ![Invoice detail](docs/screenshots/invoice-detail-light.png) |
+
+| Payments | Customer portal: pay an invoice |
+|---|---|
+| ![Payments](docs/screenshots/payments.png) | ![Portal invoice](docs/screenshots/portal-invoice-light.png) |
+
+| Customer portal: subscriptions | Dark mode: invoice |
+|---|---|
+| ![Portal subscriptions](docs/screenshots/portal-subscriptions.png) | ![Invoice dark](docs/screenshots/invoice-detail-dark.png) |
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Backend | Node.js 20+, Express, TypeScript (strict), Prisma ORM, **MySQL 8**, zod validation, JWT, bcrypt, pdfkit, Nodemailer |
+| Frontend | React 18, Vite, TypeScript, Tailwind CSS, React Router, Axios, lucide-react icons |
+| Conventions | camelCase everywhere (Prisma = API JSON = TypeScript), `UPPER_SNAKE_CASE` enums, integer ids, money as `Decimal(12,2)` serialized as JSON numbers |
+
+---
+
+## Quick start
+
+**Prerequisites:** Node.js 20+, a running MySQL 8 server.
 
 ```bash
+# 1. clone
+git clone https://github.com/Vasu-uu/brightloop-subscription-system.git
+cd brightloop-subscription-system
+
+# 2. backend
 cd backend
+cp .env.example .env          # then edit DATABASE_URL and JWT_SECRET
 npm install
-npx prisma migrate dev
-npm run seed
-npm run dev
+npx prisma migrate deploy     # creates all tables
+npm run seed                  # 5,000 subscriptions, demo users, invoices, payments
+npm run dev                   # http://localhost:4000
+
+# 3. frontend (new terminal)
+cd frontend
+cp .env.example .env
+npm install
+npm run dev                   # http://localhost:5173
 ```
 
-The API listens on `http://localhost:4000`, under base path `/api/v1`.
+Open <http://localhost:5173> and sign in with a [dev login](#dev-logins).
 
-### 3. Frontend
+> The seed script is deterministic and safe to re-run: it clears and recreates all data.
+
+---
+
+## Configuration
+
+`backend/.env`
+
+| Variable | Purpose | Example |
+|---|---|---|
+| `DATABASE_URL` | MySQL connection string | `mysql://user:pass@localhost:3306/brightloop` |
+| `JWT_SECRET` | Signing key for access tokens | a long random string |
+| `JWT_EXPIRES_IN` | Token lifetime | `7d` |
+| `APP_URL` | Used in password-reset links | `http://localhost:5173` |
+| `SMTP_HOST` / `SMTP_USER` / `SMTP_PASS` | Email (optional) | empty in development |
+| `PORT` | API port | `4000` |
+
+`frontend/.env`
+
+| Variable | Purpose | Example |
+|---|---|---|
+| `VITE_API_URL` | API base URL | `http://localhost:4000/api/v1` |
+
+In development no SMTP server is needed: password-reset links and "invoice sent" emails are printed to the backend console.
+
+---
+
+## Dev logins
+
+Created by the seed script (password for all: `Brightloop@123`).
+
+| Role | Email | Lands on |
+|---|---|---|
+| Admin | `admin@brightloop.test` | `/app/dashboard` |
+| Staff | `staff@brightloop.test` | `/app/dashboard` |
+| Customer | `customer@brightloop.test` | `/portal/subscriptions` |
+
+---
+
+## How billing works
+
+```
+ACTIVE subscription ── nextBillingDate ≤ run date and ≤ expiryDate ──▶ create invoice for that period
+        │                                                                     │
+        │   one transaction: number lock → insert invoice+lines+discounts →   │
+        │   advance nextBillingDate by one billing period                     │
+        ▼                                                                     ▼
+   repeats for every missed period                          unique (subscriptionId, periodStart)
+                                                            ⇒ a second attempt is skipped, never duplicated
+```
+
+1. `POST /billing/run` (or the **Run billing now** button) calls `runBilling(asOf)`.
+2. Subscriptions whose plan has `autoClose` and whose `expiryDate` has passed are closed first.
+3. Eligible subscription ids are snapshotted once, then processed in batches of 200 with plans, lines and products loaded once per batch.
+4. Pricing and applicable discounts are computed **before** the transaction opens; the transaction only takes the numbering lock, inserts the invoice and advances `nextBillingDate`. Discount usage is incremented only for genuinely created invoices.
+5. Running billing twice in a row creates **0** invoices the second time.
+
+Measured against the 5,000-subscription seed: **3,368 invoices created in ~30 s**; the repeat run is instant.
+
+---
+
+## Business rules
+
+- **Password:** more than 8 characters with an uppercase letter, a lowercase letter and a special character. Emails are unique and stored lowercase. Signup always creates a `CUSTOMER`; only an admin can create staff.
+- **Access:** Admin does everything. Staff can read catalog data and work with templates, subscriptions, invoices, payments, customers and the dashboard, but cannot write products, plans, taxes, discounts or staff. Customers can only use `/portal` and their own data.
+- **Line price:** `product.salesPrice + variant.extraPrice`. `Plan.price` is display-only and is never added to invoices.
+- **Plan limits:** each line quantity ≥ `plan.minQuantity`; `startDate` must be inside the plan's availability window.
+- **Status flow:** one step forward at a time; `CLOSED` is reachable early from any other state only if `plan.allowEarlyClose`. Pause needs `allowPause` and `ACTIVE`; renew needs `allowRenew` and moves `expiryDate` forward one billing period. Moving to `ACTIVE` sets `nextBillingDate = startDate`.
+- **Invoice:** new invoices are `DRAFT`; `confirm` → `CONFIRMED`; `cancel` only while nothing is paid; `PAID` is set only by recording a payment that clears the balance.
+- **Discounts:** eligible when active, within dates, and under the usage limit; `PRODUCT` discounts use only matching lines, `SUBSCRIPTION` discounts use the whole subtotal (optionally limited to listed subscriptions); minimum quantity / purchase are checked against the eligible lines; `FIXED` is capped at the eligible subtotal.
+- **Payments:** only `CONFIRMED` invoices, amount > 0 and ≤ balance, under a row lock.
+
+---
+
+## API reference
+
+Base path `/api/v1`. Auth: `Authorization: Bearer <token>`.
+Success: `{ "data": … }` (lists add `"meta": { page, pageSize, total, totalPages }`).
+Error: `{ "error": { "code", "message", "fields"? } }` with codes `VALIDATION_ERROR` 400, `UNAUTHORIZED` 401, `FORBIDDEN` 403, `NOT_FOUND` 404, `CONFLICT` 409.
+Every list accepts `page`, `pageSize` (max 100), `search`, `sort`, `order`, plus `status`, `customerId`, `from`, `to` where relevant.
+
+| Area | Endpoints | Access |
+|---|---|---|
+| Auth | `POST /auth/signup`, `/auth/login`, `/auth/forgot-password`, `/auth/reset-password`; `GET /auth/me` | public / any user |
+| Staff | `GET, POST /staff` | Admin |
+| Customers | `GET /customers` | Admin, Staff |
+| Products | `GET, POST, PUT, DELETE /products[/:id]`; `POST, PUT, DELETE /products/:id/variants[/:vid]` | read Admin+Staff, write Admin |
+| Plans / Taxes / Discounts | `GET, POST, PUT, DELETE /plans`, `/taxes`, `/discounts` (+ `/:id`) | read Admin+Staff, write Admin |
+| Quotation templates | `GET, POST, PUT, DELETE /quotation-templates[/:id]` | Admin, Staff |
+| Subscriptions | `GET, POST /subscriptions`; `GET, PUT /subscriptions/:id`; `POST /subscriptions/from-template` | Admin, Staff |
+| Subscription actions | `POST /subscriptions/:id/transition` `{to}`, `/pause`, `/resume`, `/renew` | Admin, Staff |
+| Invoices | `GET /invoices`; `GET /invoices/:id`; `POST /invoices/:id/confirm`, `/cancel`, `/send`; `GET /invoices/:id/pdf`; `GET /invoices/:id/payments` | Admin, Staff |
+| Billing | `POST /billing/run` `{asOfDate?}` → `{ created, skipped, invoiceIds }` | Admin, Staff |
+| Payments | `POST /payments`, `GET /payments` | Admin, Staff |
+| Portal | `GET /portal/subscriptions[/:id]`, `GET /portal/invoices[/:id]`, `POST /portal/invoices/:id/pay` `{method}` | Customer (own records only) |
+| Dashboard | `GET /dashboard/summary`, `/dashboard/revenue-by-month`, `/dashboard/invoices?payment=paid\|outstanding\|overdue` | Admin, Staff |
+
+Example:
 
 ```bash
-cd frontend
-npm install
-npm run dev
+TOKEN=$(curl -s -X POST localhost:4000/api/v1/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"admin@brightloop.test","password":"Brightloop@123"}' | jq -r .data.token)
+
+curl -s -X POST localhost:4000/api/v1/billing/run \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{}'
+# {"data":{"created":3368,"skipped":0,"invoiceIds":[…]}}
 ```
 
-The app runs on `http://localhost:5173` and talks to the API via `VITE_API_URL`
-(see `frontend/.env.example`).
+---
 
-### Dev logins (from the seed script)
-
-| Role     | Email                       | Password         |
-|----------|------------------------------|-------------------|
-| ADMIN    | admin@brightloop.test        | Brightloop@123    |
-| STAFF    | staff@brightloop.test        | Brightloop@123    |
-| CUSTOMER | customer@brightloop.test     | Brightloop@123    |
-
-## Project layout
+## Project structure
 
 ```
 backend/
-  prisma/schema.prisma       Database schema (MySQL)
-  prisma/seed.ts             Deterministic seed (5,000 subscriptions)
-  src/modules/               One folder per feature: routes + controller/service
-  src/services/              Cross-module business logic (pricing, invoicing, payments)
-  src/shared/                Auth, error handling, pagination, response helpers
+  prisma/
+    schema.prisma            # data model (MySQL)
+    migrations/              # SQL migrations
+    seed.ts                  # deterministic demo data (5,000 subscriptions)
+  src/
+    app.ts, server.ts        # Express app and entrypoint
+    modules/                 # one folder per feature: routes, controller, service, validation
+      auth/ staff/ customers/ products/ plans/ taxes/ discounts/
+      quotation-templates/ subscriptions/ invoices/ billing/
+      payments/ portal/ dashboard/
+    services/
+      pricing.service.ts     # line totals, discount eligibility, usage tracking
+      invoice.service.ts     # invoice creation and the billing run
+      payment.service.ts     # transactional, row-locked payment recording
+    shared/                  # auth middleware, errors, pagination, response helpers
 frontend/
-  src/pages/                 One folder per feature area
-  src/api/                   Typed API client per module
-  src/components/ui/         Shared UI kit (Button, DataTable, Modal, ...)
+  src/
+    api/                     # typed API client per module
+    components/ui/           # Button, Input, Select, Modal, DataTable, StatusBadge, Toast, ...
+    hooks/                   # useAuth, useTheme
+    pages/                   # auth, dashboard, templates, subscriptions, invoices, payments, portal
+    types/, constants/       # models and enums mirroring the Prisma schema
+docs/screenshots/            # images used in this README
 ```
 
-## Running tests / verification
+---
 
-There is no automated test suite yet. To sanity-check a change:
+## Data model
 
-```bash
-cd backend && npm run typecheck
-cd frontend && npm run typecheck
-```
+`User` · `PasswordResetToken` · `Tax` · `Product` · `ProductVariant` · `Plan` · `Discount` · `QuotationTemplate` · `QuotationTemplateLine` · `Subscription` · `SubscriptionLine` · `Invoice` · `InvoiceLine` · `InvoiceDiscount` · `Payment`
 
-Then exercise the relevant endpoints with `npm run dev` running against a
-seeded database.
+Key constraints and indexes:
+- `Invoice (subscriptionId, periodStart)` is **unique**, which is what makes billing idempotent.
+- `Subscription` is indexed on `status`, `customerId` and `nextBillingDate`; `Invoice` on `(status, dueDate)` and `customerId`; `Payment` on `invoiceId` and `paymentDate`.
+- Subscription ⇄ Discount targeting is a many-to-many; an empty list means the discount applies to all subscriptions.
+
+---
+
+## Performance
+
+With 5,000 subscriptions and 5,000+ invoices seeded, list and dashboard endpoints respond in roughly 5–15 ms. Dashboard numbers use SQL aggregates (never row loops), every list is paginated on the server, and the billing run processes thousands of invoices in tens of seconds.
+
+---
+
+## Troubleshooting
+
+| Symptom | Cause / fix |
+|---|---|
+| `EADDRINUSE: :::4000` | Another backend instance is still running. Stop it (e.g. `Get-NetTCPConnection -LocalPort 4000` on Windows) and restart. |
+| Tailwind classes such as `bg-brand-600` have no effect | Stale Vite cache after a `tailwind.config.js` change. Stop Vite, delete `frontend/node_modules/.vite`, start again. |
+| `Transaction already closed … timeout was 5000 ms` | Don't call the plain `prisma` client from inside a `prisma.$transaction` callback; compute first, then open the transaction. |
+| Dashboard or payments return 500 with SQL syntax errors | The SQL is written for MySQL (unquoted identifiers, `DATE_FORMAT`); it will not run on PostgreSQL. |
+| Seed fails with duplicate or foreign-key errors | Re-run `npm run seed`; it clears and recreates everything. |
+
+---
+
+## Scripts
+
+| Where | Command | What it does |
+|---|---|---|
+| backend | `npm run dev` | API with auto-reload |
+| backend | `npm run typecheck` | strict TypeScript check |
+| backend | `npm run build` / `npm start` | compile and run |
+| backend | `npm run seed` | reset and seed demo data |
+| frontend | `npm run dev` | Vite dev server |
+| frontend | `npm run typecheck` | strict TypeScript check |
+| frontend | `npm run build` | production bundle |
