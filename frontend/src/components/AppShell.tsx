@@ -13,7 +13,7 @@ export function AppShell() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <aside className="w-56 border-r border-gray-200 bg-white p-4">
+      <aside className="no-print w-56 border-r border-gray-200 bg-white p-4">
         <div className="mb-6 text-lg font-bold text-indigo-600">Brightloop</div>
         <nav className="flex flex-col gap-1">
           {NAV_ITEMS.map((item) => (
@@ -32,7 +32,7 @@ export function AppShell() {
         </nav>
       </aside>
       <div className="flex-1">
-        <header className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-3">
+        <header className="no-print flex items-center justify-between border-b border-gray-200 bg-white px-6 py-3">
           <span className="text-sm text-gray-500">Role: {role}</span>
           <button onClick={logout} className="text-sm text-gray-500 hover:text-gray-900">
             Log out
