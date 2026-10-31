@@ -247,16 +247,106 @@ function addDays(date: Date, days: number): Date {
   return result;
 }
 
-// Implemented in Step 4 (status flow, pause, resume, renew).
-export async function transitionSubscription(_id: number, _to: SubscriptionStatus) {
-  throw new AppError(501, "NOT_IMPLEMENTED", "Not implemented yet");
+export function addBillingPeriod(date: Date, billingPeriod: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY"): Date {
+  const result = new Date(date);
+  switch (billingPeriod) {
+    case "DAILY":
+      result.setDate(result.getDate() + 1);
+      break;
+    case "WEEKLY":
+      result.setDate(result.getDate() + 7);
+      break;
+    case "MONTHLY":
+      result.setMonth(result.getMonth() + 1);
+      break;
+    case "YEARLY":
+      result.setFullYear(result.getFullYear() + 1);
+      break;
+  }
+  return result;
 }
-export async function pauseSubscription(_id: number) {
-  throw new AppError(501, "NOT_IMPLEMENTED", "Not implemented yet");
+
+const STATUS_ORDER: SubscriptionStatus[] = ["DRAFT", "QUOTATION", "CONFIRMED", "ACTIVE", "CLOSED"];
+
+export async function transitionSubscription(id: number, to: SubscriptionStatus) {
+  const subscription = await prisma.subscription.findUnique({ where: { id }, include: { plan: true } });
+  if (!subscription) {
+    throw new AppError(404, "NOT_FOUND", "Subscription not found");
+  }
+
+  const currentIndex = STATUS_ORDER.indexOf(subscription.status);
+  const targetIndex = STATUS_ORDER.indexOf(to);
+  const isOneStepForward = targetIndex === currentIndex + 1;
+  const isEarlyClose = to === "CLOSED" && subscription.status !== "ACTIVE" && subscription.status !== "CLOSED";
+
+  if (isEarlyClose) {
+    if (!subscription.plan.allowEarlyClose) {
+      throw new AppError(
+        400,
+        "VALIDATION_ERROR",
+        `Cannot close early: plan "${subscription.plan.name}" does not allow early close`
+      );
+    }
+  } else if (!isOneStepForward) {
+    throw new AppError(
+      400,
+      "VALIDATION_ERROR",
+      `Illegal status transition from ${subscription.status} to ${to}; only one step forward is allowed`
+    );
+  }
+
+  return prisma.subscription.update({
+    where: { id },
+    data: {
+      status: to,
+      nextBillingDate: to === "ACTIVE" ? subscription.startDate : subscription.nextBillingDate,
+    },
+    include: detailInclude,
+  });
 }
-export async function resumeSubscription(_id: number) {
-  throw new AppError(501, "NOT_IMPLEMENTED", "Not implemented yet");
+
+export async function pauseSubscription(id: number) {
+  const subscription = await prisma.subscription.findUnique({ where: { id }, include: { plan: true } });
+  if (!subscription) {
+    throw new AppError(404, "NOT_FOUND", "Subscription not found");
+  }
+  if (!subscription.plan.allowPause) {
+    throw new AppError(400, "VALIDATION_ERROR", `Plan "${subscription.plan.name}" does not allow pausing`);
+  }
+  if (subscription.status !== "ACTIVE") {
+    throw new AppError(400, "VALIDATION_ERROR", "Only an ACTIVE subscription can be paused");
+  }
+  if (subscription.isPaused) {
+    throw new AppError(400, "VALIDATION_ERROR", "Subscription is already paused");
+  }
+  return prisma.subscription.update({ where: { id }, data: { isPaused: true }, include: detailInclude });
 }
-export async function renewSubscription(_id: number) {
-  throw new AppError(501, "NOT_IMPLEMENTED", "Not implemented yet");
+
+export async function resumeSubscription(id: number) {
+  const subscription = await prisma.subscription.findUnique({ where: { id } });
+  if (!subscription) {
+    throw new AppError(404, "NOT_FOUND", "Subscription not found");
+  }
+  if (!subscription.isPaused) {
+    throw new AppError(400, "VALIDATION_ERROR", "Subscription is not paused");
+  }
+  return prisma.subscription.update({ where: { id }, data: { isPaused: false }, include: detailInclude });
+}
+
+export async function renewSubscription(id: number) {
+  const subscription = await prisma.subscription.findUnique({ where: { id }, include: { plan: true } });
+  if (!subscription) {
+    throw new AppError(404, "NOT_FOUND", "Subscription not found");
+  }
+  if (!subscription.plan.allowRenew) {
+    throw new AppError(400, "VALIDATION_ERROR", `Plan "${subscription.plan.name}" does not allow renewal`);
+  }
+  if (subscription.status !== "ACTIVE") {
+    throw new AppError(400, "VALIDATION_ERROR", "Only an ACTIVE subscription can be renewed");
+  }
+  return prisma.subscription.update({
+    where: { id },
+    data: { expiryDate: addBillingPeriod(subscription.expiryDate, subscription.plan.billingPeriod) },
+    include: detailInclude,
+  });
 }
