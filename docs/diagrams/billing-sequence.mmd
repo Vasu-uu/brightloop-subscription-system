@@ -1,0 +1,22 @@
+sequenceDiagram
+    actor Staff
+    participant API as POST /billing/run
+    participant Bill as runBilling
+    participant Price as pricing.service
+    participant DB as MySQL
+
+    Staff->>API: asOfDate
+    API->>Bill: runBilling(asOf)
+    Bill->>DB: close expired subscriptions (autoClose)
+    Bill->>DB: snapshot eligible subscription ids
+    loop each batch of 200
+        Bill->>DB: load subscriptions, lines, plans
+        loop each due period
+            Bill->>Price: line totals and applicable discounts
+            Price-->>Bill: amounts
+            Bill->>DB: BEGIN, lock last number, insert invoice, advance nextBillingDate, COMMIT
+            Note over DB: unique key blocks double billing
+            Bill->>DB: increment discount usage
+        end
+    end
+    Bill-->>Staff: created, skipped, invoiceIds

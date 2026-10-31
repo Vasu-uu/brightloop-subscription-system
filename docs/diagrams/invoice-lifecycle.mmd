@@ -1,0 +1,9 @@
+stateDiagram-v2
+    [*] --> DRAFT: created by billing run
+    DRAFT --> CONFIRMED: confirm
+    DRAFT --> CANCELLED: cancel (nothing paid)
+    CONFIRMED --> CANCELLED: cancel (nothing paid)
+    CONFIRMED --> CONFIRMED: partial payment
+    CONFIRMED --> PAID: payment clears the balance
+    PAID --> [*]
+    CANCELLED --> [*]

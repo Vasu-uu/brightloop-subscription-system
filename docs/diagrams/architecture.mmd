@@ -1,0 +1,16 @@
+flowchart LR
+    subgraph Browser
+        UI["React 18 + Vite<br/>Tailwind, React Router"]
+    end
+    subgraph API["Express API (TypeScript)"]
+        MW["Auth middleware<br/>JWT, roles, zod validation"]
+        MOD["Feature modules<br/>auth, catalog, templates,<br/>subscriptions, invoices,<br/>billing, payments, portal, dashboard"]
+        SVC["Services<br/>pricing, invoicing, payments"]
+    end
+    DB[("MySQL 8<br/>via Prisma")]
+
+    UI -- "JSON over /api/v1 (Bearer token)" --> MW
+    MW --> MOD
+    MOD --> SVC
+    SVC --> DB
+    MOD --> DB

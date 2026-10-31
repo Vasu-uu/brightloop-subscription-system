@@ -6,10 +6,9 @@ Three roles (Admin, Staff, Customer), server-side pagination everywhere, idempot
 
 ![Finance dashboard](docs/screenshots/dashboard-light.png)
 
-<p align="center">
-  <img src="docs/screenshots/dashboard-dark.png" width="49%" alt="Dashboard, dark mode" />
-  <img src="docs/screenshots/subscription-detail-light.png" width="49%" alt="Subscription detail with status stepper" />
-</p>
+| Dark mode | Subscription lifecycle |
+|---|---|
+| ![Dashboard, dark mode](docs/screenshots/dashboard-dark.png) | ![Subscription detail](docs/screenshots/subscription-detail-light.png) |
 
 ---
 
@@ -282,24 +281,9 @@ curl -s -X POST localhost:4000/api/v1/billing/run \
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    subgraph Browser
-        UI["React 18 + Vite<br/>Tailwind, React Router"]
-    end
-    subgraph API["Express API (TypeScript)"]
-        MW["Auth middleware<br/>JWT, roles, zod validation"]
-        MOD["Feature modules<br/>auth, catalog, templates,<br/>subscriptions, invoices,<br/>billing, payments, portal, dashboard"]
-        SVC["Services<br/>pricing, invoicing, payments"]
-    end
-    DB[("MySQL 8<br/>via Prisma")]
+![System architecture](docs/diagrams/architecture.png)
 
-    UI -- "JSON over /api/v1 (Bearer token)" --> MW
-    MW --> MOD
-    MOD --> SVC
-    SVC --> DB
-    MOD --> DB
-```
+<sub>Diagram source: [`docs/diagrams/architecture.mmd`](docs/diagrams/architecture.mmd)</sub>
 
 Design choices worth knowing:
 
@@ -310,61 +294,21 @@ Design choices worth knowing:
 
 ### Subscription lifecycle
 
-```mermaid
-stateDiagram-v2
-    [*] --> DRAFT
-    DRAFT --> QUOTATION
-    QUOTATION --> CONFIRMED
-    CONFIRMED --> ACTIVE: nextBillingDate = startDate
-    ACTIVE --> CLOSED
-    DRAFT --> CLOSED: early close (plan allows)
-    QUOTATION --> CLOSED: early close (plan allows)
-    CONFIRMED --> CLOSED: early close (plan allows)
-    ACTIVE --> ACTIVE: pause / resume / renew (plan flags)
-    ACTIVE --> CLOSED: auto-close after expiry (plan allows)
-    CLOSED --> [*]
-```
+![Subscription lifecycle](docs/diagrams/subscription-lifecycle.png)
+
+<sub>Diagram source: [`docs/diagrams/subscription-lifecycle.mmd`](docs/diagrams/subscription-lifecycle.mmd)</sub>
 
 ### Invoice lifecycle
 
-```mermaid
-stateDiagram-v2
-    [*] --> DRAFT: created by billing run
-    DRAFT --> CONFIRMED: confirm
-    DRAFT --> CANCELLED: cancel (nothing paid)
-    CONFIRMED --> CANCELLED: cancel (nothing paid)
-    CONFIRMED --> CONFIRMED: partial payment
-    CONFIRMED --> PAID: payment clears the balance
-    PAID --> [*]
-    CANCELLED --> [*]
-```
+![Invoice lifecycle](docs/diagrams/invoice-lifecycle.png)
+
+<sub>Diagram source: [`docs/diagrams/invoice-lifecycle.mmd`](docs/diagrams/invoice-lifecycle.mmd)</sub>
 
 ### A billing run, step by step
 
-```mermaid
-sequenceDiagram
-    actor Staff
-    participant API as POST /billing/run
-    participant Bill as runBilling
-    participant Price as pricing.service
-    participant DB as MySQL
+![Billing run sequence](docs/diagrams/billing-sequence.png)
 
-    Staff->>API: asOfDate
-    API->>Bill: runBilling(asOf)
-    Bill->>DB: close expired subscriptions (autoClose)
-    Bill->>DB: snapshot eligible subscription ids
-    loop each batch of 200
-        Bill->>DB: load subscriptions, lines, plans
-        loop each due period
-            Bill->>Price: line totals and applicable discounts
-            Price-->>Bill: amounts
-            Bill->>DB: BEGIN, lock last number, insert invoice, advance nextBillingDate, COMMIT
-            Note over DB: unique key blocks double billing
-            Bill->>DB: increment discount usage
-        end
-    end
-    Bill-->>Staff: created, skipped, invoiceIds
-```
+<sub>Diagram source: [`docs/diagrams/billing-sequence.mmd`](docs/diagrams/billing-sequence.mmd)</sub>
 
 ### Who can do what
 
@@ -413,32 +357,9 @@ docs/screenshots/            # images used in this README
 
 15 tables. The diagram below is also stored as [`docs/schema.mmd`](docs/schema.mmd) (Mermaid source) and [`docs/schema.png`](docs/schema.png) (rendered image); the source of truth is [`backend/prisma/schema.prisma`](backend/prisma/schema.prisma).
 
-```mermaid
-erDiagram
-    User ||--o{ Subscription : "customer of"
-    User ||--o{ Invoice : "billed to"
-    User ||--o{ PasswordResetToken : "requests"
-    Plan ||--o{ Subscription : "governs"
-    Plan ||--o{ QuotationTemplate : "used by"
-    QuotationTemplate ||--o{ QuotationTemplateLine : "has"
-    QuotationTemplate ||--o{ Subscription : "spawns"
-    Subscription ||--o{ SubscriptionLine : "has"
-    Subscription ||--o{ Invoice : "generates"
-    Subscription }o--o{ Discount : "targeted by"
-    Product ||--o{ ProductVariant : "offered as"
-    Product ||--o{ QuotationTemplateLine : "in"
-    Product ||--o{ SubscriptionLine : "in"
-    Product ||--o{ InvoiceLine : "billed as"
-    Product }o--o{ Discount : "eligible for"
-    Product }o--o| Tax : "taxed by"
-    ProductVariant ||--o{ QuotationTemplateLine : "chosen in"
-    ProductVariant ||--o{ SubscriptionLine : "chosen in"
-    Tax ||--o{ SubscriptionLine : "snapshot of"
-    Invoice ||--o{ InvoiceLine : "has"
-    Invoice ||--o{ InvoiceDiscount : "applies"
-    Invoice ||--o{ Payment : "settled by"
-    Discount ||--o{ InvoiceDiscount : "recorded in"
-```
+![Entity relationships](docs/diagrams/er-relationships.png)
+
+<sub>Diagram source: [`docs/diagrams/er-relationships.mmd`](docs/diagrams/er-relationships.mmd)</sub>
 
 Full column-level diagram:
 

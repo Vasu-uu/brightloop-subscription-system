@@ -1,0 +1,12 @@
+stateDiagram-v2
+    [*] --> DRAFT
+    DRAFT --> QUOTATION
+    QUOTATION --> CONFIRMED
+    CONFIRMED --> ACTIVE: nextBillingDate = startDate
+    ACTIVE --> CLOSED
+    DRAFT --> CLOSED: early close (plan allows)
+    QUOTATION --> CLOSED: early close (plan allows)
+    CONFIRMED --> CLOSED: early close (plan allows)
+    ACTIVE --> ACTIVE: pause / resume / renew (plan flags)
+    ACTIVE --> CLOSED: auto-close after expiry (plan allows)
+    CLOSED --> [*]
