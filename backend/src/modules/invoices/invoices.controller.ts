@@ -42,6 +42,11 @@ export async function pdf(req: Request, res: Response): Promise<void> {
   await streamInvoicePdf(parseId(req.params.id), res);
 }
 
+export async function payments(req: Request, res: Response): Promise<void> {
+  const rows = await service.listInvoicePayments(parseId(req.params.id));
+  sendData(res, rows);
+}
+
 function parseId(raw: string): number {
   const id = Number(raw);
   if (!Number.isInteger(id) || id <= 0) {

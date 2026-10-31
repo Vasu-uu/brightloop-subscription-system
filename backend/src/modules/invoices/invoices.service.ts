@@ -67,6 +67,11 @@ export async function cancelInvoice(id: number) {
   return prisma.invoice.update({ where: { id }, data: { status: "CANCELLED" }, include: detailInclude });
 }
 
+export async function listInvoicePayments(id: number) {
+  await getInvoice(id);
+  return prisma.payment.findMany({ where: { invoiceId: id }, orderBy: { paymentDate: "desc" } });
+}
+
 export async function sendInvoice(id: number) {
   const invoice = await getInvoice(id);
   // No SMTP configured in this environment: log instead of sending, per contract 1.1.

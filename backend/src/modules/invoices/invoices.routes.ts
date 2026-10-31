@@ -13,3 +13,4 @@ invoicesRouter.post("/:id/confirm", asyncHandler(controller.confirm));
 invoicesRouter.post("/:id/cancel", asyncHandler(controller.cancel));
 invoicesRouter.post("/:id/send", asyncHandler(controller.send));
 invoicesRouter.get("/:id/pdf", asyncHandler(controller.pdf));
+invoicesRouter.get("/:id/payments", asyncHandler(controller.payments));
