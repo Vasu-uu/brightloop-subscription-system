@@ -17,17 +17,19 @@ Three roles (Admin, Staff, Customer), server-side pagination everywhere, idempot
 
 1. [Features](#features)
 2. [Screenshots](#screenshots)
-3. [Tech stack](#tech-stack)
-4. [Quick start](#quick-start)
-5. [Configuration](#configuration)
-6. [Dev logins](#dev-logins)
-7. [How billing works](#how-billing-works)
-8. [Business rules](#business-rules)
-9. [API reference](#api-reference)
-10. [Project structure](#project-structure)
-11. [Data model](#data-model)
-12. [Performance](#performance)
-13. [Troubleshooting](#troubleshooting)
+3. [Problem statement coverage](#problem-statement-coverage)
+4. [Tech stack](#tech-stack)
+5. [Quick start](#quick-start)
+6. [Configuration](#configuration)
+7. [Dev logins](#dev-logins)
+8. [How billing works](#how-billing-works)
+9. [Business rules](#business-rules)
+10. [API reference](#api-reference)
+11. [Architecture](#architecture)
+12. [Project structure](#project-structure)
+13. [Data model](#data-model)
+14. [Performance](#performance)
+15. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -56,8 +58,11 @@ Three roles (Admin, Staff, Customer), server-side pagination everywhere, idempot
 **Security**
 - JWT auth, bcrypt password hashing, strict password policy, role-based access on every route, hashed single-use password-reset tokens (1 hour expiry), customers get `404` (not `403`) for other customers' records.
 
-**UI**
-- Light and dark theme (persisted, no flash on load), role-aware grouped navigation with a mobile drawer, searchable customer picker, confirm dialogs for destructive actions, skeleton loaders, animated lists and toasts, accessible focus states, print-friendly invoice view.
+**Experience**
+- A product-style app shell: grouped, role-aware sidebar with an animated active marker, a top bar with a **command palette** (`Ctrl` / `Cmd` + `K`) to jump to any page or start an action (new subscription, run billing, switch theme).
+- Dashboard with a greeting hero, count-up KPI cards that link to the matching list, an animated revenue chart with hover tooltips, and a sliding paid / outstanding / overdue switch.
+- Smooth page transitions, staggered list animation, press and hover micro-interactions, skeleton loaders and toasts. Motion respects `prefers-reduced-motion` for number animation.
+- Light and dark theme (persisted, no flash on load), mobile drawer navigation, searchable customer picker, confirm dialogs for destructive actions, accessible focus states and a print-friendly invoice.
 
 ---
 
@@ -66,6 +71,10 @@ Three roles (Admin, Staff, Customer), server-side pagination everywhere, idempot
 | Sign in | Create account |
 |---|---|
 | ![Login](docs/screenshots/login-light.png) | ![Signup](docs/screenshots/signup.png) |
+
+**Command palette** (`Ctrl` / `Cmd` + `K`)
+
+![Command palette](docs/screenshots/command-palette.png)
 
 **Catalog (admin edits, staff reads)**
 
@@ -271,6 +280,104 @@ curl -s -X POST localhost:4000/api/v1/billing/run \
 
 ---
 
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Browser
+        UI["React 18 + Vite<br/>Tailwind, React Router"]
+    end
+    subgraph API["Express API (TypeScript)"]
+        MW["Auth middleware<br/>JWT, roles, zod validation"]
+        MOD["Feature modules<br/>auth, catalog, templates,<br/>subscriptions, invoices,<br/>billing, payments, portal, dashboard"]
+        SVC["Services<br/>pricing, invoicing, payments"]
+    end
+    DB[("MySQL 8<br/>via Prisma")]
+
+    UI -- "JSON over /api/v1 (Bearer token)" --> MW
+    MW --> MOD
+    MOD --> SVC
+    SVC --> DB
+    MOD --> DB
+```
+
+Design choices worth knowing:
+
+- **Vertical slices.** Each feature is one folder (`routes`, `controller`, `service`, `validation`), so a change stays local.
+- **One contract.** Prisma field names equal API JSON names equal TypeScript and React props. No mapping layers.
+- **Money is exact.** `Decimal(12,2)` in the database, converted to JSON numbers at the response boundary.
+- **Transactions stay small.** Pricing and discount lookups happen before a transaction opens; the transaction only takes the numbering lock, inserts and advances the billing date.
+
+### Subscription lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> DRAFT
+    DRAFT --> QUOTATION
+    QUOTATION --> CONFIRMED
+    CONFIRMED --> ACTIVE: nextBillingDate = startDate
+    ACTIVE --> CLOSED
+    DRAFT --> CLOSED: early close (plan allows)
+    QUOTATION --> CLOSED: early close (plan allows)
+    CONFIRMED --> CLOSED: early close (plan allows)
+    ACTIVE --> ACTIVE: pause / resume / renew (plan flags)
+    ACTIVE --> CLOSED: auto-close after expiry (plan allows)
+    CLOSED --> [*]
+```
+
+### Invoice lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> DRAFT: created by billing run
+    DRAFT --> CONFIRMED: confirm
+    DRAFT --> CANCELLED: cancel (nothing paid)
+    CONFIRMED --> CANCELLED: cancel (nothing paid)
+    CONFIRMED --> CONFIRMED: partial payment
+    CONFIRMED --> PAID: payment clears the balance
+    PAID --> [*]
+    CANCELLED --> [*]
+```
+
+### A billing run, step by step
+
+```mermaid
+sequenceDiagram
+    actor Staff
+    participant API as POST /billing/run
+    participant Bill as runBilling
+    participant Price as pricing.service
+    participant DB as MySQL
+
+    Staff->>API: asOfDate
+    API->>Bill: runBilling(asOf)
+    Bill->>DB: close expired subscriptions (autoClose)
+    Bill->>DB: snapshot eligible subscription ids
+    loop each batch of 200
+        Bill->>DB: load subscriptions, lines, plans
+        loop each due period
+            Bill->>Price: line totals and applicable discounts
+            Price-->>Bill: amounts
+            Bill->>DB: BEGIN, lock last number, insert invoice, advance nextBillingDate, COMMIT
+            Note over DB: unique key blocks double billing
+            Bill->>DB: increment discount usage
+        end
+    end
+    Bill-->>Staff: created, skipped, invoiceIds
+```
+
+### Who can do what
+
+| Capability | Admin | Staff | Customer |
+|---|:-:|:-:|:-:|
+| Read products, plans, taxes, discounts | yes | yes | no |
+| Create / edit / delete catalog data | yes | no | no |
+| Add staff members | yes | no | no |
+| Templates, subscriptions, invoices, billing, payments, dashboard | yes | yes | no |
+| Own subscriptions and invoices, pay online | no | no | yes |
+
+---
+
 ## Project structure
 
 ```
@@ -304,12 +411,54 @@ docs/screenshots/            # images used in this README
 
 ## Data model
 
-`User` · `PasswordResetToken` · `Tax` · `Product` · `ProductVariant` · `Plan` · `Discount` · `QuotationTemplate` · `QuotationTemplateLine` · `Subscription` · `SubscriptionLine` · `Invoice` · `InvoiceLine` · `InvoiceDiscount` · `Payment`
+15 tables. The diagram below is also stored as [`docs/schema.mmd`](docs/schema.mmd) (Mermaid source) and [`docs/schema.png`](docs/schema.png) (rendered image); the source of truth is [`backend/prisma/schema.prisma`](backend/prisma/schema.prisma).
+
+```mermaid
+erDiagram
+    User ||--o{ Subscription : "customer of"
+    User ||--o{ Invoice : "billed to"
+    User ||--o{ PasswordResetToken : "requests"
+    Plan ||--o{ Subscription : "governs"
+    Plan ||--o{ QuotationTemplate : "used by"
+    QuotationTemplate ||--o{ QuotationTemplateLine : "has"
+    QuotationTemplate ||--o{ Subscription : "spawns"
+    Subscription ||--o{ SubscriptionLine : "has"
+    Subscription ||--o{ Invoice : "generates"
+    Subscription }o--o{ Discount : "targeted by"
+    Product ||--o{ ProductVariant : "offered as"
+    Product ||--o{ QuotationTemplateLine : "in"
+    Product ||--o{ SubscriptionLine : "in"
+    Product ||--o{ InvoiceLine : "billed as"
+    Product }o--o{ Discount : "eligible for"
+    Product }o--o| Tax : "taxed by"
+    ProductVariant ||--o{ QuotationTemplateLine : "chosen in"
+    ProductVariant ||--o{ SubscriptionLine : "chosen in"
+    Tax ||--o{ SubscriptionLine : "snapshot of"
+    Invoice ||--o{ InvoiceLine : "has"
+    Invoice ||--o{ InvoiceDiscount : "applies"
+    Invoice ||--o{ Payment : "settled by"
+    Discount ||--o{ InvoiceDiscount : "recorded in"
+```
+
+Full column-level diagram:
+
+![Database schema](docs/schema.png)
+
+| Group | Tables |
+|---|---|
+| Identity | `User`, `PasswordResetToken` |
+| Catalog | `Tax`, `Product`, `ProductVariant`, `Plan`, `Discount` |
+| Sales | `QuotationTemplate`, `QuotationTemplateLine`, `Subscription`, `SubscriptionLine` |
+| Billing | `Invoice`, `InvoiceLine`, `InvoiceDiscount`, `Payment` |
 
 Key constraints and indexes:
+
 - `Invoice (subscriptionId, periodStart)` is **unique**, which is what makes billing idempotent.
+- `Subscription.number` and `Invoice.number` are unique, zero-padded and sequential (`SUB-00001`, `INV-00001`).
+- `SubscriptionLine.unitPrice` and `taxPercent` are **snapshots**, so changing a product's price later never rewrites existing subscriptions or past invoices.
 - `Subscription` is indexed on `status`, `customerId` and `nextBillingDate`; `Invoice` on `(status, dueDate)` and `customerId`; `Payment` on `invoiceId` and `paymentDate`.
-- Subscription ⇄ Discount targeting is a many-to-many; an empty list means the discount applies to all subscriptions.
+- Subscription and Discount targeting is many-to-many; an empty list means the discount applies to all subscriptions.
+- Line and discount rows cascade-delete with their parent subscription, template or invoice.
 
 ---
 

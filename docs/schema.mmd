@@ -1,0 +1,166 @@
+erDiagram
+    User ||--o{ Subscription : "customer of"
+    User ||--o{ Invoice : "billed to"
+    User ||--o{ PasswordResetToken : "requests"
+    Plan ||--o{ Subscription : "governs"
+    Plan ||--o{ QuotationTemplate : "used by"
+    QuotationTemplate ||--o{ QuotationTemplateLine : "has"
+    QuotationTemplate ||--o{ Subscription : "spawns"
+    Subscription ||--o{ SubscriptionLine : "has"
+    Subscription ||--o{ Invoice : "generates"
+    Subscription }o--o{ Discount : "targeted by"
+    Product ||--o{ ProductVariant : "offered as"
+    Product ||--o{ QuotationTemplateLine : "in"
+    Product ||--o{ SubscriptionLine : "in"
+    Product ||--o{ InvoiceLine : "billed as"
+    Product }o--o{ Discount : "eligible for"
+    Product }o--o| Tax : "taxed by"
+    ProductVariant ||--o{ QuotationTemplateLine : "chosen in"
+    ProductVariant ||--o{ SubscriptionLine : "chosen in"
+    Tax ||--o{ SubscriptionLine : "snapshot of"
+    Invoice ||--o{ InvoiceLine : "has"
+    Invoice ||--o{ InvoiceDiscount : "applies"
+    Invoice ||--o{ Payment : "settled by"
+    Discount ||--o{ InvoiceDiscount : "recorded in"
+
+    User {
+        int id PK
+        string email UK
+        string passwordHash
+        string name
+        enum role "ADMIN STAFF CUSTOMER"
+        bool isActive
+    }
+    PasswordResetToken {
+        int id PK
+        int userId FK
+        string tokenHash
+        datetime expiresAt
+        datetime usedAt
+    }
+    Tax {
+        int id PK
+        string name
+        decimal ratePercent
+        bool isActive
+    }
+    Product {
+        int id PK
+        string name
+        enum type "SERVICE GOODS"
+        decimal salesPrice
+        decimal costPrice
+        int taxId FK
+    }
+    ProductVariant {
+        int id PK
+        int productId FK
+        string attribute
+        string value
+        decimal extraPrice
+    }
+    Plan {
+        int id PK
+        string name
+        decimal price
+        enum billingPeriod "DAILY WEEKLY MONTHLY YEARLY"
+        int minQuantity
+        datetime availableFrom
+        datetime availableTo
+        bool autoClose
+        bool allowEarlyClose
+        bool allowPause
+        bool allowRenew
+    }
+    Discount {
+        int id PK
+        string name
+        enum type "FIXED PERCENTAGE"
+        decimal value
+        enum appliesTo "PRODUCT SUBSCRIPTION"
+        decimal minPurchase
+        int minQuantity
+        datetime startDate
+        datetime endDate
+        int usageLimit
+        int usedCount
+    }
+    QuotationTemplate {
+        int id PK
+        string name
+        int planId FK
+        int validityDays
+    }
+    QuotationTemplateLine {
+        int id PK
+        int templateId FK
+        int productId FK
+        int variantId FK
+        int quantity
+    }
+    Subscription {
+        int id PK
+        string number UK "SUB-00001"
+        int customerId FK
+        int planId FK
+        int templateId FK
+        enum status "DRAFT QUOTATION CONFIRMED ACTIVE CLOSED"
+        bool isPaused
+        datetime startDate
+        datetime expiryDate
+        int paymentTermDays
+        datetime quotationValidUntil
+        datetime nextBillingDate
+    }
+    SubscriptionLine {
+        int id PK
+        int subscriptionId FK
+        int productId FK
+        int variantId FK
+        int quantity
+        decimal unitPrice
+        int taxId FK
+        decimal taxPercent
+        decimal amount
+    }
+    Invoice {
+        int id PK
+        string number UK "INV-00001"
+        int subscriptionId FK
+        int customerId FK
+        enum status "DRAFT CONFIRMED PAID CANCELLED"
+        datetime issueDate
+        datetime dueDate
+        datetime periodStart
+        datetime periodEnd
+        decimal subtotal
+        decimal discountTotal
+        decimal taxTotal
+        decimal total
+        decimal amountPaid
+    }
+    InvoiceLine {
+        int id PK
+        int invoiceId FK
+        int productId FK
+        string description
+        int quantity
+        decimal unitPrice
+        decimal taxPercent
+        decimal taxAmount
+        decimal amount
+    }
+    InvoiceDiscount {
+        int id PK
+        int invoiceId FK
+        int discountId FK
+        decimal amount
+    }
+    Payment {
+        int id PK
+        int invoiceId FK
+        enum method "CASH CARD UPI BANK_TRANSFER CHEQUE"
+        decimal amount
+        datetime paymentDate
+        string note
+    }

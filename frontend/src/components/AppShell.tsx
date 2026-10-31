@@ -1,57 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import {
-  LayoutDashboard,
-  FileText,
-  Repeat,
-  Receipt,
-  Wallet,
-  Package,
-  Layers,
-  Percent,
-  Tag,
-  UserCog,
-  LogOut,
-  Moon,
-  Sun,
-  Sparkles,
-  Menu,
-  X,
-  LucideIcon,
-} from "lucide-react";
+import { LogOut, Menu, Moon, Search, Sparkles, Sun, X } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useTheme } from "../hooks/useTheme";
 import { useMe } from "../hooks/useMe";
-import { Role } from "../types";
-
-type NavItem = { to: string; label: string; icon: LucideIcon; roles?: Role[] };
-const NAV_GROUPS: { title: string; items: NavItem[] }[] = [
-  { title: "Overview", items: [{ to: "/app/dashboard", label: "Dashboard", icon: LayoutDashboard }] },
-  {
-    title: "Sales",
-    items: [
-      { to: "/app/templates", label: "Quotation templates", icon: FileText },
-      { to: "/app/subscriptions", label: "Subscriptions", icon: Repeat },
-    ],
-  },
-  {
-    title: "Billing",
-    items: [
-      { to: "/app/invoices", label: "Invoices", icon: Receipt },
-      { to: "/app/payments", label: "Payments", icon: Wallet },
-    ],
-  },
-  {
-    title: "Catalog",
-    items: [
-      { to: "/app/products", label: "Products", icon: Package },
-      { to: "/app/plans", label: "Plans", icon: Layers },
-      { to: "/app/taxes", label: "Taxes", icon: Percent },
-      { to: "/app/discounts", label: "Discounts", icon: Tag },
-    ],
-  },
-  { title: "Administration", items: [{ to: "/app/staff", label: "Staff", icon: UserCog, roles: ["ADMIN"] }] },
-];
+import { NAV_GROUPS } from "./nav";
+import { CommandPalette } from "./CommandPalette";
 
 function initials(name?: string) {
   return (name ?? "?")
@@ -62,19 +16,35 @@ function initials(name?: string) {
     .toUpperCase();
 }
 
+const isMac = typeof navigator !== "undefined" && /Mac/i.test(navigator.platform);
+
 export function AppShell() {
   const { role, logout } = useAuth();
   const { theme, toggle } = useTheme();
   const me = useMe();
-  const [open, setOpen] = useState(false);
+  const [drawer, setDrawer] = useState(false);
+  const [palette, setPalette] = useState(false);
   const location = useLocation();
 
-  useEffect(() => setOpen(false), [location.pathname]);
+  useEffect(() => setDrawer(false), [location.pathname]);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setPalette((p) => !p);
+      }
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
+  const closePalette = useCallback(() => setPalette(false), []);
 
   const sidebar = (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2.5 px-5 py-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-md shadow-brand-500/30">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-md shadow-brand-500/30 transition-transform hover:rotate-6">
           <Sparkles className="h-[18px] w-[18px]" />
         </div>
         <div className="leading-tight">
@@ -88,26 +58,28 @@ export function AppShell() {
           if (items.length === 0) return null;
           return (
             <div key={group.title}>
-              <p className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
-                {group.title}
-              </p>
+              <p className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">{group.title}</p>
               <div className="space-y-0.5">
                 {items.map((item) => (
                   <NavLink
                     key={item.to}
                     to={item.to}
                     className={({ isActive }) =>
-                      `group relative flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                      `group relative flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
                         isActive
                           ? "bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300"
-                          : "text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                          : "text-gray-600 hover:translate-x-0.5 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                       }`
                     }
                   >
                     {({ isActive }) => (
                       <>
-                        {isActive && <span className="absolute left-0 top-1.5 h-5 w-[3px] rounded-r bg-brand-600" />}
-                        <item.icon className={`h-4 w-4 ${isActive ? "text-brand-600 dark:text-brand-400" : "text-gray-400 group-hover:text-gray-600"}`} />
+                        <span
+                          className={`absolute left-0 top-1.5 h-5 w-[3px] rounded-r bg-brand-600 transition-all duration-300 ${
+                            isActive ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"
+                          }`}
+                        />
+                        <item.icon className={`h-4 w-4 transition-colors ${isActive ? "text-brand-600 dark:text-brand-400" : "text-gray-400 group-hover:text-gray-600"}`} />
                         {item.label}
                       </>
                     )}
@@ -120,25 +92,14 @@ export function AppShell() {
       </nav>
       <div className="border-t border-gray-100 p-3 dark:border-gray-800">
         <div className="flex items-center gap-2.5 rounded-lg px-2 py-2">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700 dark:bg-brand-500/20 dark:text-brand-300">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-400 to-brand-600 text-xs font-semibold text-white">
             {initials(me?.name)}
           </div>
           <div className="min-w-0 flex-1 leading-tight">
             <p className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">{me?.name ?? "..."}</p>
-            <p className="truncate text-xs text-gray-500 dark:text-gray-400">{role}</p>
+            <p className="truncate text-xs capitalize text-gray-500 dark:text-gray-400">{role?.toLowerCase()}</p>
           </div>
-          <button
-            onClick={toggle}
-            aria-label="Toggle theme"
-            className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-          >
-            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
-          <button
-            onClick={logout}
-            aria-label="Log out"
-            className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-red-600 dark:hover:bg-gray-800"
-          >
+          <button onClick={logout} aria-label="Log out" className="rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-red-600 dark:hover:bg-gray-800">
             <LogOut className="h-4 w-4" />
           </button>
         </div>
@@ -152,26 +113,44 @@ export function AppShell() {
         {sidebar}
       </aside>
 
-      {open && (
+      {drawer && (
         <div className="no-print fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 animate-fade-in bg-gray-900/50 backdrop-blur-sm" onClick={() => setOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 w-64 animate-slide-in-left bg-white shadow-2xl dark:bg-gray-900">
-            {sidebar}
-          </aside>
+          <div className="absolute inset-0 animate-fade-in bg-gray-900/50 backdrop-blur-sm" onClick={() => setDrawer(false)} />
+          <aside className="absolute inset-y-0 left-0 w-64 animate-slide-in-left bg-white shadow-2xl dark:bg-gray-900">{sidebar}</aside>
         </div>
       )}
 
       <div className="lg:pl-64">
-        <header className="no-print sticky top-0 z-20 flex items-center gap-3 border-b border-gray-200 bg-white/80 px-4 py-3 backdrop-blur dark:border-gray-800 dark:bg-gray-900/80 lg:hidden">
-          <button onClick={() => setOpen((o) => !o)} aria-label="Menu" className="rounded-md p-1.5 text-gray-600 dark:text-gray-300">
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        <header className="no-print sticky top-0 z-20 flex items-center gap-3 border-b border-gray-200 bg-white/80 px-4 py-2.5 backdrop-blur-md dark:border-gray-800 dark:bg-gray-900/80 sm:px-6 lg:px-8">
+          <button onClick={() => setDrawer((o) => !o)} aria-label="Menu" className="rounded-md p-1.5 text-gray-600 dark:text-gray-300 lg:hidden">
+            {drawer ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <span className="font-bold tracking-tight text-gray-900 dark:text-gray-50">Brightloop</span>
+          <button
+            onClick={() => setPalette(true)}
+            className="group flex w-full max-w-sm items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm text-gray-400 transition-all hover:border-brand-300 hover:bg-white hover:shadow-sm dark:border-gray-800 dark:bg-gray-800/60 dark:hover:border-brand-500/40"
+          >
+            <Search className="h-4 w-4" />
+            <span className="flex-1 text-left">Search or jump to...</span>
+            <kbd className="hidden rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-medium text-gray-500 dark:border-gray-700 dark:bg-gray-900 sm:block">
+              {isMac ? "⌘" : "Ctrl"} K
+            </kbd>
+          </button>
+          <div className="ml-auto flex items-center gap-1">
+            <button
+              onClick={toggle}
+              aria-label="Toggle theme"
+              className="rounded-lg p-2 text-gray-500 transition-all hover:rotate-12 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+            >
+              {theme === "dark" ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+            </button>
+          </div>
         </header>
-        <main className="mx-auto w-full max-w-7xl animate-fade-in px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <main key={location.pathname} className="mx-auto w-full max-w-7xl animate-fade-in-up px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
           <Outlet />
         </main>
       </div>
+
+      <CommandPalette open={palette} onClose={closePalette} role={role} theme={theme} toggleTheme={toggle} />
     </div>
   );
 }

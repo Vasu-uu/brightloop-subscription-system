@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AlertCircle, Clock, DollarSign, LucideIcon, TrendingUp, Users } from "lucide-react";
-import { PageHeader } from "../../components/ui/PageHeader";
-import { Card } from "../../components/ui/Card";
-import { Input } from "../../components/ui/Input";
+import { AlertCircle, ArrowRight, Clock, DollarSign, LucideIcon, Play, Plus, TrendingUp, Users } from "lucide-react";
 import { Button } from "../../components/ui/Button";
+import { Card } from "../../components/ui/Card";
+import { CountUp } from "../../components/ui/CountUp";
+import { Input } from "../../components/ui/Input";
+import { Segmented } from "../../components/ui/Segmented";
 import { Select } from "../../components/ui/Select";
 import { SearchInput } from "../../components/ui/SearchInput";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { StatusBadge } from "../../components/ui/StatusBadge";
 import { DataTable, Column } from "../../components/ui/DataTable";
+import { useMe } from "../../hooks/useMe";
 import { usePagedList } from "../../hooks/usePagedList";
 import { DashboardSummary, getRevenueByMonth, getSummary, listDashboardInvoices } from "../../api/dashboard";
 import { Invoice } from "../../types";
@@ -22,40 +24,54 @@ const TABS = [
 ] as const;
 type Tab = (typeof TABS)[number]["key"];
 
+function greeting() {
+  const h = new Date().getHours();
+  return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+}
+
 function Kpi({
   label,
   value,
+  format,
   sub,
   icon: Icon,
   accent,
   delay,
+  onClick,
 }: {
   label: string;
-  value: string;
+  value: number;
+  format: (n: number) => string;
   sub?: string;
   icon: LucideIcon;
   accent: string;
   delay: number;
+  onClick?: () => void;
 }) {
   return (
-    <div
-      className="animate-fade-in-up rounded-xl border border-gray-200 bg-white p-5 shadow-card transition-shadow hover:shadow-card-hover dark:border-gray-800 dark:bg-gray-900"
+    <button
+      onClick={onClick}
+      disabled={!onClick}
+      className="group animate-fade-in-up rounded-xl border border-gray-200 bg-white p-5 text-left shadow-card transition-all duration-200 enabled:hover:-translate-y-1 enabled:hover:shadow-card-hover disabled:cursor-default dark:border-gray-800 dark:bg-gray-900"
       style={{ animationDelay: `${delay}ms`, animationFillMode: "backwards" }}
     >
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{label}</p>
-        <div className={`flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br ${accent} text-white shadow-sm`}>
+        <div className={`flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br ${accent} text-white shadow-sm transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110`}>
           <Icon className="h-4 w-4" />
         </div>
       </div>
-      <p className="mt-3 truncate text-xl font-bold tabular-nums tracking-tight text-gray-900 dark:text-gray-50">{value}</p>
+      <p className="mt-3 truncate text-xl font-bold tracking-tight text-gray-900 dark:text-gray-50">
+        <CountUp value={value} format={format} />
+      </p>
       {sub && <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{sub}</p>}
-    </div>
+    </button>
   );
 }
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const me = useMe();
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [months, setMonths] = useState(6);
   const [revenue, setRevenue] = useState<{ month: string; revenue: number }[] | null>(null);
@@ -101,37 +117,59 @@ export default function Dashboard() {
       render: (r) => (
         <div className="leading-tight">
           <p>{formatDate(r.dueDate)}</p>
-          {r.status === "CONFIRMED" && daysOverdue(r.dueDate) > 0 && (
-            <p className="text-xs font-medium text-red-600">{daysOverdue(r.dueDate)} days overdue</p>
-          )}
+          {r.status === "CONFIRMED" && daysOverdue(r.dueDate) > 0 && <p className="text-xs font-medium text-red-600">{daysOverdue(r.dueDate)} days overdue</p>}
         </div>
       ),
     },
     { key: "total", header: "Total", render: (r) => <span className="tabular-nums">{formatMoney(r.total)}</span> },
-    {
-      key: "balance",
-      header: "Balance",
-      render: (r) => <span className="font-medium tabular-nums">{formatMoney(Number(r.total) - Number(r.amountPaid))}</span>,
-    },
+    { key: "balance", header: "Balance", render: (r) => <span className="font-medium tabular-nums">{formatMoney(Number(r.total) - Number(r.amountPaid))}</span> },
   ];
 
   const maxRevenue = Math.max(1, ...(revenue ?? []).map((r) => r.revenue));
   const gridLines = [1, 0.75, 0.5, 0.25];
+  const firstName = me?.name?.split(" ")[0];
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Finance dashboard" description="Active subscriptions, revenue collected, what is still owed and what is overdue." />
+      <section className="relative animate-gradient-pan overflow-hidden rounded-2xl bg-gradient-to-r from-brand-600 via-violet-600 to-brand-700 bg-[length:200%_200%] p-6 text-white shadow-lg shadow-brand-600/20 sm:p-8">
+        <div className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 animate-float rounded-full bg-white/10 blur-2xl" />
+        <div className="pointer-events-none absolute -bottom-20 right-1/3 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+        <div className="relative flex flex-wrap items-end justify-between gap-5">
+          <div>
+            <p className="text-sm font-medium text-white/80">
+              {new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}
+            </p>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
+              {greeting()}
+              {firstName ? `, ${firstName}` : ""}
+            </h1>
+            <p className="mt-1.5 max-w-md text-sm text-white/80">
+              {summary
+                ? `${summary.activeSubscriptions.toLocaleString("en-IN")} active subscriptions and ${summary.overdueCount.toLocaleString("en-IN")} overdue invoices need your attention.`
+                : "Loading your numbers..."}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button onClick={() => navigate("/app/subscriptions/new")} className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-2 text-sm font-semibold text-brand-700 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+              <Plus className="h-4 w-4" /> New subscription
+            </button>
+            <button onClick={() => navigate("/app/invoices?billing=1")} className="inline-flex items-center gap-1.5 rounded-lg bg-white/15 px-3.5 py-2 text-sm font-semibold text-white ring-1 ring-white/30 backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-white/25">
+              <Play className="h-4 w-4" /> Run billing
+            </button>
+          </div>
+        </div>
+      </section>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {!summary ? (
           Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-[116px]" />)
         ) : (
           <>
-            <Kpi delay={0} label="Active subscriptions" value={String(summary.activeSubscriptions)} icon={Users} accent="from-brand-500 to-brand-600" />
-            <Kpi delay={50} label="Revenue collected" value={formatMoneyWhole(summary.totalRevenue)} sub="All payments received" icon={DollarSign} accent="from-emerald-500 to-emerald-600" />
-            <Kpi delay={100} label="Revenue this month" value={formatMoneyWhole(summary.revenueThisMonth)} icon={TrendingUp} accent="from-violet-500 to-violet-600" />
-            <Kpi delay={150} label="Outstanding" value={formatMoneyWhole(summary.totalOutstanding)} sub="Confirmed invoices still owed" icon={Clock} accent="from-amber-500 to-amber-600" />
-            <Kpi delay={200} label="Overdue" value={formatMoneyWhole(summary.overdueAmount)} sub={`${summary.overdueCount} invoices past due`} icon={AlertCircle} accent="from-red-500 to-red-600" />
+            <Kpi delay={0} label="Active subscriptions" value={summary.activeSubscriptions} format={(n) => Math.round(n).toLocaleString("en-IN")} icon={Users} accent="from-brand-500 to-brand-600" onClick={() => navigate("/app/subscriptions")} />
+            <Kpi delay={60} label="Revenue collected" value={summary.totalRevenue} format={formatMoneyWhole} sub="All payments received" icon={DollarSign} accent="from-emerald-500 to-emerald-600" onClick={() => navigate("/app/payments")} />
+            <Kpi delay={120} label="This month" value={summary.revenueThisMonth} format={formatMoneyWhole} sub="Collected so far" icon={TrendingUp} accent="from-violet-500 to-violet-600" />
+            <Kpi delay={180} label="Outstanding" value={summary.totalOutstanding} format={formatMoneyWhole} sub="Confirmed, not yet paid" icon={Clock} accent="from-amber-500 to-amber-600" onClick={() => setTab("outstanding")} />
+            <Kpi delay={240} label="Overdue" value={summary.overdueAmount} format={formatMoneyWhole} sub={`${summary.overdueCount} invoices past due`} icon={AlertCircle} accent="from-red-500 to-red-600" onClick={() => setTab("overdue")} />
           </>
         )}
       </div>
@@ -154,23 +192,21 @@ export default function Dashboard() {
         ) : revenue.length === 0 ? (
           <p className="py-12 text-center text-sm text-gray-500">No payments in this period.</p>
         ) : (
-          <div className="relative h-48">
+          <div className="relative h-52" key={months}>
             {gridLines.map((g) => (
-              <div key={g} className="absolute inset-x-0 border-t border-dashed border-gray-100 dark:border-gray-800" style={{ bottom: `calc(${g * 100}% * 0.82 + 22px)` }}>
-                <span className="absolute -top-2 left-0 bg-white pr-1 text-[10px] text-gray-400 dark:bg-gray-900">
-                  {formatMoney(maxRevenue * g).replace(/\.00$/, "")}
-                </span>
+              <div key={g} className="absolute inset-x-0 border-t border-dashed border-gray-100 dark:border-gray-800" style={{ bottom: `calc(${g * 100}% * 0.8 + 24px)` }}>
+                <span className="absolute -top-2 left-0 bg-white pr-1 text-[10px] text-gray-400 dark:bg-gray-900">{formatMoneyWhole(maxRevenue * g)}</span>
               </div>
             ))}
-            <div className="absolute inset-0 flex items-end gap-4 pl-16">
-              {revenue.map((r) => (
+            <div className="absolute inset-0 flex items-end gap-4 pl-20">
+              {revenue.map((r, i) => (
                 <div key={r.month} className="group flex h-full flex-1 flex-col items-center justify-end gap-1.5">
-                  <span className="text-[11px] font-medium tabular-nums text-gray-600 opacity-0 transition-opacity group-hover:opacity-100 dark:text-gray-300">
+                  <span className="rounded-md bg-gray-900 px-2 py-0.5 text-[11px] font-medium tabular-nums text-white opacity-0 shadow transition-all duration-200 group-hover:-translate-y-0.5 group-hover:opacity-100 dark:bg-gray-700">
                     {formatMoney(r.revenue)}
                   </span>
                   <div
-                    className="w-full max-w-[72px] rounded-t-md bg-gradient-to-t from-brand-600 to-brand-400 transition-all duration-500 group-hover:from-brand-700 group-hover:to-brand-500"
-                    style={{ height: `${Math.max(3, (r.revenue / maxRevenue) * 82)}%` }}
+                    className="w-full max-w-[72px] origin-bottom animate-bar-grow rounded-t-md bg-gradient-to-t from-brand-600 to-brand-400 transition-[filter] duration-200 group-hover:brightness-110"
+                    style={{ height: `${Math.max(3, (r.revenue / maxRevenue) * 80)}%`, animationDelay: `${i * 90}ms` }}
                   />
                   <span className="text-xs text-gray-500">{r.month}</span>
                 </div>
@@ -182,21 +218,7 @@ export default function Dashboard() {
 
       <div>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-          <div className="inline-flex gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-900">
-            {TABS.map((t) => (
-              <button
-                key={t.key}
-                onClick={() => setTab(t.key)}
-                className={`rounded-md px-3.5 py-1.5 text-sm font-medium transition-all ${
-                  tab === t.key
-                    ? "bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-gray-50"
-                    : "text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+          <Segmented options={TABS} value={tab} onChange={setTab} />
           <div className="flex flex-wrap items-center gap-2">
             <div className="w-52">
               <SearchInput value={search} onChange={setSearch} placeholder="Invoice or customer" />
@@ -221,6 +243,9 @@ export default function Dashboard() {
           </div>
         </div>
         <DataTable columns={columns} rows={rows} page={page} pageSize={20} total={total} onPageChange={setPage} loading={loading} onRowClick={(r) => navigate(`/app/invoices/${r.id}`)} />
+        <button onClick={() => navigate("/app/invoices")} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-brand-700 transition-all hover:gap-2 dark:text-brand-300">
+          View all invoices <ArrowRight className="h-4 w-4" />
+        </button>
       </div>
     </div>
   );

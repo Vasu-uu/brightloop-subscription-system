@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { CheckCircle2, Play } from "lucide-react";
 import { PageHeader } from "../../components/ui/PageHeader";
 import { Button } from "../../components/ui/Button";
@@ -44,7 +44,15 @@ export default function InvoicesList() {
     { status, from, to, customerId }
   );
 
+  const [params, setParams] = useSearchParams();
   const [billingOpen, setBillingOpen] = useState(false);
+  useEffect(() => {
+    if (params.get("billing")) {
+      setBillingOpen(true);
+      setParams({}, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [asOf, setAsOf] = useState(new Date().toISOString().slice(0, 10));
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<BillingRunResult | null>(null);

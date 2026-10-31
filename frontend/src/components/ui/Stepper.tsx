@@ -12,7 +12,7 @@ export function Stepper({ steps, current }: { steps: readonly string[]; current:
               <span
                 className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition-colors ${
                   done
-                    ? "bg-brand-600 text-white"
+                    ? "animate-pop-in bg-brand-600 text-white"
                     : active
                       ? "bg-brand-600 text-white ring-4 ring-brand-100 dark:ring-brand-500/20"
                       : "bg-gray-100 text-gray-400 dark:bg-gray-800"

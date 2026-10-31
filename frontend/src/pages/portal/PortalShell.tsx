@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { Repeat, Receipt, LogOut, Moon, Sun, Sparkles } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useTheme } from "../../hooks/useTheme";
@@ -11,6 +11,7 @@ const NAV_ITEMS = [
 export function PortalShell() {
   const { logout } = useAuth();
   const { theme, toggle } = useTheme();
+  const location = useLocation();
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -58,7 +59,7 @@ export function PortalShell() {
           </button>
         </div>
       </header>
-      <main className="animate-fade-in p-6">
+      <main key={location.pathname} className="animate-fade-in-up p-6">
         <Outlet />
       </main>
     </div>
