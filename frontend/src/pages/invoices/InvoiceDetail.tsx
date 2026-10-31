@@ -1,17 +1,26 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/ui/Input";
+import { Select } from "../../components/ui/Select";
+import { Modal } from "../../components/ui/Modal";
 import { PageHeader } from "../../components/ui/PageHeader";
 import { StatusBadge } from "../../components/ui/StatusBadge";
 import { useToast } from "../../components/ui/Toast";
 import { cancelInvoice, confirmInvoice, getInvoice, invoicePdfUrl, sendInvoice } from "../../api/invoices";
+import { recordPayment } from "../../api/payments";
 import { Invoice } from "../../types";
+import { PAYMENT_METHODS } from "../../constants/enums";
 
 export default function InvoiceDetail() {
   const { id } = useParams();
   const { push } = useToast();
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [busy, setBusy] = useState(false);
+  const [payModalOpen, setPayModalOpen] = useState(false);
+  const [payMethod, setPayMethod] = useState("CARD");
+  const [payAmount, setPayAmount] = useState(0);
+  const [payNote, setPayNote] = useState("");
 
   function load() {
     if (!id) return;
@@ -35,6 +44,34 @@ export default function InvoiceDetail() {
     }
   }
 
+  function openPayModal() {
+    setPayAmount(balance);
+    setPayMethod("CARD");
+    setPayNote("");
+    setPayModalOpen(true);
+  }
+
+  async function handleRecordPayment() {
+    if (!invoice) return;
+    setBusy(true);
+    try {
+      await recordPayment({
+        invoiceId: invoice.id,
+        method: payMethod,
+        amount: payAmount,
+        paymentDate: new Date().toISOString(),
+        note: payNote || undefined,
+      });
+      push("Payment recorded");
+      setPayModalOpen(false);
+      load();
+    } catch (err: any) {
+      push(err?.response?.data?.error?.message ?? "Failed to record payment", "error");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (!invoice) return <div>Loading...</div>;
 
   const balance = Number(invoice.total) - Number(invoice.amountPaid);
@@ -49,6 +86,11 @@ export default function InvoiceDetail() {
               {invoice.status === "DRAFT" && (
                 <Button onClick={() => handle("confirm")} disabled={busy}>
                   Confirm
+                </Button>
+              )}
+              {invoice.status === "CONFIRMED" && balance > 0 && (
+                <Button onClick={openPayModal} disabled={busy}>
+                  Record Payment
                 </Button>
               )}
               {(invoice.status === "DRAFT" || invoice.status === "CONFIRMED") &&
@@ -151,6 +193,33 @@ export default function InvoiceDetail() {
           </div>
         </div>
       </div>
+
+      <Modal open={payModalOpen} onClose={() => setPayModalOpen(false)} title="Record Payment">
+        <div className="space-y-3">
+          <Select label="Method" value={payMethod} onChange={(e) => setPayMethod(e.target.value)}>
+            {PAYMENT_METHODS.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </Select>
+          <Input
+            type="number"
+            label="Amount"
+            value={payAmount}
+            onChange={(e) => setPayAmount(Number(e.target.value))}
+          />
+          <Input label="Note (optional)" value={payNote} onChange={(e) => setPayNote(e.target.value)} />
+          <div className="flex justify-end gap-2">
+            <Button variant="secondary" onClick={() => setPayModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleRecordPayment} disabled={busy}>
+              Record
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

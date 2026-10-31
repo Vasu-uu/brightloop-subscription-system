@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { to: "/app/templates", label: "Templates" },
   { to: "/app/subscriptions", label: "Subscriptions" },
   { to: "/app/invoices", label: "Invoices" },
+  { to: "/app/payments", label: "Payments" },
 ];
 
 export function AppShell() {
