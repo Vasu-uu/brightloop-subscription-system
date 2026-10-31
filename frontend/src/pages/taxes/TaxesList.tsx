@@ -66,13 +66,13 @@ export default function TaxesList() {
   }
 
   const columns: Column<Tax>[] = [
-    { key: "name", header: "Tax rule", render: (r) => <span className="font-medium text-gray-900 dark:text-gray-100">{r.name}</span> },
+    { key: "name", header: "Tax rule", render: (r) => <span className="font-medium text-gray-900">{r.name}</span> },
     { key: "rate", header: "Rate", render: (r) => <span className="tabular-nums">{r.ratePercent}%</span> },
     {
       key: "active",
       header: "Status",
       render: (r) => (
-        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${r.isActive ? "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-300" : "bg-gray-100 text-gray-500 dark:bg-gray-800"}`}>
+        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${r.isActive ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"}`}>
           {r.isActive ? "Active" : "Inactive"}
         </span>
       ),

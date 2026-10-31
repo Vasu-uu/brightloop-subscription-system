@@ -79,14 +79,14 @@ export default function InvoiceDetail() {
   return (
     <div>
       <div className="no-print">
-        <button onClick={() => navigate("/app/invoices")} className="mb-3 flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">
+        <button onClick={() => navigate("/app/invoices")} className="mb-3 flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800">
           <ArrowLeft className="h-4 w-4" /> Invoices
         </button>
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-50">{invoice.number}</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">{invoice.number}</h1>
             <StatusBadge status={invoice.status} />
-            {late && <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700 dark:bg-red-500/10 dark:text-red-300">{daysOverdue(invoice.dueDate)} days overdue</span>}
+            {late && <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700">{daysOverdue(invoice.dueDate)} days overdue</span>}
           </div>
           <div className="flex flex-wrap gap-2">
             {invoice.status === "DRAFT" && (
@@ -125,43 +125,43 @@ export default function InvoiceDetail() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px] print:block">
-        <article className="rounded-xl border border-gray-200 bg-white p-8 shadow-card print:border-0 print:p-0 print:shadow-none dark:border-gray-800 dark:bg-gray-900 print:dark:bg-white">
-          <div className="flex items-start justify-between border-b border-gray-100 pb-6 dark:border-gray-800">
+        <article className="rounded-xl border border-gray-200 bg-white p-8 shadow-card print:border-0 print:p-0 print:shadow-none">
+          <div className="flex items-start justify-between border-b border-gray-100 pb-6">
             <div>
-              <p className="text-lg font-bold tracking-tight text-gray-900 dark:text-gray-50">Brightloop Software</p>
+              <p className="text-lg font-bold tracking-tight text-gray-900">Brightloop Software</p>
               <p className="text-xs text-gray-500">Subscription billing</p>
             </div>
             <div className="text-right">
               <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Invoice</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-gray-50">{invoice.number}</p>
+              <p className="text-xl font-bold text-gray-900">{invoice.number}</p>
             </div>
           </div>
 
           <div className="grid gap-6 py-6 sm:grid-cols-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Billed to</p>
-              <p className="mt-1 text-sm font-medium text-gray-900 dark:text-gray-100">{invoice.customer?.name}</p>
-              {invoice.customer?.company && <p className="text-sm text-gray-600 dark:text-gray-400">{invoice.customer.company}</p>}
-              <p className="text-sm text-gray-600 dark:text-gray-400">{invoice.customer?.email}</p>
-              {invoice.customer?.address && <p className="text-sm text-gray-600 dark:text-gray-400">{invoice.customer.address}</p>}
+              <p className="mt-1 text-sm font-medium text-gray-900">{invoice.customer?.name}</p>
+              {invoice.customer?.company && <p className="text-sm text-gray-600">{invoice.customer.company}</p>}
+              <p className="text-sm text-gray-600">{invoice.customer?.email}</p>
+              {invoice.customer?.address && <p className="text-sm text-gray-600">{invoice.customer.address}</p>}
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Dates</p>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">Issued {formatDate(invoice.issueDate)}</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Due {formatDate(invoice.dueDate)}</p>
+              <p className="mt-1 text-sm text-gray-600">Issued {formatDate(invoice.issueDate)}</p>
+              <p className="text-sm text-gray-600">Due {formatDate(invoice.dueDate)}</p>
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Billing period</p>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              <p className="mt-1 text-sm text-gray-600">
                 {formatDate(invoice.periodStart)} - {formatDate(invoice.periodEnd)}
               </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Subscription {invoice.subscription?.number}</p>
+              <p className="text-sm text-gray-600">Subscription {invoice.subscription?.number}</p>
             </div>
           </div>
 
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-y border-gray-200 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-800">
+              <tr className="border-y border-gray-200 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                 <th className="py-2.5">Description</th>
                 <th className="py-2.5 text-right">Qty</th>
                 <th className="py-2.5 text-right">Unit price</th>
@@ -169,10 +169,10 @@ export default function InvoiceDetail() {
                 <th className="py-2.5 text-right">Amount</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+            <tbody className="divide-y divide-gray-100">
               {(invoice.lines ?? []).map((line) => (
                 <tr key={line.id}>
-                  <td className="py-3 text-gray-900 dark:text-gray-100">{line.description}</td>
+                  <td className="py-3 text-gray-900">{line.description}</td>
                   <td className="py-3 text-right tabular-nums">{line.quantity}</td>
                   <td className="py-3 text-right tabular-nums">{formatMoney(line.unitPrice)}</td>
                   <td className="py-3 text-right tabular-nums text-gray-500">{Number(line.taxPercent)}%</td>
@@ -183,29 +183,29 @@ export default function InvoiceDetail() {
           </table>
 
           <div className="mt-6 ml-auto w-full max-w-xs space-y-1.5 text-sm">
-            <div className="flex justify-between text-gray-600 dark:text-gray-400">
+            <div className="flex justify-between text-gray-600">
               <span>Subtotal</span>
               <span className="tabular-nums">{formatMoney(invoice.subtotal)}</span>
             </div>
             {(invoice.discounts ?? []).map((d) => (
-              <div key={d.id} className="flex justify-between text-green-700 dark:text-green-400">
+              <div key={d.id} className="flex justify-between text-green-700">
                 <span>Discount: {d.discount?.name}</span>
                 <span className="tabular-nums">-{formatMoney(d.amount)}</span>
               </div>
             ))}
-            <div className="flex justify-between text-gray-600 dark:text-gray-400">
+            <div className="flex justify-between text-gray-600">
               <span>Tax</span>
               <span className="tabular-nums">{formatMoney(invoice.taxTotal)}</span>
             </div>
-            <div className="flex justify-between border-t border-gray-200 pt-2 text-base font-bold text-gray-900 dark:border-gray-800 dark:text-gray-50">
+            <div className="flex justify-between border-t border-gray-200 pt-2 text-base font-bold text-gray-900">
               <span>Total</span>
               <span className="tabular-nums">{formatMoney(invoice.total)}</span>
             </div>
-            <div className="flex justify-between text-gray-600 dark:text-gray-400">
+            <div className="flex justify-between text-gray-600">
               <span>Paid</span>
               <span className="tabular-nums">{formatMoney(invoice.amountPaid)}</span>
             </div>
-            <div className="flex justify-between font-semibold text-gray-900 dark:text-gray-100">
+            <div className="flex justify-between font-semibold text-gray-900">
               <span>Balance due</span>
               <span className="tabular-nums">{formatMoney(balance)}</span>
             </div>
@@ -221,7 +221,7 @@ export default function InvoiceDetail() {
                 {invoice.payments!.map((p) => (
                   <li key={p.id} className="flex items-start justify-between text-sm">
                     <div>
-                      <p className="font-medium text-gray-900 dark:text-gray-100">{p.method.replace("_", " ")}</p>
+                      <p className="font-medium text-gray-900">{p.method.replace("_", " ")}</p>
                       <p className="text-xs text-gray-500">{formatDate(p.paymentDate)}{p.note ? ` - ${p.note}` : ""}</p>
                     </div>
                     <span className="tabular-nums font-medium">{formatMoney(p.amount)}</span>
@@ -231,7 +231,7 @@ export default function InvoiceDetail() {
             )}
           </Card>
           <Card title="Activity">
-            <ul className="space-y-1.5 text-sm text-gray-600 dark:text-gray-400">
+            <ul className="space-y-1.5 text-sm text-gray-600">
               <li>Created {formatDate(invoice.createdAt)}</li>
               <li>{invoice.sentAt ? `Sent ${formatDate(invoice.sentAt)}` : "Not sent yet"}</li>
             </ul>
@@ -242,7 +242,7 @@ export default function InvoiceDetail() {
       <Modal open={payOpen} onClose={() => setPayOpen(false)} title="Record payment">
         <div className="space-y-3">
           <p className="text-sm text-gray-500">
-            Balance due <span className="font-semibold text-gray-900 dark:text-gray-100">{formatMoney(balance)}</span>. You cannot record more than the balance.
+            Balance due <span className="font-semibold text-gray-900">{formatMoney(balance)}</span>. You cannot record more than the balance.
           </p>
           <Select label="Method" value={method} onChange={(e) => setMethod(e.target.value)}>
             {PAYMENT_METHODS.map((m) => (

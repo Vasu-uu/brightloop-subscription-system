@@ -45,7 +45,7 @@ export default function PaymentsList() {
     {
       key: "invoice",
       header: "Invoice",
-      render: (r) => <span className="font-semibold text-brand-700 dark:text-brand-300">{r.invoice?.number ?? r.invoiceId}</span>,
+      render: (r) => <span className="font-semibold text-brand-700">{r.invoice?.number ?? r.invoiceId}</span>,
     },
     {
       key: "method",
@@ -107,7 +107,7 @@ export default function PaymentsList() {
       />
       {!loading && rows.length > 0 && (
         <p className="mt-2 text-right text-xs text-gray-500">
-          Total on this page: <span className="font-semibold text-gray-700 dark:text-gray-300">{formatMoney(pageTotal)}</span>
+          Total on this page: <span className="font-semibold text-gray-700">{formatMoney(pageTotal)}</span>
         </p>
       )}
     </div>

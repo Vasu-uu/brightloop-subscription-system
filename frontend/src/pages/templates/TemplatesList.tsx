@@ -36,7 +36,7 @@ export default function TemplatesList() {
   }
 
   const columns: Column<Row>[] = [
-    { key: "name", header: "Template", render: (r) => <span className="font-medium text-gray-900 dark:text-gray-100">{r.name}</span> },
+    { key: "name", header: "Template", render: (r) => <span className="font-medium text-gray-900">{r.name}</span> },
     { key: "plan", header: "Plan", render: (r) => r.plan?.name ?? r.planId },
     { key: "lines", header: "Lines", render: (r) => r._count?.lines ?? "-" },
     { key: "validity", header: "Quotation valid for", render: (r) => `${r.validityDays} days` },
@@ -44,7 +44,7 @@ export default function TemplatesList() {
       key: "active",
       header: "Status",
       render: (r) => (
-        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${r.isActive ? "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-300" : "bg-gray-100 text-gray-500"}`}>
+        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${r.isActive ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"}`}>
           {r.isActive ? "Active" : "Inactive"}
         </span>
       ),

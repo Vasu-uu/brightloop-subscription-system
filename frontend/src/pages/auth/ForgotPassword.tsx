@@ -26,10 +26,10 @@ export default function ForgotPassword() {
     <AuthLayout title="Reset your password" subtitle="We'll email you a link to get back in.">
       {sent ? (
         <div className="flex animate-fade-in flex-col items-center gap-2 py-2 text-center">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-50 dark:bg-green-500/10">
-            <MailCheck className="h-5 w-5 text-green-600 dark:text-green-400" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-50">
+            <MailCheck className="h-5 w-5 text-green-600" />
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-gray-600">
             If that email is registered, a reset link has been sent.
           </p>
         </div>
@@ -42,7 +42,7 @@ export default function ForgotPassword() {
         </form>
       )}
       <div className="mt-4 text-sm">
-        <Link to="/login" className="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300">
+        <Link to="/login" className="text-brand-600 hover:text-brand-700">
           Back to sign in
         </Link>
       </div>

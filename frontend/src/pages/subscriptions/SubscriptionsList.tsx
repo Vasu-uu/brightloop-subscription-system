@@ -69,13 +69,13 @@ export default function SubscriptionsList() {
   }
 
   const columns: Column<Subscription>[] = [
-    { key: "number", header: "Number", render: (r) => <span className="font-semibold text-brand-700 dark:text-brand-300">{r.number}</span> },
+    { key: "number", header: "Number", render: (r) => <span className="font-semibold text-brand-700">{r.number}</span> },
     {
       key: "customer",
       header: "Customer",
       render: (r) => (
         <div className="leading-tight">
-          <p className="font-medium text-gray-900 dark:text-gray-100">{r.customer?.name ?? r.customerId}</p>
+          <p className="font-medium text-gray-900">{r.customer?.name ?? r.customerId}</p>
           <p className="text-xs text-gray-500">{r.customer?.email}</p>
         </div>
       ),
@@ -108,8 +108,8 @@ export default function SubscriptionsList() {
           onClick={() => setParams(expiring ? {} : { expiring: "30" })}
           className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
             expiring
-              ? "border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200"
-              : "border-gray-200 text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+              ? "border-amber-300 bg-amber-50 text-amber-800"
+              : "border-gray-200 text-gray-600 hover:bg-gray-50"
           }`}
         >
           <CalendarClock className="h-3.5 w-3.5" /> Renewals due in 30 days

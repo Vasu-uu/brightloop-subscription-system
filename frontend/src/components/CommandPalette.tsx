@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CornerDownLeft, LucideIcon, Moon, Play, Plus, Search, Sun } from "lucide-react";
+import { CornerDownLeft, LucideIcon, Play, Plus, Search } from "lucide-react";
 import { NAV_GROUPS } from "./nav";
 import { Role } from "../types";
 
@@ -10,14 +10,10 @@ export function CommandPalette({
   open,
   onClose,
   role,
-  theme,
-  toggleTheme,
 }: {
   open: boolean;
   onClose: () => void;
   role: Role | null;
-  theme: "light" | "dark";
-  toggleTheme: () => void;
 }) {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
@@ -35,16 +31,9 @@ export function CommandPalette({
       { id: "new-sub", label: "New subscription", icon: Plus, group: "Actions", run: go("/app/subscriptions/new") },
       { id: "new-tpl", label: "New quotation template", icon: Plus, group: "Actions", run: go("/app/templates/new") },
       { id: "billing", label: "Run billing", hint: "Opens Invoices", icon: Play, group: "Actions", run: go("/app/invoices?billing=1") },
-      {
-        id: "theme",
-        label: theme === "dark" ? "Switch to light mode" : "Switch to dark mode",
-        icon: theme === "dark" ? Sun : Moon,
-        group: "Actions",
-        run: toggleTheme,
-      },
     ];
     return [...actions, ...nav];
-  }, [navigate, role, theme, toggleTheme]);
+  }, [navigate, role]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -82,11 +71,11 @@ export function CommandPalette({
   return (
     <div className="fixed inset-0 z-[90] flex items-start justify-center bg-gray-900/50 px-4 pt-[14vh] backdrop-blur-sm animate-fade-in" onClick={onClose}>
       <div
-        className="w-full max-w-lg animate-scale-in overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 dark:bg-gray-900 dark:ring-white/10"
+        className="w-full max-w-lg animate-scale-in overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={onKeyDown}
       >
-        <div className="flex items-center gap-3 border-b border-gray-100 px-4 py-3 dark:border-gray-800">
+        <div className="flex items-center gap-3 border-b border-gray-100 px-4 py-3">
           <Search className="h-4 w-4 text-gray-400" />
           <input
             ref={inputRef}
@@ -95,7 +84,7 @@ export function CommandPalette({
             placeholder="Search pages and actions..."
             className="w-full bg-transparent text-sm outline-none placeholder:text-gray-400"
           />
-          <kbd className="rounded border border-gray-200 px-1.5 py-0.5 text-[10px] text-gray-400 dark:border-gray-700">ESC</kbd>
+          <kbd className="rounded border border-gray-200 px-1.5 py-0.5 text-[10px] text-gray-400">ESC</kbd>
         </div>
         <ul className="max-h-80 overflow-y-auto p-2">
           {filtered.length === 0 && <li className="px-3 py-8 text-center text-sm text-gray-400">No matches</li>}
@@ -112,7 +101,7 @@ export function CommandPalette({
                     onClose();
                   }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
-                    i === active ? "bg-brand-50 text-brand-800 dark:bg-brand-500/15 dark:text-brand-200" : "text-gray-700 dark:text-gray-300"
+                    i === active ? "bg-brand-50 text-brand-800" : "text-gray-700"
                   }`}
                 >
                   <c.icon className="h-4 w-4 shrink-0 opacity-70" />

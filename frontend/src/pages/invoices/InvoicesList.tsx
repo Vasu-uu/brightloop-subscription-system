@@ -75,13 +75,13 @@ export default function InvoicesList() {
   }
 
   const columns: Column<Invoice>[] = [
-    { key: "number", header: "Invoice", render: (r) => <span className="font-semibold text-brand-700 dark:text-brand-300">{r.number}</span> },
+    { key: "number", header: "Invoice", render: (r) => <span className="font-semibold text-brand-700">{r.number}</span> },
     {
       key: "customer",
       header: "Customer",
       render: (r) => (
         <div className="leading-tight">
-          <p className="font-medium text-gray-900 dark:text-gray-100">{r.customer?.name ?? r.customerId}</p>
+          <p className="font-medium text-gray-900">{r.customer?.name ?? r.customerId}</p>
           <p className="text-xs text-gray-500">{r.subscription?.number}</p>
         </div>
       ),
@@ -107,7 +107,7 @@ export default function InvoicesList() {
       header: "Balance",
       render: (r) => {
         const b = Number(r.total) - Number(r.amountPaid);
-        return <span className={`tabular-nums font-medium ${b > 0 && r.status === "CONFIRMED" ? "text-gray-900 dark:text-gray-100" : "text-gray-400"}`}>{formatMoney(b)}</span>;
+        return <span className={`tabular-nums font-medium ${b > 0 && r.status === "CONFIRMED" ? "text-gray-900" : "text-gray-400"}`}>{formatMoney(b)}</span>;
       },
     },
   ];
@@ -177,17 +177,17 @@ export default function InvoicesList() {
       <Modal open={billingOpen} onClose={() => setBillingOpen(false)} title="Run billing">
         {result ? (
           <div className="animate-fade-in text-center">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-50 dark:bg-green-500/10">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-50">
               <CheckCircle2 className="h-6 w-6 text-green-600" />
             </div>
-            <p className="text-lg font-semibold text-gray-900 dark:text-gray-50">Billing run complete</p>
+            <p className="text-lg font-semibold text-gray-900">Billing run complete</p>
             <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
-                <p className="text-2xl font-bold tabular-nums text-gray-900 dark:text-gray-50">{result.created}</p>
+              <div className="rounded-lg bg-gray-50 p-3">
+                <p className="text-2xl font-bold tabular-nums text-gray-900">{result.created}</p>
                 <p className="text-xs text-gray-500">Invoices created</p>
               </div>
-              <div className="rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
-                <p className="text-2xl font-bold tabular-nums text-gray-900 dark:text-gray-50">{result.skipped}</p>
+              <div className="rounded-lg bg-gray-50 p-3">
+                <p className="text-2xl font-bold tabular-nums text-gray-900">{result.skipped}</p>
                 <p className="text-xs text-gray-500">Already billed (skipped)</p>
               </div>
             </div>
@@ -202,7 +202,7 @@ export default function InvoicesList() {
               Creates a draft invoice for every active, unpaused subscription that is due on or before the date below,
               including any missed periods. Eligible discounts and taxes are applied automatically.
             </p>
-            <p className="mb-4 rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+            <p className="mb-4 rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600">
               {billingStatus?.enabled
                 ? `Billing also runs automatically (${billingStatus.schedule}, server time).`
                 : "Automatic billing is off. Run it here as needed."}

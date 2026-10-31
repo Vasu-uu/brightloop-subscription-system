@@ -25,11 +25,11 @@ export function ConfirmDialog({
     <Modal open={open} onClose={onClose} title={title}>
       <div className="flex gap-3">
         {danger && (
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/10">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-50">
             <AlertTriangle className="h-4 w-4 text-red-600" />
           </div>
         )}
-        <p className="text-sm text-gray-600 dark:text-gray-400">{message}</p>
+        <p className="text-sm text-gray-600">{message}</p>
       </div>
       <div className="mt-5 flex justify-end gap-2">
         <Button variant="secondary" onClick={onClose}>

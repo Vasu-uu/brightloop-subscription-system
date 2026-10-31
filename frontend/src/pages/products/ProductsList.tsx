@@ -129,7 +129,7 @@ export default function ProductsList() {
       header: "Product",
       render: (r) => (
         <div>
-          <p className="font-medium text-gray-900 dark:text-gray-100">{r.name}</p>
+          <p className="font-medium text-gray-900">{r.name}</p>
           {r.notes && <p className="max-w-xs truncate text-xs text-gray-500">{r.notes}</p>}
         </div>
       ),
@@ -138,7 +138,7 @@ export default function ProductsList() {
       key: "type",
       header: "Type",
       render: (r) => (
-        <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+        <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
           {r.type}
         </span>
       ),
@@ -152,7 +152,7 @@ export default function ProductsList() {
         r.variants && r.variants.length > 0 ? (
           <div className="flex flex-wrap gap-1">
             {r.variants.map((v) => (
-              <span key={v.id} className="rounded-full bg-brand-50 px-2 py-0.5 text-xs text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">
+              <span key={v.id} className="rounded-full bg-brand-50 px-2 py-0.5 text-xs text-brand-700">
                 {v.value}
                 {v.extraPrice > 0 && ` +${v.extraPrice}`}
               </span>
@@ -221,7 +221,7 @@ export default function ProductsList() {
           <div>
             <div className="mb-2 flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Variants</p>
+                <p className="text-sm font-medium text-gray-700">Variants</p>
                 <p className="text-xs text-gray-500">e.g. Brand / Odoo / +560 added to the unit price</p>
               </div>
               <Button variant="secondary" onClick={() => setDraft({ ...draft, variants: [...draft.variants, { attribute: "", value: "", extraPrice: 0 }] })}>
@@ -229,7 +229,7 @@ export default function ProductsList() {
               </Button>
             </div>
             {draft.variants.length === 0 && (
-              <p className="rounded-lg border border-dashed border-gray-300 px-3 py-4 text-center text-sm text-gray-400 dark:border-gray-700">
+              <p className="rounded-lg border border-dashed border-gray-300 px-3 py-4 text-center text-sm text-gray-400">
                 No variants. The base sales price is used.
               </p>
             )}

@@ -9,7 +9,7 @@ const FEATURES = [
 
 export function AuthLayout({ title, subtitle, children }: { title: string; subtitle?: string; children: ReactNode }) {
   return (
-    <div className="grid min-h-screen bg-white dark:bg-gray-950 lg:grid-cols-[1.05fr_1fr]">
+    <div className="grid min-h-screen bg-white lg:grid-cols-[1.05fr_1fr]">
       <aside className="relative hidden animate-gradient-pan overflow-hidden bg-gradient-to-br from-brand-700 via-violet-700 to-brand-900 bg-[length:200%_200%] p-12 text-white lg:flex lg:flex-col lg:justify-between">
         <div className="pointer-events-none absolute -left-20 top-1/4 h-72 w-72 animate-float rounded-full bg-white/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 right-0 h-80 w-80 rounded-full bg-fuchsia-400/20 blur-3xl" />
@@ -54,10 +54,10 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-500/30">
               <Sparkles className="h-[18px] w-[18px]" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-gray-50">Brightloop</span>
+            <span className="text-xl font-bold tracking-tight text-gray-900">Brightloop</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-50">{title}</h1>
-          {subtitle && <p className="mt-1.5 text-sm text-gray-500 dark:text-gray-400">{subtitle}</p>}
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">{title}</h1>
+          {subtitle && <p className="mt-1.5 text-sm text-gray-500">{subtitle}</p>}
           <div className="mt-7">{children}</div>
         </div>
       </main>

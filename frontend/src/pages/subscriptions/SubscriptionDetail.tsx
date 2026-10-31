@@ -163,13 +163,13 @@ export default function SubscriptionDetail() {
 
   return (
     <div>
-      <button onClick={() => navigate("/app/subscriptions")} className="mb-3 flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">
+      <button onClick={() => navigate("/app/subscriptions")} className="mb-3 flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800">
         <ArrowLeft className="h-4 w-4" /> Subscriptions
       </button>
 
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-50">
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
             {isNew ? "New subscription" : subscription?.number}
           </h1>
           {subscription && <StatusBadge status={subscription.isPaused ? "PAUSED" : subscription.status} />}
@@ -211,7 +211,7 @@ export default function SubscriptionDetail() {
         <Card className="mb-6">
           <Stepper steps={SUBSCRIPTION_STATUSES} current={currentIndex} />
           {quotationExpired && (
-            <div className="mt-4 flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:bg-amber-500/10 dark:text-amber-300">
+            <div className="mt-4 flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
               <AlertTriangle className="h-4 w-4" /> The quotation expired on {formatDate(subscription.quotationValidUntil)}.
             </div>
           )}
@@ -279,7 +279,7 @@ export default function SubscriptionDetail() {
                   <col className="w-[52px]" />
                 </colgroup>
                 <thead>
-                  <tr className="border-b border-gray-100 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-800 dark:text-gray-400">
+                  <tr className="border-b border-gray-100 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                     <th className="px-5 py-2.5">Product</th>
                     <th className="px-2 py-2.5">Variant</th>
                     <th className="px-2 py-2.5">Qty</th>
@@ -289,7 +289,7 @@ export default function SubscriptionDetail() {
                     <th />
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                <tbody className="divide-y divide-gray-100">
                   {lines.map((line, i) => {
                     const row = preview.rows[i];
                     const belowMin = plan && line.quantity < plan.minQuantity;
@@ -334,9 +334,9 @@ export default function SubscriptionDetail() {
                             onChange={(e) => updateLine(i, { quantity: Number(e.target.value) })}
                           />
                         </td>
-                        <td className="px-2 py-2.5 text-right tabular-nums text-gray-700 dark:text-gray-300">{formatMoney(row.unitPrice)}</td>
+                        <td className="px-2 py-2.5 text-right tabular-nums text-gray-700">{formatMoney(row.unitPrice)}</td>
                         <td className="px-2 py-2.5 text-right tabular-nums text-gray-500">{row.taxPercent}%</td>
-                        <td className="px-5 py-2.5 text-right font-medium tabular-nums text-gray-900 dark:text-gray-100">{formatMoney(row.amount)}</td>
+                        <td className="px-5 py-2.5 text-right font-medium tabular-nums text-gray-900">{formatMoney(row.amount)}</td>
                         <td className="pr-4">
                           {!closed && lines.length > 1 && (
                             <Button variant="ghost" onClick={() => setLines((p) => p.filter((_, idx) => idx !== i))} aria-label="Remove line">
@@ -356,15 +356,15 @@ export default function SubscriptionDetail() {
         <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
           <Card title="Summary">
             <dl className="space-y-2 text-sm">
-              <div className="flex justify-between text-gray-600 dark:text-gray-400">
+              <div className="flex justify-between text-gray-600">
                 <dt>Subtotal</dt>
                 <dd className="tabular-nums">{formatMoney(preview.subtotal)}</dd>
               </div>
-              <div className="flex justify-between text-gray-600 dark:text-gray-400">
+              <div className="flex justify-between text-gray-600">
                 <dt>Tax</dt>
                 <dd className="tabular-nums">{formatMoney(preview.taxTotal)}</dd>
               </div>
-              <div className="flex justify-between border-t border-gray-100 pt-2 text-base font-semibold text-gray-900 dark:border-gray-800 dark:text-gray-50">
+              <div className="flex justify-between border-t border-gray-100 pt-2 text-base font-semibold text-gray-900">
                 <dt>Per period</dt>
                 <dd className="tabular-nums">{formatMoney(preview.total)}</dd>
               </div>
@@ -379,7 +379,7 @@ export default function SubscriptionDetail() {
 
           {plan && (
             <Card title={plan.name} description={`Billed ${plan.billingPeriod.toLowerCase()}`}>
-              <ul className="space-y-1.5 text-sm text-gray-600 dark:text-gray-400">
+              <ul className="space-y-1.5 text-sm text-gray-600">
                 <li>Available {formatDate(plan.availableFrom)} - {plan.availableTo ? formatDate(plan.availableTo) : "open-ended"}</li>
                 <li>Closes automatically: {plan.autoClose ? "yes" : "no"}</li>
                 <li>Early close: {plan.allowEarlyClose ? "allowed" : "not allowed"}</li>
@@ -394,15 +394,15 @@ export default function SubscriptionDetail() {
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-gray-500">Next billing</dt>
-                  <dd className="font-medium text-gray-900 dark:text-gray-100">{formatDate(subscription.nextBillingDate)}</dd>
+                  <dd className="font-medium text-gray-900">{formatDate(subscription.nextBillingDate)}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-gray-500">Quote valid until</dt>
-                  <dd className="font-medium text-gray-900 dark:text-gray-100">{formatDate(subscription.quotationValidUntil)}</dd>
+                  <dd className="font-medium text-gray-900">{formatDate(subscription.quotationValidUntil)}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-gray-500">Created</dt>
-                  <dd className="font-medium text-gray-900 dark:text-gray-100">{formatDate(subscription.createdAt)}</dd>
+                  <dd className="font-medium text-gray-900">{formatDate(subscription.createdAt)}</dd>
                 </div>
               </dl>
             </Card>

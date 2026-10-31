@@ -70,7 +70,7 @@ export default function Signup() {
             return (
               <li
                 key={rule.label}
-                className={`flex items-center gap-1 transition-colors ${ok ? "text-green-600 dark:text-green-400" : "text-gray-400"}`}
+                className={`flex items-center gap-1 transition-colors ${ok ? "text-green-600" : "text-gray-400"}`}
               >
                 {ok ? <Check className="h-3 w-3" /> : <Circle className="h-2 w-2" />}
                 {rule.label}
@@ -79,7 +79,7 @@ export default function Signup() {
           })}
         </ul>
         {error && (
-          <div className="flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 animate-fade-in dark:bg-red-500/10 dark:text-red-400">
+          <div className="flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 animate-fade-in">
             <AlertCircle className="h-4 w-4 shrink-0" />
             {error}
           </div>
@@ -88,7 +88,7 @@ export default function Signup() {
           Create account
         </Button>
         <div className="pt-1 text-sm">
-          <Link to="/login" className="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300">
+          <Link to="/login" className="text-brand-600 hover:text-brand-700">
             Already have an account? Sign in
           </Link>
         </div>

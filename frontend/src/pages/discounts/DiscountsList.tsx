@@ -46,11 +46,11 @@ const EMPTY = (): Draft => ({
 
 function state(d: DiscountRow): { label: string; cls: string } {
   const now = Date.now();
-  if (!d.isActive) return { label: "Inactive", cls: "bg-gray-100 text-gray-500 dark:bg-gray-800" };
-  if (d.endDate && new Date(d.endDate).getTime() < now) return { label: "Expired", cls: "bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-300" };
-  if (d.usageLimit != null && d.usedCount >= d.usageLimit) return { label: "Used up", cls: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300" };
-  if (new Date(d.startDate).getTime() > now) return { label: "Scheduled", cls: "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300" };
-  return { label: "Live", cls: "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-300" };
+  if (!d.isActive) return { label: "Inactive", cls: "bg-gray-100 text-gray-500" };
+  if (d.endDate && new Date(d.endDate).getTime() < now) return { label: "Expired", cls: "bg-red-50 text-red-700" };
+  if (d.usageLimit != null && d.usedCount >= d.usageLimit) return { label: "Used up", cls: "bg-amber-50 text-amber-700" };
+  if (new Date(d.startDate).getTime() > now) return { label: "Scheduled", cls: "bg-blue-50 text-blue-700" };
+  return { label: "Live", cls: "bg-green-50 text-green-700" };
 }
 
 export default function DiscountsList() {
@@ -135,7 +135,7 @@ export default function DiscountsList() {
     setDraft((d) => ({ ...d, productIds: d.productIds.includes(id) ? d.productIds.filter((x) => x !== id) : [...d.productIds, id] }));
 
   const columns: Column<DiscountRow>[] = [
-    { key: "name", header: "Discount", render: (r) => <span className="font-medium text-gray-900 dark:text-gray-100">{r.name}</span> },
+    { key: "name", header: "Discount", render: (r) => <span className="font-medium text-gray-900">{r.name}</span> },
     {
       key: "value",
       header: "Value",
@@ -157,7 +157,7 @@ export default function DiscountsList() {
       key: "conditions",
       header: "Conditions",
       render: (r) => (
-        <span className="text-gray-600 dark:text-gray-400">
+        <span className="text-gray-600">
           {r.minPurchase != null ? `Min ${formatMoney(r.minPurchase)}` : ""}
           {r.minPurchase != null && r.minQuantity != null ? ", " : ""}
           {r.minQuantity != null ? `Min qty ${r.minQuantity}` : ""}
@@ -238,10 +238,10 @@ export default function DiscountsList() {
 
         {draft.appliesTo === "PRODUCT" && (
           <div className="mt-4">
-            <p className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Eligible products</p>
-            <div className="grid max-h-40 grid-cols-2 gap-1 overflow-y-auto rounded-lg border border-gray-200 p-2 dark:border-gray-800">
+            <p className="mb-2 text-sm font-medium text-gray-700">Eligible products</p>
+            <div className="grid max-h-40 grid-cols-2 gap-1 overflow-y-auto rounded-lg border border-gray-200 p-2">
               {products.map((p) => (
-                <label key={p.id} className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-800">
+                <label key={p.id} className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm hover:bg-gray-50">
                   <input type="checkbox" checked={draft.productIds.includes(p.id)} onChange={() => toggleProduct(p.id)} className="rounded border-gray-300 text-brand-600" />
                   {p.name}
                 </label>

@@ -53,19 +53,19 @@ function Kpi({
     <button
       onClick={onClick}
       disabled={!onClick}
-      className="group animate-fade-in-up rounded-xl border border-gray-200 bg-white p-5 text-left shadow-card transition-all duration-200 enabled:hover:-translate-y-1 enabled:hover:shadow-card-hover disabled:cursor-default dark:border-gray-800 dark:bg-gray-900"
+      className="group animate-fade-in-up rounded-xl border border-gray-200 bg-white p-5 text-left shadow-card transition-all duration-200 enabled:hover:-translate-y-1 enabled:hover:shadow-card-hover disabled:cursor-default"
       style={{ animationDelay: `${delay}ms`, animationFillMode: "backwards" }}
     >
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{label}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</p>
         <div className={`flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br ${accent} text-white shadow-sm transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110`}>
           <Icon className="h-4 w-4" />
         </div>
       </div>
-      <p className="mt-3 truncate text-xl font-bold tracking-tight text-gray-900 dark:text-gray-50">
+      <p className="mt-3 truncate text-xl font-bold tracking-tight text-gray-900">
         <CountUp value={value} format={format} />
       </p>
-      {sub && <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{sub}</p>}
+      {sub && <p className="mt-1 text-xs text-gray-500">{sub}</p>}
     </button>
   );
 }
@@ -102,13 +102,13 @@ export default function Dashboard() {
   );
 
   const columns: Column<Invoice>[] = [
-    { key: "number", header: "Invoice", render: (r) => <span className="font-semibold text-brand-700 dark:text-brand-300">{r.number}</span> },
+    { key: "number", header: "Invoice", render: (r) => <span className="font-semibold text-brand-700">{r.number}</span> },
     {
       key: "customer",
       header: "Customer",
       render: (r) => (
         <div className="leading-tight">
-          <p className="font-medium text-gray-900 dark:text-gray-100">{r.customer?.name ?? r.customerId}</p>
+          <p className="font-medium text-gray-900">{r.customer?.name ?? r.customerId}</p>
           <p className="text-xs text-gray-500">{r.subscription?.number}</p>
         </div>
       ),
@@ -198,14 +198,14 @@ export default function Dashboard() {
         ) : (
           <div className="relative h-52" key={months}>
             {gridLines.map((g) => (
-              <div key={g} className="absolute inset-x-0 border-t border-dashed border-gray-100 dark:border-gray-800" style={{ bottom: `calc(${g * 100}% * 0.8 + 24px)` }}>
-                <span className="absolute -top-2 left-0 bg-white pr-1 text-[10px] text-gray-400 dark:bg-gray-900">{formatMoneyWhole(maxRevenue * g)}</span>
+              <div key={g} className="absolute inset-x-0 border-t border-dashed border-gray-100" style={{ bottom: `calc(${g * 100}% * 0.8 + 24px)` }}>
+                <span className="absolute -top-2 left-0 bg-white pr-1 text-[10px] text-gray-400">{formatMoneyWhole(maxRevenue * g)}</span>
               </div>
             ))}
             <div className="absolute inset-0 flex items-end gap-4 pl-20">
               {revenue.map((r, i) => (
                 <div key={r.month} className="group flex h-full flex-1 flex-col items-center justify-end gap-1.5">
-                  <span className="rounded-md bg-gray-900 px-2 py-0.5 text-[11px] font-medium tabular-nums text-white opacity-0 shadow transition-all duration-200 group-hover:-translate-y-0.5 group-hover:opacity-100 dark:bg-gray-700">
+                  <span className="rounded-md bg-gray-900 px-2 py-0.5 text-[11px] font-medium tabular-nums text-white opacity-0 shadow transition-all duration-200 group-hover:-translate-y-0.5 group-hover:opacity-100">
                     {formatMoney(r.revenue)}
                   </span>
                   <div
@@ -247,7 +247,7 @@ export default function Dashboard() {
           </div>
         </div>
         <DataTable columns={columns} rows={rows} page={page} pageSize={20} total={total} onPageChange={setPage} loading={loading} onRowClick={(r) => navigate(`/app/invoices/${r.id}`)} />
-        <button onClick={() => navigate("/app/invoices")} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-brand-700 transition-all hover:gap-2 dark:text-brand-300">
+        <button onClick={() => navigate("/app/invoices")} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-brand-700 transition-all hover:gap-2">
           View all invoices <ArrowRight className="h-4 w-4" />
         </button>
       </div>

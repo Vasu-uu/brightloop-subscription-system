@@ -62,14 +62,14 @@ export default function MyInvoiceDetail() {
   return (
     <div className="mx-auto max-w-4xl">
       <div className="no-print">
-        <button onClick={() => navigate("/portal/invoices")} className="mb-3 flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">
+        <button onClick={() => navigate("/portal/invoices")} className="mb-3 flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800">
           <ArrowLeft className="h-4 w-4" /> My invoices
         </button>
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-50">{invoice.number}</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">{invoice.number}</h1>
             <StatusBadge status={invoice.status} />
-            {late && <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700 dark:bg-red-500/10 dark:text-red-300">{daysOverdue(invoice.dueDate)} days overdue</span>}
+            {late && <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700">{daysOverdue(invoice.dueDate)} days overdue</span>}
           </div>
           <Button variant="secondary" onClick={() => window.print()}>
             <Printer className="h-4 w-4" /> Print
@@ -78,10 +78,10 @@ export default function MyInvoiceDetail() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_300px] print:block">
-        <article className="rounded-xl border border-gray-200 bg-white p-7 shadow-card print:border-0 print:p-0 print:shadow-none dark:border-gray-800 dark:bg-gray-900 print:dark:bg-white">
-          <div className="flex items-start justify-between border-b border-gray-100 pb-5 dark:border-gray-800">
+        <article className="rounded-xl border border-gray-200 bg-white p-7 shadow-card print:border-0 print:p-0 print:shadow-none">
+          <div className="flex items-start justify-between border-b border-gray-100 pb-5">
             <p className="text-lg font-bold tracking-tight">Brightloop Software</p>
-            <div className="text-right text-sm text-gray-600 dark:text-gray-400">
+            <div className="text-right text-sm text-gray-600">
               <p>Issued {formatDate(invoice.issueDate)}</p>
               <p>Due {formatDate(invoice.dueDate)}</p>
               <p>Period {formatDate(invoice.periodStart)} - {formatDate(invoice.periodEnd)}</p>
@@ -89,14 +89,14 @@ export default function MyInvoiceDetail() {
           </div>
           <table className="mt-4 w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-200 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-800">
+              <tr className="border-b border-gray-200 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                 <th className="py-2">Description</th>
                 <th className="py-2 text-right">Qty</th>
                 <th className="py-2 text-right">Unit price</th>
                 <th className="py-2 text-right">Amount</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+            <tbody className="divide-y divide-gray-100">
               {(invoice.lines ?? []).map((l) => (
                 <tr key={l.id}>
                   <td className="py-3">{l.description}</td>
@@ -108,13 +108,13 @@ export default function MyInvoiceDetail() {
             </tbody>
           </table>
           <div className="mt-5 ml-auto w-full max-w-xs space-y-1.5 text-sm">
-            <div className="flex justify-between text-gray-600 dark:text-gray-400"><span>Subtotal</span><span className="tabular-nums">{formatMoney(invoice.subtotal)}</span></div>
+            <div className="flex justify-between text-gray-600"><span>Subtotal</span><span className="tabular-nums">{formatMoney(invoice.subtotal)}</span></div>
             {Number(invoice.discountTotal) > 0 && (
-              <div className="flex justify-between text-green-700 dark:text-green-400"><span>Discounts</span><span className="tabular-nums">-{formatMoney(invoice.discountTotal)}</span></div>
+              <div className="flex justify-between text-green-700"><span>Discounts</span><span className="tabular-nums">-{formatMoney(invoice.discountTotal)}</span></div>
             )}
-            <div className="flex justify-between text-gray-600 dark:text-gray-400"><span>Tax</span><span className="tabular-nums">{formatMoney(invoice.taxTotal)}</span></div>
-            <div className="flex justify-between border-t border-gray-200 pt-2 text-base font-bold dark:border-gray-800"><span>Total</span><span className="tabular-nums">{formatMoney(invoice.total)}</span></div>
-            <div className="flex justify-between text-gray-600 dark:text-gray-400"><span>Paid</span><span className="tabular-nums">{formatMoney(invoice.amountPaid)}</span></div>
+            <div className="flex justify-between text-gray-600"><span>Tax</span><span className="tabular-nums">{formatMoney(invoice.taxTotal)}</span></div>
+            <div className="flex justify-between border-t border-gray-200 pt-2 text-base font-bold"><span>Total</span><span className="tabular-nums">{formatMoney(invoice.total)}</span></div>
+            <div className="flex justify-between text-gray-600"><span>Paid</span><span className="tabular-nums">{formatMoney(invoice.amountPaid)}</span></div>
             <div className="flex justify-between font-semibold"><span>Balance due</span><span className="tabular-nums">{formatMoney(balance)}</span></div>
           </div>
         </article>
@@ -131,8 +131,8 @@ export default function MyInvoiceDetail() {
                       onClick={() => setMethod(m)}
                       className={`flex items-center gap-2.5 rounded-lg border px-3 py-2 text-left text-sm transition-colors ${
                         method === m
-                          ? "border-brand-500 bg-brand-50 text-brand-800 ring-1 ring-brand-500 dark:bg-brand-500/10 dark:text-brand-200"
-                          : "border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
+                          ? "border-brand-500 bg-brand-50 text-brand-800 ring-1 ring-brand-500"
+                          : "border-gray-200 hover:bg-gray-50"
                       }`}
                     >
                       <Icon className="h-4 w-4" />
@@ -147,7 +147,7 @@ export default function MyInvoiceDetail() {
             </Card>
           ) : (
             <Card title="Payment">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-gray-600">
                 {invoice.status === "PAID" ? "This invoice is fully paid. Thank you!" : invoice.status === "CANCELLED" ? "This invoice was cancelled." : "This invoice is not open for payment yet."}
               </p>
             </Card>

@@ -30,14 +30,14 @@ export function Modal({
       onClick={onClose}
     >
       <div
-        className={`max-h-[90vh] w-full ${wide ? "max-w-2xl" : "max-w-lg"} animate-scale-in overflow-y-auto rounded-xl bg-white p-6 shadow-2xl ring-1 ring-black/5 dark:bg-gray-900 dark:ring-white/10`}
+        className={`max-h-[90vh] w-full ${wide ? "max-w-2xl" : "max-w-lg"} animate-scale-in overflow-y-auto rounded-xl bg-white p-6 shadow-2xl ring-1 ring-black/5`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
-          {title && <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">{title}</h2>}
+          {title && <h2 className="text-lg font-semibold text-gray-900">{title}</h2>}
           <button
             onClick={onClose}
-            className="rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+            className="rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
             aria-label="Close"
           >
             <X className="h-4 w-4" />

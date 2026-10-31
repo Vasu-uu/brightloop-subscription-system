@@ -18,9 +18,9 @@ export function Segmented<T extends string>({
   }, [value, options]);
 
   return (
-    <div className="relative inline-flex rounded-lg bg-gray-100 p-1 dark:bg-gray-900">
+    <div className="relative inline-flex rounded-lg bg-gray-100 p-1">
       <span
-        className="absolute bottom-1 top-1 rounded-md bg-white shadow-sm transition-all duration-300 ease-out dark:bg-gray-700"
+        className="absolute bottom-1 top-1 rounded-md bg-white shadow-sm transition-all duration-300 ease-out"
         style={{ left: box.left, width: box.width }}
       />
       {options.map((o) => (
@@ -31,7 +31,7 @@ export function Segmented<T extends string>({
           }}
           onClick={() => onChange(o.key)}
           className={`relative z-10 rounded-md px-3.5 py-1.5 text-sm font-medium transition-colors ${
-            value === o.key ? "text-gray-900 dark:text-gray-50" : "text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+            value === o.key ? "text-gray-900" : "text-gray-500 hover:text-gray-800"
           }`}
         >
           {o.label}

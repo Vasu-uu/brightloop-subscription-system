@@ -32,7 +32,7 @@ export default function MyInvoices() {
   const rows = (all ?? []).slice((page - 1) * pageSize, page * pageSize);
 
   const columns: Column<Invoice>[] = [
-    { key: "number", header: "Invoice", render: (r) => <span className="font-semibold text-brand-700 dark:text-brand-300">{r.number}</span> },
+    { key: "number", header: "Invoice", render: (r) => <span className="font-semibold text-brand-700">{r.number}</span> },
     { key: "status", header: "Status", render: (r) => <StatusBadge status={r.status} /> },
     { key: "issued", header: "Issued", render: (r) => formatDate(r.issueDate) },
     {
@@ -61,15 +61,15 @@ export default function MyInvoices() {
           [0, 1, 2].map((i) => <Skeleton key={i} className="h-24" />)
         ) : (
           <>
-            <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-card dark:border-gray-800 dark:bg-gray-900">
+            <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-card">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-500"><Wallet className="h-4 w-4" /> Amount due</div>
               <p className="mt-2 text-2xl font-bold tabular-nums">{formatMoney(summary.due)}</p>
             </div>
-            <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-card dark:border-gray-800 dark:bg-gray-900">
+            <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-card">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-500"><AlertCircle className="h-4 w-4 text-red-500" /> Overdue invoices</div>
               <p className="mt-2 text-2xl font-bold tabular-nums">{summary.overdue}</p>
             </div>
-            <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-card dark:border-gray-800 dark:bg-gray-900">
+            <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-card">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-500"><CheckCircle2 className="h-4 w-4 text-green-500" /> Paid invoices</div>
               <p className="mt-2 text-2xl font-bold tabular-nums">{summary.paid}</p>
             </div>

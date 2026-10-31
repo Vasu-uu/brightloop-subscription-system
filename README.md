@@ -2,13 +2,13 @@
 
 A full-stack platform that runs the whole life of a subscription business: **products and plans → quotations → subscriptions → automated recurring invoices → discounts and taxes → payments → customer portal → finance reporting**.
 
-Three roles (Admin, Staff, Customer), server-side pagination everywhere, idempotent billing, and a responsive light/dark UI.
+Three roles (Admin, Staff, Customer), server-side pagination everywhere, idempotent billing, and a responsive light UI.
 
 ![Finance dashboard](docs/screenshots/dashboard-light.png)
 
-| Dark mode | Subscription lifecycle |
+| Command palette | Subscription lifecycle |
 |---|---|
-| ![Dashboard, dark mode](docs/screenshots/dashboard-dark.png) | ![Subscription detail](docs/screenshots/subscription-detail-light.png) |
+| ![Command palette](docs/screenshots/command-palette.png) | ![Subscription detail](docs/screenshots/subscription-detail-light.png) |
 
 ---
 
@@ -61,7 +61,7 @@ Three roles (Admin, Staff, Customer), server-side pagination everywhere, idempot
 - A product-style app shell: grouped, role-aware sidebar with an animated active marker, a top bar with a **command palette** (`Ctrl` / `Cmd` + `K`) to jump to any page or start an action (new subscription, run billing, switch theme).
 - Dashboard with a greeting hero, count-up KPI cards that link to the matching list, an animated revenue chart with hover tooltips, and a sliding paid / outstanding / overdue switch.
 - Smooth page transitions, staggered list animation, press and hover micro-interactions, skeleton loaders and toasts. Motion respects `prefers-reduced-motion` for number animation.
-- Light and dark theme (persisted, no flash on load), mobile drawer navigation, searchable customer picker, confirm dialogs for destructive actions, accessible focus states and a print-friendly invoice.
+- Clean light theme, mobile drawer navigation, searchable customer picker, confirm dialogs for destructive actions, accessible focus states and a print-friendly invoice.
 
 ---
 
@@ -109,9 +109,9 @@ Three roles (Admin, Staff, Customer), server-side pagination everywhere, idempot
 |---|---|
 | ![Portal subscriptions](docs/screenshots/portal-subscriptions.png) | ![Portal invoices](docs/screenshots/portal-invoices.png) |
 
-| Pay an invoice | Dark mode |
+| Pay an invoice | Subscription detail |
 |---|---|
-| ![Portal invoice](docs/screenshots/portal-invoice-light.png) | ![Subscription dark](docs/screenshots/subscription-detail-dark.png) |
+| ![Portal invoice](docs/screenshots/portal-invoice-light.png) | ![Subscription detail](docs/screenshots/subscription-detail-light.png) |
 
 ---
 

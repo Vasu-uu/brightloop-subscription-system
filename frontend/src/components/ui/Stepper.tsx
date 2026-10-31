@@ -14,22 +14,22 @@ export function Stepper({ steps, current }: { steps: readonly string[]; current:
                   done
                     ? "animate-pop-in bg-brand-600 text-white"
                     : active
-                      ? "bg-brand-600 text-white ring-4 ring-brand-100 dark:ring-brand-500/20"
-                      : "bg-gray-100 text-gray-400 dark:bg-gray-800"
+                      ? "bg-brand-600 text-white ring-4 ring-brand-100"
+                      : "bg-gray-100 text-gray-400"
                 }`}
               >
                 {done ? <Check className="h-3.5 w-3.5" /> : i + 1}
               </span>
               <span
                 className={`text-[11px] font-medium capitalize ${
-                  active ? "text-brand-700 dark:text-brand-300" : done ? "text-gray-700 dark:text-gray-300" : "text-gray-400"
+                  active ? "text-brand-700" : done ? "text-gray-700" : "text-gray-400"
                 }`}
               >
                 {step.toLowerCase()}
               </span>
             </div>
             {i < steps.length - 1 && (
-              <div className={`mx-2 mb-4 h-0.5 flex-1 rounded ${done ? "bg-brand-600" : "bg-gray-200 dark:bg-gray-800"}`} />
+              <div className={`mx-2 mb-4 h-0.5 flex-1 rounded ${done ? "bg-brand-600" : "bg-gray-200"}`} />
             )}
           </li>
         );

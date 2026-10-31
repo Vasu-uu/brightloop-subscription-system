@@ -103,7 +103,7 @@ export default function PlansList() {
   }
 
   const columns: Column<Plan>[] = [
-    { key: "name", header: "Plan", render: (r) => <span className="font-medium text-gray-900 dark:text-gray-100">{r.name}</span> },
+    { key: "name", header: "Plan", render: (r) => <span className="font-medium text-gray-900">{r.name}</span> },
     { key: "price", header: "Price", render: (r) => <span className="tabular-nums">{formatMoney(r.price)}</span> },
     {
       key: "period",
@@ -115,7 +115,7 @@ export default function PlansList() {
       key: "avail",
       header: "Available",
       render: (r) => (
-        <span className="text-gray-600 dark:text-gray-400">
+        <span className="text-gray-600">
           {formatDate(r.availableFrom)} - {r.availableTo ? formatDate(r.availableTo) : "open-ended"}
         </span>
       ),
@@ -126,7 +126,7 @@ export default function PlansList() {
       render: (r) => (
         <div className="flex flex-wrap gap-1">
           {RULES.filter((x) => r[x.key]).map((x) => (
-            <span key={x.key} className="rounded-full bg-green-50 px-2 py-0.5 text-xs text-green-700 dark:bg-green-500/10 dark:text-green-300">
+            <span key={x.key} className="rounded-full bg-green-50 px-2 py-0.5 text-xs text-green-700">
               {x.label}
             </span>
           ))}
@@ -189,7 +189,7 @@ export default function PlansList() {
           <Input label="Available from" type="date" value={draft.availableFrom} onChange={(e) => setDraft({ ...draft, availableFrom: e.target.value })} />
           <Input label="Available until (optional)" type="date" value={draft.availableTo} onChange={(e) => setDraft({ ...draft, availableTo: e.target.value })} />
         </div>
-        <div className="mt-5 space-y-3 rounded-lg border border-gray-200 p-4 dark:border-gray-800">
+        <div className="mt-5 space-y-3 rounded-lg border border-gray-200 p-4">
           <Toggle label="Close automatically" description="Closes itself once the expiry date has passed." checked={draft.autoClose} onChange={(v) => setDraft({ ...draft, autoClose: v })} />
           <Toggle label="Allow early close" description="Staff may close a subscription before it is active or before expiry." checked={draft.allowEarlyClose} onChange={(v) => setDraft({ ...draft, allowEarlyClose: v })} />
           <Toggle label="Allow pause" description="Active subscriptions can be paused and resumed." checked={draft.allowPause} onChange={(v) => setDraft({ ...draft, allowPause: v })} />

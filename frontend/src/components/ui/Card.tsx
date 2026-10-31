@@ -17,13 +17,13 @@ export function Card({
 }) {
   return (
     <section
-      className={`rounded-xl border border-gray-200 bg-white shadow-card dark:border-gray-800 dark:bg-gray-900 ${className}`}
+      className={`rounded-xl border border-gray-200 bg-white shadow-card ${className}`}
     >
       {(title || actions) && (
-        <header className="flex items-start justify-between gap-3 border-b border-gray-100 px-5 py-3.5 dark:border-gray-800">
+        <header className="flex items-start justify-between gap-3 border-b border-gray-100 px-5 py-3.5">
           <div>
-            {title && <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-50">{title}</h2>}
-            {description && <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{description}</p>}
+            {title && <h2 className="text-sm font-semibold text-gray-900">{title}</h2>}
+            {description && <p className="mt-0.5 text-xs text-gray-500">{description}</p>}
           </div>
           {actions}
         </header>

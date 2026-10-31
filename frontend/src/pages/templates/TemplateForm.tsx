@@ -65,10 +65,10 @@ export default function TemplateForm() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <button onClick={() => navigate("/app/templates")} className="mb-3 flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">
+      <button onClick={() => navigate("/app/templates")} className="mb-3 flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800">
         <ArrowLeft className="h-4 w-4" /> Quotation templates
       </button>
-      <h1 className="mb-6 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-50">
+      <h1 className="mb-6 text-2xl font-bold tracking-tight text-gray-900">
         {isEdit ? "Edit template" : "New template"}
       </h1>
 

@@ -53,10 +53,10 @@ export default function StaffList() {
       header: "Name",
       render: (r) => (
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700 dark:bg-brand-500/20 dark:text-brand-300">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700">
             {r.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase()}
           </div>
-          <span className="font-medium text-gray-900 dark:text-gray-100">{r.name}</span>
+          <span className="font-medium text-gray-900">{r.name}</span>
         </div>
       ),
     },
@@ -67,7 +67,7 @@ export default function StaffList() {
       key: "active",
       header: "Status",
       render: (r) => (
-        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${r.isActive ? "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-300" : "bg-gray-100 text-gray-500"}`}>
+        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${r.isActive ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"}`}>
           {r.isActive ? "Active" : "Disabled"}
         </span>
       ),
@@ -100,7 +100,7 @@ export default function StaffList() {
             {RULES.map((r) => {
               const ok = r.test(form.password);
               return (
-                <li key={r.label} className={`flex items-center gap-1 ${ok ? "text-green-600 dark:text-green-400" : "text-gray-400"}`}>
+                <li key={r.label} className={`flex items-center gap-1 ${ok ? "text-green-600" : "text-gray-400"}`}>
                   {ok ? <Check className="h-3 w-3" /> : <Circle className="h-2 w-2" />}
                   {r.label}
                 </li>
