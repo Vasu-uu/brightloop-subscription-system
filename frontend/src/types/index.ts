@@ -132,6 +132,7 @@ export interface Subscription {
   createdAt: string;
   updatedAt: string;
   lines?: SubscriptionLine[];
+  invoices?: Invoice[];
 }
 
 export interface InvoiceLine {

@@ -1,8 +1,8 @@
 import { apiGet, apiPost } from "./client";
 import { ApiMeta, Invoice, Subscription } from "../types";
 
-export async function listMySubscriptions(page = 1) {
-  return apiGet<Subscription[]>("/portal/subscriptions", { page }) as Promise<{
+export async function listMySubscriptions(page = 1, pageSize = 20) {
+  return apiGet<Subscription[]>("/portal/subscriptions", { page, pageSize }) as Promise<{
     data: Subscription[];
     meta: ApiMeta;
   }>;
@@ -12,8 +12,8 @@ export async function getMySubscription(id: number) {
   return apiGet<Subscription>(`/portal/subscriptions/${id}`).then((r) => r.data);
 }
 
-export async function listMyInvoices(page = 1) {
-  return apiGet<Invoice[]>("/portal/invoices", { page }) as Promise<{ data: Invoice[]; meta: ApiMeta }>;
+export async function listMyInvoices(page = 1, pageSize = 20) {
+  return apiGet<Invoice[]>("/portal/invoices", { page, pageSize }) as Promise<{ data: Invoice[]; meta: ApiMeta }>;
 }
 
 export async function getMyInvoice(id: number) {

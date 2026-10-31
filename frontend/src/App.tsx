@@ -20,6 +20,11 @@ import SubscriptionDetail from "./pages/subscriptions/SubscriptionDetail";
 import InvoicesList from "./pages/invoices/InvoicesList";
 import InvoiceDetail from "./pages/invoices/InvoiceDetail";
 import PaymentsList from "./pages/payments/PaymentsList";
+import ProductsList from "./pages/products/ProductsList";
+import PlansList from "./pages/plans/PlansList";
+import TaxesList from "./pages/taxes/TaxesList";
+import DiscountsList from "./pages/discounts/DiscountsList";
+import StaffList from "./pages/staff/StaffList";
 
 export default function App() {
   return (
@@ -42,6 +47,13 @@ export default function App() {
           <Route path="/app/invoices" element={<InvoicesList />} />
           <Route path="/app/invoices/:id" element={<InvoiceDetail />} />
           <Route path="/app/payments" element={<PaymentsList />} />
+          <Route path="/app/products" element={<ProductsList />} />
+          <Route path="/app/plans" element={<PlansList />} />
+          <Route path="/app/taxes" element={<TaxesList />} />
+          <Route path="/app/discounts" element={<DiscountsList />} />
+          <Route element={<ProtectedRoute roles={["ADMIN"]} />}>
+            <Route path="/app/staff" element={<StaffList />} />
+          </Route>
         </Route>
       </Route>
 

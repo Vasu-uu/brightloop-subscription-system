@@ -51,13 +51,13 @@ Three roles (Admin, Staff, Customer), server-side pagination everywhere, idempot
 **Payments and reporting**
 - Record payments (cash, card, UPI, bank transfer, cheque) with row-level locking so concurrent payments can never overpay.
 - Finance dashboard: active subscriptions, revenue, outstanding, overdue, revenue by month, and paid / outstanding / overdue invoice tabs.
-- Customer portal: customers see only their own subscriptions and invoices and can pay online (simulated gateway).
+- Customer portal: customers see only their own subscriptions (with lifecycle view) and invoices, and can pay online (simulated gateway).
 
 **Security**
 - JWT auth, bcrypt password hashing, strict password policy, role-based access on every route, hashed single-use password-reset tokens (1 hour expiry), customers get `404` (not `403`) for other customers' records.
 
 **UI**
-- Light and dark theme (persisted, no flash on load), skeleton loaders, animated lists and toasts, icon navigation, accessible focus states, print-friendly invoice view.
+- Light and dark theme (persisted, no flash on load), role-aware grouped navigation with a mobile drawer, searchable customer picker, confirm dialogs for destructive actions, skeleton loaders, animated lists and toasts, accessible focus states, print-friendly invoice view.
 
 ---
 
@@ -67,25 +67,60 @@ Three roles (Admin, Staff, Customer), server-side pagination everywhere, idempot
 |---|---|
 | ![Login](docs/screenshots/login-light.png) | ![Signup](docs/screenshots/signup.png) |
 
-| Quotation templates | Template editor |
-|---|---|
-| ![Templates](docs/screenshots/templates.png) | ![Template form](docs/screenshots/template-form.png) |
+**Catalog (admin edits, staff reads)**
 
-| Subscriptions | Subscription detail and status stepper |
+| Products with variants | Plans with lifecycle rules |
+|---|---|
+| ![Products](docs/screenshots/products.png) | ![Plans](docs/screenshots/plans.png) |
+
+| Taxes | Discounts |
+|---|---|
+| ![Taxes](docs/screenshots/taxes.png) | ![Discounts](docs/screenshots/discounts.png) |
+
+| Staff (admin only) | Quotation templates |
+|---|---|
+| ![Staff](docs/screenshots/staff.png) | ![Templates](docs/screenshots/templates.png) |
+
+**Sales and billing**
+
+| Subscriptions | Subscription: lifecycle stepper, variant lines, summary |
 |---|---|
 | ![Subscriptions](docs/screenshots/subscriptions.png) | ![Subscription detail](docs/screenshots/subscription-detail-light.png) |
 
-| Invoices | Invoice detail (print / PDF / record payment) |
+| Invoices with filters and days overdue | Invoice: print, PDF, record payment |
 |---|---|
 | ![Invoices](docs/screenshots/invoices.png) | ![Invoice detail](docs/screenshots/invoice-detail-light.png) |
 
-| Payments | Customer portal: pay an invoice |
+| Payments | Template editor |
 |---|---|
-| ![Payments](docs/screenshots/payments.png) | ![Portal invoice](docs/screenshots/portal-invoice-light.png) |
+| ![Payments](docs/screenshots/payments.png) | ![Template form](docs/screenshots/template-form.png) |
 
-| Customer portal: subscriptions | Dark mode: invoice |
+**Customer portal**
+
+| My subscriptions | My invoices |
 |---|---|
-| ![Portal subscriptions](docs/screenshots/portal-subscriptions.png) | ![Invoice dark](docs/screenshots/invoice-detail-dark.png) |
+| ![Portal subscriptions](docs/screenshots/portal-subscriptions.png) | ![Portal invoices](docs/screenshots/portal-invoices.png) |
+
+| Pay an invoice | Dark mode |
+|---|---|
+| ![Portal invoice](docs/screenshots/portal-invoice-light.png) | ![Subscription dark](docs/screenshots/subscription-detail-dark.png) |
+
+---
+
+## Problem statement coverage
+
+Each scene from the brief and where it lives in the app:
+
+| Scene | Implemented as |
+|---|---|
+| **A new customer signs up** | `/signup` with a live password checklist (more than 8 chars, upper, lower, special), unique case-insensitive email, `/forgot-password` and `/reset-password` (hashed, single-use, 1 hour link). Roles: Admin, Staff, Customer; only an admin can add staff (**Staff** page). |
+| **Launching a new plan** | **Products** (name, type, sales price, cost price, notes, tax, variants such as *Brand / Odoo / +560*) and **Plans** (daily, weekly, monthly, yearly, minimum quantity, availability dates, auto-close, early close, pause, renew toggles). |
+| **Turning a quote into a subscription** | **Quotation templates** (plan, lines with variants, validity days) and **Subscriptions → From template**. Each subscription has a generated number, customer, plan, start and expiry dates, payment terms and lines with product, quantity, unit price, tax and amount, plus a **lifecycle stepper** (Draft, Quotation, Confirmed, Active, Closed) visible on every record. |
+| **Billing day** | **Invoices → Run billing** creates every due invoice from its subscription with customer, lines, taxes and totals pre-filled. Confirm, cancel, send, print and PDF on each invoice (Draft, Confirmed, Paid). A unique `(subscriptionId, periodStart)` key guarantees nothing is billed twice. |
+| **A customer asks for a better price** | **Discounts** (admin only): fixed or percentage, minimum purchase or quantity, start and end dates, usage limit, specific products or whole subscriptions. Applied automatically to the next invoice and stops when expired or used up. |
+| **The money comes in** | **Record payment** on an invoice (method, amount, date, note) and the **Payments** page with date and customer filters. Dashboard tabs show paid, outstanding and overdue invoices, with days overdue. |
+| **The finance lead, at month end** | **Finance dashboard**: active subscriptions, revenue, this month, outstanding, overdue, revenue by month, and a filterable invoice table. Every list is server-paginated; measured responses are in the 5 to 15 ms range with 5,000 subscriptions. |
+| **Customers manage their own** | **Portal**: only their own subscriptions and invoices (other customers' records return 404), lifecycle view, invoice history and online payment. |
 
 ---
 

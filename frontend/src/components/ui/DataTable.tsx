@@ -17,6 +17,7 @@ export function DataTable<T extends { id: number | string }>({
   total,
   onPageChange,
   loading,
+  onRowClick,
 }: {
   columns: Column<T>[];
   rows: T[];
@@ -25,6 +26,7 @@ export function DataTable<T extends { id: number | string }>({
   total: number;
   onPageChange: (page: number) => void;
   loading?: boolean;
+  onRowClick?: (row: T) => void;
 }) {
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
@@ -59,7 +61,8 @@ export function DataTable<T extends { id: number | string }>({
               rows.map((row, i) => (
                 <tr
                   key={row.id}
-                  className="animate-fade-in-up transition-colors duration-100 hover:bg-gray-50 dark:hover:bg-gray-800/60"
+                  onClick={onRowClick ? () => onRowClick(row) : undefined}
+                  className={`animate-fade-in-up transition-colors duration-100 hover:bg-gray-50 dark:hover:bg-gray-800/60 ${onRowClick ? "cursor-pointer" : ""}`}
                   style={{ animationDelay: `${Math.min(i, 10) * 20}ms`, animationFillMode: "backwards" }}
                 >
                   {columns.map((col) => (

@@ -9,7 +9,7 @@ export type TemplateInput = {
   lines: TemplateLineInput[];
 };
 
-export async function listTemplates(params: { page?: number; search?: string }) {
+export async function listTemplates(params: { page?: number; pageSize?: number; search?: string }) {
   return apiGet<QuotationTemplate[]>("/quotation-templates", params) as Promise<{
     data: QuotationTemplate[];
     meta: ApiMeta;

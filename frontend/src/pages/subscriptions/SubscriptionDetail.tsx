@@ -1,10 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { PageHeader } from "../../components/ui/PageHeader";
+import { AlertTriangle, ArrowLeft, ArrowRight, Pause, Play, Plus, RefreshCw, Trash2, XCircle } from "lucide-react";
 import { Button } from "../../components/ui/Button";
+import { Card } from "../../components/ui/Card";
+import { Combobox } from "../../components/ui/Combobox";
+import { ConfirmDialog } from "../../components/ui/ConfirmDialog";
 import { Input } from "../../components/ui/Input";
 import { Select } from "../../components/ui/Select";
+import { Stepper } from "../../components/ui/Stepper";
 import { StatusBadge } from "../../components/ui/StatusBadge";
+import { Skeleton } from "../../components/ui/Skeleton";
 import { useToast } from "../../components/ui/Toast";
 import {
   createSubscription,
@@ -16,16 +21,20 @@ import {
   transitionSubscription,
   updateSubscription,
 } from "../../api/subscriptions";
-import { listCustomers } from "../../api/customers";
+import { searchCustomers } from "../../api/customers";
 import { listPlans } from "../../api/plans";
 import { listProducts } from "../../api/products";
 import { listTaxes } from "../../api/taxes";
-import { Plan, Product, Subscription, SubscriptionStatus, Tax, User } from "../../types";
+import { Plan, Product, Subscription, SubscriptionStatus, Tax } from "../../types";
 import { SUBSCRIPTION_STATUSES } from "../../constants/enums";
+import { errorMessage, formatDate, formatMoney, toDateInput } from "../../lib/format";
 
-function toDateInput(value?: string) {
-  return value ? value.slice(0, 10) : "";
-}
+const blankLine = (): SubscriptionLineInput => ({ productId: 0, variantId: null, quantity: 1 });
+const plusYear = () => {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() + 1);
+  return d.toISOString().slice(0, 10);
+};
 
 export default function SubscriptionDetail() {
   const { id } = useParams();
@@ -34,47 +43,52 @@ export default function SubscriptionDetail() {
   const { push } = useToast();
 
   const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [loaded, setLoaded] = useState(isNew);
   const [customerId, setCustomerId] = useState<number | "">("");
+  const [customerLabel, setCustomerLabel] = useState("");
   const [planId, setPlanId] = useState<number | "">("");
-  const [startDate, setStartDate] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
+  const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
+  const [expiryDate, setExpiryDate] = useState(plusYear());
   const [paymentTermDays, setPaymentTermDays] = useState(0);
-  const [lines, setLines] = useState<SubscriptionLineInput[]>([{ productId: 0, variantId: null, quantity: 1 }]);
+  const [lines, setLines] = useState<SubscriptionLineInput[]>([blankLine()]);
 
-  const [customers, setCustomers] = useState<User[]>([]);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [taxes, setTaxes] = useState<Tax[]>([]);
   const [saving, setSaving] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [confirmClose, setConfirmClose] = useState(false);
 
   useEffect(() => {
-    listCustomers().then((r) => setCustomers(r.data)).catch(() => setCustomers([]));
-    listPlans().then((r) => setPlans(r.data)).catch(() => setPlans([]));
-    listProducts().then((r) => setProducts(r.data)).catch(() => setProducts([]));
-    listTaxes().then((r) => setTaxes(r.data)).catch(() => setTaxes([]));
+    listPlans().then((r) => setPlans(r.data));
+    listProducts().then((r) => setProducts(r.data));
+    listTaxes().then((r) => setTaxes(r.data));
   }, []);
 
-  function loadSubscription() {
+  function load() {
     if (!id) return;
-    getSubscription(Number(id)).then((s) => {
-      setSubscription(s);
-      setCustomerId(s.customerId);
-      setPlanId(s.planId);
-      setStartDate(toDateInput(s.startDate));
-      setExpiryDate(toDateInput(s.expiryDate));
-      setPaymentTermDays(s.paymentTermDays);
-      setLines((s.lines ?? []).map((l) => ({ productId: l.productId, variantId: l.variantId, quantity: l.quantity })));
-    });
+    getSubscription(Number(id))
+      .then((s) => {
+        setSubscription(s);
+        setCustomerId(s.customerId);
+        setCustomerLabel(s.customer?.name ?? "");
+        setPlanId(s.planId);
+        setStartDate(toDateInput(s.startDate));
+        setExpiryDate(toDateInput(s.expiryDate));
+        setPaymentTermDays(s.paymentTermDays);
+        setLines((s.lines ?? []).map((l) => ({ productId: l.productId, variantId: l.variantId ?? null, quantity: l.quantity })));
+      })
+      .finally(() => setLoaded(true));
   }
+  useEffect(load, [id]);
 
-  useEffect(loadSubscription, [id]);
-
-  const selectedPlan = plans.find((p) => p.id === planId) || subscription?.plan;
+  const plan = plans.find((p) => p.id === planId) ?? subscription?.plan;
+  const closed = subscription?.status === "CLOSED";
 
   const preview = useMemo(() => {
     let subtotal = 0;
     let taxTotal = 0;
-    const previewLines = lines.map((line) => {
+    const rows = lines.map((line) => {
       const product = products.find((p) => p.id === line.productId);
       const variant = product?.variants?.find((v) => v.id === line.variantId);
       const unitPrice = (product?.salesPrice ?? 0) + (variant?.extraPrice ?? 0);
@@ -83,224 +97,328 @@ export default function SubscriptionDetail() {
       const taxAmount = tax ? Math.round(((amount * tax.ratePercent) / 100) * 100) / 100 : 0;
       subtotal += amount;
       taxTotal += taxAmount;
-      return { ...line, unitPrice, amount, taxPercent: tax?.ratePercent ?? 0, taxAmount };
+      return { product, unitPrice, amount, taxPercent: tax?.ratePercent ?? 0 };
     });
-    return { previewLines, subtotal, taxTotal, total: subtotal + taxTotal };
+    return { rows, subtotal, taxTotal, total: subtotal + taxTotal };
   }, [lines, products, taxes]);
 
-  function updateLine(index: number, patch: Partial<SubscriptionLineInput>) {
-    setLines((prev) => prev.map((l, i) => (i === index ? { ...l, ...patch } : l)));
+  const outsideWindow =
+    plan && startDate && (startDate < toDateInput(plan.availableFrom) || (plan.availableTo && startDate > toDateInput(plan.availableTo)));
+
+  function updateLine(i: number, patch: Partial<SubscriptionLineInput>) {
+    setLines((prev) => prev.map((l, idx) => (idx === i ? { ...l, ...patch } : l)));
   }
 
-  async function handleSave() {
-    if (!customerId || !planId) {
-      push("Select a customer and plan", "error");
-      return;
-    }
+  async function save() {
+    if (!customerId || !planId) return push("Choose a customer and a plan", "error");
+    if (lines.some((l) => !l.productId)) return push("Choose a product on every line", "error");
     setSaving(true);
     try {
-      const input = {
-        customerId: Number(customerId),
-        planId: Number(planId),
-        startDate,
-        expiryDate,
-        paymentTermDays,
-        lines,
-      };
+      const input = { customerId: Number(customerId), planId: Number(planId), startDate, expiryDate, paymentTermDays, lines };
       if (isNew) {
         const created = await createSubscription(input);
-        push("Subscription created");
+        push(`${created.number} created`);
         navigate(`/app/subscriptions/${created.id}`);
       } else {
         await updateSubscription(Number(id), input);
         push("Subscription saved");
-        loadSubscription();
+        load();
       }
-    } catch (err: any) {
-      push(err?.response?.data?.error?.message ?? "Failed to save subscription", "error");
+    } catch (err) {
+      push(errorMessage(err, "Failed to save subscription"), "error");
     } finally {
       setSaving(false);
     }
   }
 
-  async function handleTransition(to: SubscriptionStatus) {
-    if (!id) return;
+  async function run(action: () => Promise<unknown>, message: string) {
+    setBusy(true);
     try {
-      await transitionSubscription(Number(id), to);
-      push(`Moved to ${to}`);
-      loadSubscription();
-    } catch (err: any) {
-      push(err?.response?.data?.error?.message ?? "Transition failed", "error");
+      await action();
+      push(message);
+      load();
+    } catch (err) {
+      push(errorMessage(err, "Action failed"), "error");
+    } finally {
+      setBusy(false);
+      setConfirmClose(false);
     }
   }
 
-  async function handleAction(action: "pause" | "resume" | "renew") {
-    if (!id) return;
-    try {
-      const fn = action === "pause" ? pauseSubscription : action === "resume" ? resumeSubscription : renewSubscription;
-      await fn(Number(id));
-      push(`${action} succeeded`);
-      loadSubscription();
-    } catch (err: any) {
-      push(err?.response?.data?.error?.message ?? `${action} failed`, "error");
-    }
-  }
+  const currentIndex = subscription ? SUBSCRIPTION_STATUSES.indexOf(subscription.status) : 0;
+  const nextStatus = subscription && currentIndex < 4 ? SUBSCRIPTION_STATUSES[currentIndex + 1] : null;
+  const canEarlyClose = subscription && plan?.allowEarlyClose && subscription.status !== "ACTIVE" && subscription.status !== "CLOSED";
+  const quotationExpired = subscription?.quotationValidUntil && new Date(subscription.quotationValidUntil) < new Date() && subscription.status !== "ACTIVE" && subscription.status !== "CLOSED";
 
-  const currentIndex = subscription ? SUBSCRIPTION_STATUSES.indexOf(subscription.status) : -1;
-  const nextStatus = currentIndex >= 0 && currentIndex < 4 ? SUBSCRIPTION_STATUSES[currentIndex + 1] : null;
+  if (!loaded) {
+    return (
+      <div className="space-y-4">
+        <Skeleton className="h-10 w-64" />
+        <Skeleton className="h-28" />
+        <Skeleton className="h-96" />
+      </div>
+    );
+  }
 
   return (
     <div>
-      <PageHeader title={isNew ? "New Subscription" : subscription?.number ?? "Loading..."} />
+      <button onClick={() => navigate("/app/subscriptions")} className="mb-3 flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">
+        <ArrowLeft className="h-4 w-4" /> Subscriptions
+      </button>
+
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-50">
+            {isNew ? "New subscription" : subscription?.number}
+          </h1>
+          {subscription && <StatusBadge status={subscription.isPaused ? "PAUSED" : subscription.status} />}
+        </div>
+        {subscription && (
+          <div className="flex flex-wrap gap-2">
+            {subscription.isPaused ? (
+              <Button variant="secondary" loading={busy} onClick={() => run(() => resumeSubscription(subscription.id), "Subscription resumed")}>
+                <Play className="h-4 w-4" /> Resume
+              </Button>
+            ) : (
+              plan?.allowPause &&
+              subscription.status === "ACTIVE" && (
+                <Button variant="secondary" loading={busy} onClick={() => run(() => pauseSubscription(subscription.id), "Subscription paused")}>
+                  <Pause className="h-4 w-4" /> Pause
+                </Button>
+              )
+            )}
+            {plan?.allowRenew && subscription.status === "ACTIVE" && (
+              <Button variant="secondary" loading={busy} onClick={() => run(() => renewSubscription(subscription.id), "Expiry extended by one period")}>
+                <RefreshCw className="h-4 w-4" /> Renew
+              </Button>
+            )}
+            {canEarlyClose && (
+              <Button variant="secondary" onClick={() => setConfirmClose(true)}>
+                <XCircle className="h-4 w-4" /> Close early
+              </Button>
+            )}
+            {nextStatus && (
+              <Button loading={busy} onClick={() => run(() => transitionSubscription(subscription.id, nextStatus as SubscriptionStatus), `Moved to ${nextStatus}`)}>
+                Move to {nextStatus.toLowerCase()} <ArrowRight className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
 
       {subscription && (
-        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-card animate-fade-in-up dark:border-gray-800 dark:bg-gray-900">
-          <div className="flex flex-wrap items-center gap-2">
-            {SUBSCRIPTION_STATUSES.map((s, i) => (
-              <span key={s} className={`flex items-center gap-2 transition-opacity ${i > currentIndex ? "opacity-40" : ""}`}>
-                <StatusBadge status={s} />
-                {i < SUBSCRIPTION_STATUSES.length - 1 && <span className="text-gray-300 dark:text-gray-600">→</span>}
-              </span>
-            ))}
-          </div>
-          <div className="ml-auto flex gap-2">
-            {nextStatus && (
-              <Button onClick={() => handleTransition(nextStatus)}>Move to {nextStatus}</Button>
-            )}
-            {selectedPlan?.allowEarlyClose && subscription.status !== "ACTIVE" && subscription.status !== "CLOSED" && (
-              <Button variant="secondary" onClick={() => handleTransition("CLOSED")}>
-                Close early
-              </Button>
-            )}
-            {selectedPlan?.allowPause && subscription.status === "ACTIVE" && !subscription.isPaused && (
-              <Button variant="secondary" onClick={() => handleAction("pause")}>
-                Pause
-              </Button>
-            )}
-            {subscription.isPaused && (
-              <Button variant="secondary" onClick={() => handleAction("resume")}>
-                Resume
-              </Button>
-            )}
-            {selectedPlan?.allowRenew && subscription.status === "ACTIVE" && (
-              <Button variant="secondary" onClick={() => handleAction("renew")}>
-                Renew
-              </Button>
-            )}
-          </div>
-        </div>
+        <Card className="mb-6">
+          <Stepper steps={SUBSCRIPTION_STATUSES} current={currentIndex} />
+          {quotationExpired && (
+            <div className="mt-4 flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:bg-amber-500/10 dark:text-amber-300">
+              <AlertTriangle className="h-4 w-4" /> The quotation expired on {formatDate(subscription.quotationValidUntil)}.
+            </div>
+          )}
+        </Card>
       )}
 
-      <div className="grid max-w-4xl grid-cols-2 gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-card animate-fade-in-up dark:border-gray-800 dark:bg-gray-900">
-        <Select label="Customer" value={customerId} onChange={(e) => setCustomerId(Number(e.target.value))}>
-          <option value="">Select a customer</option>
-          {customers.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </Select>
-        <Select label="Plan" value={planId} onChange={(e) => setPlanId(Number(e.target.value))}>
-          <option value="">Select a plan</option>
-          {plans.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name}
-            </option>
-          ))}
-        </Select>
-        <Input type="date" label="Start date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-        <Input type="date" label="Expiry date" value={expiryDate} onChange={(e) => setExpiryDate(e.target.value)} />
-        <Input
-          type="number"
-          label="Payment terms (days)"
-          value={paymentTermDays}
-          onChange={(e) => setPaymentTermDays(Number(e.target.value))}
-        />
-
-        <div className="col-span-2">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Lines</span>
-            <Button
-              variant="secondary"
-              onClick={() => setLines((prev) => [...prev, { productId: 0, variantId: null, quantity: 1 }])}
-            >
-              Add line
-            </Button>
-          </div>
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-xs uppercase text-gray-500 dark:text-gray-400">
-                <th className="pb-1.5">Product</th>
-                <th className="pb-1.5">Qty</th>
-                <th className="pb-1.5">Unit price</th>
-                <th className="pb-1.5">Tax %</th>
-                <th className="pb-1.5">Amount</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-              {preview.previewLines.map((line, i) => (
-                <tr key={i} className="animate-fade-in-up">
-                  <td className="py-2 pr-2">
-                    <Select
-                      value={line.productId}
-                      onChange={(e) => updateLine(i, { productId: Number(e.target.value) })}
-                    >
-                      <option value={0}>Select</option>
-                      {products.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name}
-                        </option>
-                      ))}
-                    </Select>
-                  </td>
-                  <td className="py-2 pr-2">
-                    <Input
-                      type="number"
-                      value={line.quantity}
-                      onChange={(e) => updateLine(i, { quantity: Number(e.target.value) })}
-                      className="w-20"
-                    />
-                  </td>
-                  <td className="py-2 pr-2 tabular-nums text-gray-700 dark:text-gray-300">{line.unitPrice.toFixed(2)}</td>
-                  <td className="py-2 pr-2 tabular-nums text-gray-700 dark:text-gray-300">{line.taxPercent}%</td>
-                  <td className="py-2 pr-2 font-medium tabular-nums text-gray-900 dark:text-gray-100">{line.amount.toFixed(2)}</td>
-                  <td>
-                    <Button variant="danger" onClick={() => setLines((prev) => prev.filter((_, idx) => idx !== i))}>
-                      Remove
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="mt-3 flex justify-end text-sm">
-            <div className="w-56 space-y-1 text-gray-600 dark:text-gray-400">
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span className="tabular-nums">{preview.subtotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Tax</span>
-                <span className="tabular-nums">{preview.taxTotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between border-t border-gray-200 pt-1 font-semibold text-gray-900 dark:border-gray-800 dark:text-gray-100">
-                <span>Total</span>
-                <span className="tabular-nums">{preview.total.toFixed(2)}</span>
-              </div>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="space-y-6">
+          <Card title="Details">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Combobox
+                label="Customer"
+                value={customerId}
+                selectedLabel={customerLabel}
+                placeholder="Search customers"
+                fetchOptions={searchCustomers}
+                disabled={closed}
+                onChange={(o) => {
+                  setCustomerId(o.id);
+                  setCustomerLabel(o.label);
+                }}
+              />
+              <Select label="Plan" value={planId} disabled={closed} onChange={(e) => setPlanId(e.target.value ? Number(e.target.value) : "")}>
+                <option value="">Select a plan</option>
+                {plans.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} ({p.billingPeriod.toLowerCase()})
+                  </option>
+                ))}
+              </Select>
+              <Input label="Start date" type="date" value={startDate} disabled={closed} onChange={(e) => setStartDate(e.target.value)} />
+              <Input label="Expiry date" type="date" value={expiryDate} disabled={closed} onChange={(e) => setExpiryDate(e.target.value)} />
+              <Input label="Payment terms (days)" type="number" min={0} value={paymentTermDays} disabled={closed} onChange={(e) => setPaymentTermDays(Number(e.target.value))} />
             </div>
-          </div>
+            {outsideWindow && plan && (
+              <p className="mt-3 flex items-center gap-1.5 text-xs font-medium text-red-600">
+                <AlertTriangle className="h-3.5 w-3.5" />
+                This plan is only available from {formatDate(plan.availableFrom)}
+                {plan.availableTo ? ` to ${formatDate(plan.availableTo)}` : ""}.
+              </p>
+            )}
+          </Card>
+
+          <Card
+            title="Order lines"
+            description={plan ? `Minimum quantity per line on this plan: ${plan.minQuantity}` : "Choose a plan to see its limits"}
+            actions={
+              !closed && (
+                <Button variant="secondary" onClick={() => setLines((p) => [...p, blankLine()])}>
+                  <Plus className="h-4 w-4" /> Add line
+                </Button>
+              )
+            }
+            padded={false}
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[720px] table-fixed text-sm">
+                <colgroup>
+                  <col />
+                  <col className="w-[20%]" />
+                  <col className="w-[76px]" />
+                  <col className="w-[112px]" />
+                  <col className="w-[56px]" />
+                  <col className="w-[124px]" />
+                  <col className="w-[52px]" />
+                </colgroup>
+                <thead>
+                  <tr className="border-b border-gray-100 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-800 dark:text-gray-400">
+                    <th className="px-5 py-2.5">Product</th>
+                    <th className="px-2 py-2.5">Variant</th>
+                    <th className="px-2 py-2.5">Qty</th>
+                    <th className="px-2 py-2.5 text-right">Unit price</th>
+                    <th className="px-2 py-2.5 text-right">Tax</th>
+                    <th className="px-5 py-2.5 text-right">Amount</th>
+                    <th />
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                  {lines.map((line, i) => {
+                    const row = preview.rows[i];
+                    const belowMin = plan && line.quantity < plan.minQuantity;
+                    return (
+                      <tr key={i}>
+                        <td className="px-5 py-2.5">
+                          <Select
+                            value={line.productId}
+                            disabled={closed}
+                            onChange={(e) => updateLine(i, { productId: Number(e.target.value), variantId: null })}
+                          >
+                            <option value={0}>Select product</option>
+                            {products.map((p) => (
+                              <option key={p.id} value={p.id}>
+                                {p.name}
+                              </option>
+                            ))}
+                          </Select>
+                        </td>
+                        <td className="px-2 py-2.5">
+                          <Select
+                            value={line.variantId ?? ""}
+                            disabled={closed || !row.product?.variants?.length}
+                            onChange={(e) => updateLine(i, { variantId: e.target.value ? Number(e.target.value) : null })}
+                          >
+                            <option value="">{row.product?.variants?.length ? "Standard" : "No variants"}</option>
+                            {row.product?.variants?.map((v) => (
+                              <option key={v.id} value={v.id}>
+                                {v.value}
+                                {v.extraPrice > 0 ? ` (+${v.extraPrice})` : ""}
+                              </option>
+                            ))}
+                          </Select>
+                        </td>
+                        <td className="px-2 py-2.5">
+                          <Input
+                            type="number"
+                            min={1}
+                            value={line.quantity}
+                            disabled={closed}
+                            error={belowMin ? `Min ${plan?.minQuantity}` : undefined}
+                            onChange={(e) => updateLine(i, { quantity: Number(e.target.value) })}
+                          />
+                        </td>
+                        <td className="px-2 py-2.5 text-right tabular-nums text-gray-700 dark:text-gray-300">{formatMoney(row.unitPrice)}</td>
+                        <td className="px-2 py-2.5 text-right tabular-nums text-gray-500">{row.taxPercent}%</td>
+                        <td className="px-5 py-2.5 text-right font-medium tabular-nums text-gray-900 dark:text-gray-100">{formatMoney(row.amount)}</td>
+                        <td className="pr-4">
+                          {!closed && lines.length > 1 && (
+                            <Button variant="ghost" onClick={() => setLines((p) => p.filter((_, idx) => idx !== i))} aria-label="Remove line">
+                              <Trash2 className="h-4 w-4 text-red-500" />
+                            </Button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </Card>
         </div>
 
-        <div className="col-span-2 flex justify-end gap-2">
-          <Button variant="secondary" onClick={() => navigate("/app/subscriptions")}>
-            Cancel
-          </Button>
-          <Button onClick={handleSave} disabled={saving}>
-            Save
-          </Button>
-        </div>
+        <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
+          <Card title="Summary">
+            <dl className="space-y-2 text-sm">
+              <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                <dt>Subtotal</dt>
+                <dd className="tabular-nums">{formatMoney(preview.subtotal)}</dd>
+              </div>
+              <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                <dt>Tax</dt>
+                <dd className="tabular-nums">{formatMoney(preview.taxTotal)}</dd>
+              </div>
+              <div className="flex justify-between border-t border-gray-100 pt-2 text-base font-semibold text-gray-900 dark:border-gray-800 dark:text-gray-50">
+                <dt>Per period</dt>
+                <dd className="tabular-nums">{formatMoney(preview.total)}</dd>
+              </div>
+            </dl>
+            <p className="mt-2 text-xs text-gray-500">Discounts are applied automatically when each invoice is created.</p>
+            {!closed && (
+              <Button className="mt-4 w-full" onClick={save} loading={saving}>
+                {isNew ? "Create subscription" : "Save changes"}
+              </Button>
+            )}
+          </Card>
+
+          {plan && (
+            <Card title={plan.name} description={`Billed ${plan.billingPeriod.toLowerCase()}`}>
+              <ul className="space-y-1.5 text-sm text-gray-600 dark:text-gray-400">
+                <li>Available {formatDate(plan.availableFrom)} - {plan.availableTo ? formatDate(plan.availableTo) : "open-ended"}</li>
+                <li>Closes automatically: {plan.autoClose ? "yes" : "no"}</li>
+                <li>Early close: {plan.allowEarlyClose ? "allowed" : "not allowed"}</li>
+                <li>Pause: {plan.allowPause ? "allowed" : "not allowed"}</li>
+                <li>Renew: {plan.allowRenew ? "allowed" : "not allowed"}</li>
+              </ul>
+            </Card>
+          )}
+
+          {subscription && (
+            <Card title="Billing">
+              <dl className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <dt className="text-gray-500">Next billing</dt>
+                  <dd className="font-medium text-gray-900 dark:text-gray-100">{formatDate(subscription.nextBillingDate)}</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-gray-500">Quote valid until</dt>
+                  <dd className="font-medium text-gray-900 dark:text-gray-100">{formatDate(subscription.quotationValidUntil)}</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-gray-500">Created</dt>
+                  <dd className="font-medium text-gray-900 dark:text-gray-100">{formatDate(subscription.createdAt)}</dd>
+                </div>
+              </dl>
+            </Card>
+          )}
+        </aside>
       </div>
+
+      <ConfirmDialog
+        open={confirmClose}
+        title="Close subscription early"
+        message="The subscription will be closed and no further invoices will be generated. This cannot be undone."
+        confirmLabel="Close subscription"
+        danger
+        loading={busy}
+        onConfirm={() => subscription && run(() => transitionSubscription(subscription.id, "CLOSED"), "Subscription closed")}
+        onClose={() => setConfirmClose(false)}
+      />
     </div>
   );
 }
