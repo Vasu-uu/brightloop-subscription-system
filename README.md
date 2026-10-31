@@ -124,11 +124,12 @@ Each scene from the brief and where it lives in the app:
 | **A new customer signs up** | `/signup` with a live password checklist (more than 8 chars, upper, lower, special), unique case-insensitive email, `/forgot-password` and `/reset-password` (hashed, single-use, 1 hour link). Roles: Admin, Staff, Customer; only an admin can add staff (**Staff** page). |
 | **Launching a new plan** | **Products** (name, type, sales price, cost price, notes, tax, variants such as *Brand / Odoo / +560*) and **Plans** (daily, weekly, monthly, yearly, minimum quantity, availability dates, auto-close, early close, pause, renew toggles). |
 | **Turning a quote into a subscription** | **Quotation templates** (plan, lines with variants, validity days) and **Subscriptions → From template**. Each subscription has a generated number, customer, plan, start and expiry dates, payment terms and lines with product, quantity, unit price, tax and amount, plus a **lifecycle stepper** (Draft, Quotation, Confirmed, Active, Closed) visible on every record. |
-| **Billing day** | **Invoices → Run billing** creates every due invoice from its subscription with customer, lines, taxes and totals pre-filled. Confirm, cancel, send, print and PDF on each invoice (Draft, Confirmed, Paid). A unique `(subscriptionId, periodStart)` key guarantees nothing is billed twice. |
+| **Billing day** | Billing also runs **automatically** on a schedule (`BILLING_SCHEDULE`, default 02:00 daily). **Invoices → Run billing** does the same on demand and shows the schedule and last run. It creates every due invoice from its subscription with customer, lines, taxes and totals pre-filled. Confirm, cancel, print and PDF on each invoice (Draft, Confirmed, Paid). **Send** emails the customer the invoice with the PDF attached. A unique `(subscriptionId, periodStart)` key guarantees nothing is billed twice. |
 | **A customer asks for a better price** | **Discounts** (admin only): fixed or percentage, minimum purchase or quantity, start and end dates, usage limit, specific products or whole subscriptions. Applied automatically to the next invoice and stops when expired or used up. |
 | **The money comes in** | **Record payment** on an invoice (method, amount, date, note) and the **Payments** page with date and customer filters. Dashboard tabs show paid, outstanding and overdue invoices, with days overdue. |
 | **The finance lead, at month end** | **Finance dashboard**: active subscriptions, revenue, this month, outstanding, overdue, revenue by month, and a filterable invoice table. Every list is server-paginated; measured responses are in the 5 to 15 ms range with 5,000 subscriptions. |
-| **Customers manage their own** | **Portal**: only their own subscriptions and invoices (other customers' records return 404), lifecycle view, invoice history and online payment. |
+| **Customers manage their own** | **Portal**: only their own subscriptions and invoices (other customers' records return 404), lifecycle view, invoice history and online payment. Customers can also **pause, resume, renew and cancel** their own subscriptions, limited by what the plan allows. |
+| **Spotting renewals** | The dashboard has a **Renewals due** card (active subscriptions expiring in 30 days) linking to a filtered Subscriptions list, and customers see an expiry banner with a Renew button. |
 
 ---
 
@@ -182,7 +183,9 @@ Open <http://localhost:5173> and sign in with a [dev login](#dev-logins).
 | `JWT_SECRET` | Signing key for access tokens | a long random string |
 | `JWT_EXPIRES_IN` | Token lifetime | `7d` |
 | `APP_URL` | Used in password-reset links | `http://localhost:5173` |
-| `SMTP_HOST` / `SMTP_USER` / `SMTP_PASS` | Email (optional) | empty in development |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` | Outgoing email server (optional) | empty in development; port defaults to 587 |
+| `MAIL_FROM` | Sender shown on emails | `Brightloop <no-reply@yourdomain.com>` |
+| `BILLING_SCHEDULE` | Cron expression for automatic billing, server time. `off` disables it | `0 2 * * *` |
 | `PORT` | API port | `4000` |
 
 `frontend/.env`
@@ -191,7 +194,7 @@ Open <http://localhost:5173> and sign in with a [dev login](#dev-logins).
 |---|---|---|
 | `VITE_API_URL` | API base URL | `http://localhost:4000/api/v1` |
 
-In development no SMTP server is needed: password-reset links and "invoice sent" emails are printed to the backend console.
+Without `SMTP_HOST`, password-reset and invoice emails are printed to the backend console instead of sent. With it set, they are delivered through SMTP and invoice emails carry the PDF as an attachment. Only one billing run executes at a time, so a manual run during a scheduled one returns `409`.
 
 ---
 
@@ -219,7 +222,7 @@ ACTIVE subscription ── nextBillingDate ≤ run date and ≤ expiryDate ─�
                                                             ⇒ a second attempt is skipped, never duplicated
 ```
 
-1. `POST /billing/run` (or the **Run billing now** button) calls `runBilling(asOf)`.
+1. The scheduler (or `POST /billing/run`, or the **Run billing** button) calls `runBilling(asOf)`. Runs are exclusive; `GET /billing/status` reports the schedule and the last run.
 2. Subscriptions whose plan has `autoClose` and whose `expiryDate` has passed are closed first.
 3. Eligible subscription ids are snapshotted once, then processed in batches of 200 with plans, lines and products loaded once per batch.
 4. Pricing and applicable discounts are computed **before** the transaction opens; the transaction only takes the numbering lock, inserts the invoice and advances `nextBillingDate`. Discount usage is incremented only for genuinely created invoices.
@@ -257,12 +260,12 @@ Every list accepts `page`, `pageSize` (max 100), `search`, `sort`, `order`, plus
 | Products | `GET, POST, PUT, DELETE /products[/:id]`; `POST, PUT, DELETE /products/:id/variants[/:vid]` | read Admin+Staff, write Admin |
 | Plans / Taxes / Discounts | `GET, POST, PUT, DELETE /plans`, `/taxes`, `/discounts` (+ `/:id`) | read Admin+Staff, write Admin |
 | Quotation templates | `GET, POST, PUT, DELETE /quotation-templates[/:id]` | Admin, Staff |
-| Subscriptions | `GET, POST /subscriptions`; `GET, PUT /subscriptions/:id`; `POST /subscriptions/from-template` | Admin, Staff |
+| Subscriptions | `GET, POST /subscriptions` (filters: `status`, `customerId`, `search`, `expiringInDays`); `GET, PUT /subscriptions/:id`; `POST /subscriptions/from-template` | Admin, Staff |
 | Subscription actions | `POST /subscriptions/:id/transition` `{to}`, `/pause`, `/resume`, `/renew` | Admin, Staff |
 | Invoices | `GET /invoices`; `GET /invoices/:id`; `POST /invoices/:id/confirm`, `/cancel`, `/send`; `GET /invoices/:id/pdf`; `GET /invoices/:id/payments` | Admin, Staff |
-| Billing | `POST /billing/run` `{asOfDate?}` → `{ created, skipped, invoiceIds }` | Admin, Staff |
+| Billing | `POST /billing/run` `{asOfDate?}` → `{ created, skipped, invoiceIds }` (409 if a run is in progress); `GET /billing/status` → `{ enabled, schedule, running, lastRun }` | Admin, Staff |
 | Payments | `POST /payments`, `GET /payments` | Admin, Staff |
-| Portal | `GET /portal/subscriptions[/:id]`, `GET /portal/invoices[/:id]`, `POST /portal/invoices/:id/pay` `{method}` | Customer (own records only) |
+| Portal | `GET /portal/subscriptions[/:id]`, `GET /portal/invoices[/:id]`, `POST /portal/invoices/:id/pay` `{method}`, `POST /portal/subscriptions/:id/(pause\|resume\|renew\|close)` (plan rules apply) | Customer (own records only) |
 | Dashboard | `GET /dashboard/summary`, `/dashboard/revenue-by-month`, `/dashboard/invoices?payment=paid\|outstanding\|overdue` | Admin, Staff |
 
 Example:

@@ -20,6 +20,12 @@ export async function getMyInvoice(id: number) {
   return apiGet<Invoice>(`/portal/invoices/${id}`).then((r) => r.data);
 }
 
+export type SelfServiceAction = "pause" | "resume" | "renew" | "close";
+
+export async function manageMySubscription(id: number, action: SelfServiceAction) {
+  return apiPost<Subscription>(`/portal/subscriptions/${id}/${action}`);
+}
+
 export async function payInvoice(id: number, method: string) {
   return apiPost(`/portal/invoices/${id}/pay`, { method });
 }

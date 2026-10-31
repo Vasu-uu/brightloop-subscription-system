@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AlertCircle, ArrowRight, Clock, DollarSign, LucideIcon, Play, Plus, TrendingUp, Users } from "lucide-react";
+import { AlertCircle, ArrowRight, CalendarClock, Clock, DollarSign, LucideIcon, Play, Plus, TrendingUp, Users } from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { CountUp } from "../../components/ui/CountUp";
@@ -14,6 +14,7 @@ import { DataTable, Column } from "../../components/ui/DataTable";
 import { useMe } from "../../hooks/useMe";
 import { usePagedList } from "../../hooks/usePagedList";
 import { DashboardSummary, getRevenueByMonth, getSummary, listDashboardInvoices } from "../../api/dashboard";
+import { listSubscriptions } from "../../api/subscriptions";
 import { Invoice } from "../../types";
 import { dateToIsoEnd, dateToIsoStart, daysOverdue, formatDate, formatMoney, formatMoneyWhole } from "../../lib/format";
 
@@ -73,6 +74,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const me = useMe();
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [renewalsDue, setRenewalsDue] = useState<number | null>(null);
   const [months, setMonths] = useState(6);
   const [revenue, setRevenue] = useState<{ month: string; revenue: number }[] | null>(null);
   const [tab, setTab] = useState<Tab>("overdue");
@@ -81,6 +83,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     getSummary().then(setSummary);
+    listSubscriptions({ expiringInDays: 30, page: 1 }).then((r) => setRenewalsDue(r.meta.total)).catch(() => setRenewalsDue(0));
   }, []);
   useEffect(() => {
     setRevenue(null);
@@ -160,9 +163,9 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
         {!summary ? (
-          Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-[116px]" />)
+          Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-[116px]" />)
         ) : (
           <>
             <Kpi delay={0} label="Active subscriptions" value={summary.activeSubscriptions} format={(n) => Math.round(n).toLocaleString("en-IN")} icon={Users} accent="from-brand-500 to-brand-600" onClick={() => navigate("/app/subscriptions")} />
@@ -170,6 +173,7 @@ export default function Dashboard() {
             <Kpi delay={120} label="This month" value={summary.revenueThisMonth} format={formatMoneyWhole} sub="Collected so far" icon={TrendingUp} accent="from-violet-500 to-violet-600" />
             <Kpi delay={180} label="Outstanding" value={summary.totalOutstanding} format={formatMoneyWhole} sub="Confirmed, not yet paid" icon={Clock} accent="from-amber-500 to-amber-600" onClick={() => setTab("outstanding")} />
             <Kpi delay={240} label="Overdue" value={summary.overdueAmount} format={formatMoneyWhole} sub={`${summary.overdueCount} invoices past due`} icon={AlertCircle} accent="from-red-500 to-red-600" onClick={() => setTab("overdue")} />
+            <Kpi delay={300} label="Renewals due" value={renewalsDue ?? 0} format={(n) => Math.round(n).toLocaleString("en-IN")} sub="Expiring in the next 30 days" icon={CalendarClock} accent="from-sky-500 to-sky-600" onClick={() => navigate("/app/subscriptions?expiring=30")} />
           </>
         )}
       </div>

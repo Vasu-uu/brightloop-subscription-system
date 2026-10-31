@@ -16,6 +16,7 @@ export async function listSubscriptions(params: {
   status?: string;
   customerId?: number;
   search?: string;
+  expiringInDays?: number;
 }) {
   return apiGet<Subscription[]>("/subscriptions", params) as Promise<{ data: Subscription[]; meta: ApiMeta }>;
 }

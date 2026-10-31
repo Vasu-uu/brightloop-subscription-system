@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { FileText, Plus } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { CalendarClock, FileText, Plus, X } from "lucide-react";
 import { PageHeader } from "../../components/ui/PageHeader";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
@@ -22,21 +22,24 @@ import { errorMessage, formatDate } from "../../lib/format";
 export default function SubscriptionsList() {
   const navigate = useNavigate();
   const { push } = useToast();
+  const [params, setParams] = useSearchParams();
+  const expiring = Number(params.get("expiring")) || 0;
   const [status, setStatus] = useState("");
   const [customerId, setCustomerId] = useState<number | "">("");
   const [customerLabel, setCustomerLabel] = useState("");
 
   const { rows, total, page, setPage, search, setSearch, loading } = usePagedList<
     Subscription,
-    { status: string; customerId: number | "" }
+    { status: string; customerId: number | ""; expiring: number }
   >((a) =>
     listSubscriptions({
       page: a.page,
       search: a.search,
       status: a.status || undefined,
       customerId: a.customerId === "" ? undefined : a.customerId,
+      expiringInDays: a.expiring || undefined,
     }),
-    { status, customerId }
+    { status, customerId, expiring }
   );
 
   const [tplOpen, setTplOpen] = useState(false);
@@ -99,6 +102,20 @@ export default function SubscriptionsList() {
           </>
         }
       />
+
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <button
+          onClick={() => setParams(expiring ? {} : { expiring: "30" })}
+          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
+            expiring
+              ? "border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200"
+              : "border-gray-200 text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+          }`}
+        >
+          <CalendarClock className="h-3.5 w-3.5" /> Renewals due in 30 days
+          {expiring ? <X className="h-3 w-3" /> : null}
+        </button>
+      </div>
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_200px_280px]">
         <SearchInput value={search} onChange={setSearch} placeholder="Search by number, e.g. SUB-00012" />

@@ -13,7 +13,7 @@ import { DataTable, Column } from "../../components/ui/DataTable";
 import { useToast } from "../../components/ui/Toast";
 import { usePagedList } from "../../hooks/usePagedList";
 import { listInvoices } from "../../api/invoices";
-import { BillingRunResult, runBilling } from "../../api/billing";
+import { BillingRunResult, BillingStatus, getBillingStatus, runBilling } from "../../api/billing";
 import { searchCustomers } from "../../api/customers";
 import { Invoice } from "../../types";
 import { INVOICE_STATUSES } from "../../constants/enums";
@@ -55,6 +55,10 @@ export default function InvoicesList() {
   }, []);
   const [asOf, setAsOf] = useState(new Date().toISOString().slice(0, 10));
   const [running, setRunning] = useState(false);
+  const [billingStatus, setBillingStatus] = useState<BillingStatus | null>(null);
+  useEffect(() => {
+    if (billingOpen) getBillingStatus().then(setBillingStatus).catch(() => setBillingStatus(null));
+  }, [billingOpen]);
   const [result, setResult] = useState<BillingRunResult | null>(null);
 
   async function run() {
@@ -197,6 +201,13 @@ export default function InvoicesList() {
             <p className="mb-4 text-sm text-gray-500">
               Creates a draft invoice for every active, unpaused subscription that is due on or before the date below,
               including any missed periods. Eligible discounts and taxes are applied automatically.
+            </p>
+            <p className="mb-4 rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+              {billingStatus?.enabled
+                ? `Billing also runs automatically (${billingStatus.schedule}, server time).`
+                : "Automatic billing is off. Run it here as needed."}
+              {billingStatus?.lastRun &&
+                ` Last run ${new Date(billingStatus.lastRun.at).toLocaleString("en-IN")} (${billingStatus.lastRun.trigger}): ${billingStatus.lastRun.created} created.`}
             </p>
             <Input label="Bill as of" type="date" value={asOf} onChange={(e) => setAsOf(e.target.value)} />
             <div className="mt-6 flex justify-end gap-2">

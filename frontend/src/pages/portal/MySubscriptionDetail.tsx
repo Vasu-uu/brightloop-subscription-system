@@ -1,19 +1,32 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CalendarPlus, Pause, Play, XCircle } from "lucide-react";
 import { Card } from "../../components/ui/Card";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { Stepper } from "../../components/ui/Stepper";
 import { StatusBadge } from "../../components/ui/StatusBadge";
-import { getMySubscription } from "../../api/portal";
+import { Button } from "../../components/ui/Button";
+import { ConfirmDialog } from "../../components/ui/ConfirmDialog";
+import { useToast } from "../../components/ui/Toast";
+import { getMySubscription, manageMySubscription, SelfServiceAction } from "../../api/portal";
 import { Subscription } from "../../types";
 import { SUBSCRIPTION_STATUSES } from "../../constants/enums";
-import { formatDate, formatMoney } from "../../lib/format";
+import { errorMessage, formatDate, formatMoney } from "../../lib/format";
+
+const ACTIONS: Record<SelfServiceAction, { title: string; message: string; label: string; done: string; danger?: boolean }> = {
+  pause: { title: "Pause subscription", message: "Billing stops until you resume. You can resume at any time.", label: "Pause", done: "Subscription paused" },
+  resume: { title: "Resume subscription", message: "Billing continues from your next billing date.", label: "Resume", done: "Subscription resumed" },
+  renew: { title: "Renew subscription", message: "Extends your subscription by one more billing period.", label: "Renew", done: "Subscription renewed" },
+  close: { title: "Cancel subscription", message: "This closes the subscription and stops all future billing. It cannot be undone.", label: "Cancel subscription", done: "Subscription closed", danger: true },
+};
 
 export default function MySubscriptionDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { push } = useToast();
   const [sub, setSub] = useState<Subscription | null>(null);
+  const [pending, setPending] = useState<SelfServiceAction | null>(null);
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (id) getMySubscription(Number(id)).then(setSub).catch(() => navigate("/portal/subscriptions"));
@@ -28,6 +41,30 @@ export default function MySubscriptionDetail() {
     );
   }
 
+  async function confirm() {
+    if (!pending) return;
+    setBusy(true);
+    try {
+      await manageMySubscription(sub!.id, pending);
+      push(ACTIONS[pending].done);
+      setSub(await getMySubscription(sub!.id));
+      setPending(null);
+    } catch (err) {
+      push(errorMessage(err, "That could not be done"), "error");
+      setPending(null);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const live = sub.status === "ACTIVE";
+  const plan = sub.plan;
+  const canPause = live && !sub.isPaused && plan?.allowPause;
+  const canResume = live && sub.isPaused;
+  const canRenew = live && plan?.allowRenew;
+  const canClose = (live || sub.status === "CONFIRMED") && plan?.allowEarlyClose;
+  const expiresInDays = Math.ceil((new Date(sub.expiryDate).getTime() - Date.now()) / 86400000);
+
   const total = (sub.lines ?? []).reduce((s, l) => s + Number(l.amount) * (1 + Number(l.taxPercent) / 100), 0);
 
   return (
@@ -40,6 +77,13 @@ export default function MySubscriptionDetail() {
         <StatusBadge status={sub.isPaused ? "PAUSED" : sub.status} />
         <span className="text-sm text-gray-500">{sub.number}</span>
       </div>
+
+      {live && expiresInDays <= 30 && expiresInDays >= 0 && (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
+          <span>Your subscription expires on {formatDate(sub.expiryDate)} ({expiresInDays} days left).</span>
+          {canRenew && <Button onClick={() => setPending("renew")}>Renew now</Button>}
+        </div>
+      )}
 
       <div className="space-y-6">
         <Card>
@@ -86,6 +130,16 @@ export default function MySubscriptionDetail() {
                 <div className="flex justify-between"><dt className="text-gray-500">Payment terms</dt><dd className="font-medium">{sub.paymentTermDays} days</dd></div>
               </dl>
             </Card>
+            {(canPause || canResume || canRenew || canClose) && (
+              <Card title="Manage" description="Changes apply immediately">
+                <div className="flex flex-col gap-2">
+                  {canPause && <Button variant="secondary" onClick={() => setPending("pause")}><Pause className="h-4 w-4" /> Pause</Button>}
+                  {canResume && <Button onClick={() => setPending("resume")}><Play className="h-4 w-4" /> Resume</Button>}
+                  {canRenew && <Button variant="secondary" onClick={() => setPending("renew")}><CalendarPlus className="h-4 w-4" /> Renew</Button>}
+                  {canClose && <Button variant="secondary" onClick={() => setPending("close")}><XCircle className="h-4 w-4" /> Cancel subscription</Button>}
+                </div>
+              </Card>
+            )}
             <Card title="Invoices" description="Billed for this subscription">
               {(sub.invoices ?? []).length === 0 ? (
                 <p className="text-sm text-gray-500">No invoices yet.</p>
@@ -105,6 +159,16 @@ export default function MySubscriptionDetail() {
           </div>
         </div>
       </div>
+      <ConfirmDialog
+        open={pending !== null}
+        title={pending ? ACTIONS[pending].title : ""}
+        message={pending ? ACTIONS[pending].message : ""}
+        confirmLabel={pending ? ACTIONS[pending].label : "Confirm"}
+        danger={pending ? ACTIONS[pending].danger : false}
+        loading={busy}
+        onConfirm={confirm}
+        onClose={() => setPending(null)}
+      />
     </div>
   );
 }
