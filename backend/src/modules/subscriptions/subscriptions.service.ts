@@ -82,7 +82,7 @@ async function buildLines(lines: { productId: number; variantId?: number | null;
 
 export async function listSubscriptions(
   pagination: ParsedPagination,
-  filters: { status?: string; customerId?: number; search?: string; from?: Date; to?: Date }
+  filters: { status?: string; customerId?: number; search?: string; from?: Date; to?: Date; expiringInDays?: number }
 ) {
   const where: Prisma.SubscriptionWhereInput = {};
   if (filters.status) where.status = filters.status as SubscriptionStatus;
@@ -93,6 +93,13 @@ export async function listSubscriptions(
       ...(filters.from ? { gte: filters.from } : {}),
       ...(filters.to ? { lte: filters.to } : {}),
     };
+  }
+
+  if (filters.expiringInDays && filters.expiringInDays > 0) {
+    // Renewals due: active subscriptions whose expiry falls within the next N days.
+    const now = new Date();
+    where.status = "ACTIVE";
+    where.expiryDate = { gte: now, lte: addDays(now, filters.expiringInDays) };
   }
 
   const [rows, total] = await Promise.all([

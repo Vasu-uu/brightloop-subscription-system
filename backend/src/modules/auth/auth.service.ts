@@ -4,6 +4,7 @@ import crypto from "crypto";
 import { User } from "@prisma/client";
 import { prisma } from "../../shared/prisma";
 import { AppError } from "../../shared/AppError";
+import { sendMail } from "../../services/mail.service";
 
 function signToken(userId: number, role: User["role"]) {
   return jwt.sign({ userId, role }, process.env.JWT_SECRET as string, {
@@ -74,8 +75,17 @@ export async function forgotPassword(email: string) {
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
   await prisma.passwordResetToken.create({ data: { userId: user.id, tokenHash, expiresAt } });
   const link = `${process.env.APP_URL}/reset-password?token=${rawToken}`;
-  // No SMTP configured in this environment: log instead of sending.
-  console.log(`[email] Password reset link for ${user.email}: ${link}`);
+  // A failed send must not change the response (it would reveal the account exists).
+  await sendMail({
+    to: user.email,
+    subject: "Reset your Brightloop password",
+    text: `Hi ${user.name},
+
+Use this link to choose a new password. It expires in 1 hour and works once:
+${link}
+
+If you did not ask for this, you can ignore this email.`,
+  }).catch((err) => console.error("[email] reset mail failed:", err.message));
 }
 
 export async function resetPassword(rawToken: string, newPassword: string) {

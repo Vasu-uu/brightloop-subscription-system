@@ -6,6 +6,7 @@ import { sendData, sendError } from "../../shared";
 import { AppError } from "../../shared/AppError";
 import { recordPayment, getInvoiceBalance } from "../../services/payment.service";
 import { portalPaySchema, portalListQuerySchema } from "./portal.schemas";
+import { pauseSubscription, renewSubscription, resumeSubscription, transitionSubscription } from "../subscriptions/subscriptions.service";
 
 const router = Router();
 router.use(requireAuth, requireRole(Role.CUSTOMER));
@@ -60,4 +61,40 @@ router.post("/invoices/:id/pay", async (req, res, next) => {
     return sendData(res, payment);
   } catch (error) { next(error); }
 });
+// Self-service: customers manage their own subscriptions within the plan's rules.
+// Ownership is checked first so another customer's id is indistinguishable from a missing one (404).
+async function ownedSubscription(userId: number, rawId: string) {
+  const id = Number(rawId);
+  if (!Number.isInteger(id) || id <= 0) throw new AppError(404, "NOT_FOUND", "Subscription not found.");
+  const sub = await prisma.subscription.findFirst({ where: { id, customerId: userId }, include: { plan: true } });
+  if (!sub) throw new AppError(404, "NOT_FOUND", "Subscription not found.");
+  return sub;
+}
+
+const selfService = {
+  pause: (id: number) => pauseSubscription(id),
+  resume: (id: number) => resumeSubscription(id),
+  renew: (id: number) => renewSubscription(id),
+} as const;
+
+for (const action of ["pause", "resume", "renew"] as const) {
+  router.post("/subscriptions/:id/" + action, async (req, res, next) => {
+    try {
+      const sub = await ownedSubscription(req.user!.userId, req.params.id);
+      return sendData(res, await selfService[action](sub.id));
+    } catch (error) { next(error); }
+  });
+}
+
+router.post("/subscriptions/:id/close", async (req, res, next) => {
+  try {
+    const sub = await ownedSubscription(req.user!.userId, req.params.id);
+    if (sub.status === "CLOSED") throw new AppError(400, "VALIDATION_ERROR", "This subscription is already closed.");
+    if (!sub.plan.allowEarlyClose) {
+      throw new AppError(400, "VALIDATION_ERROR", `The ${sub.plan.name} plan does not allow cancelling early. Please contact support.`);
+    }
+    return sendData(res, await transitionSubscription(sub.id, "CLOSED"));
+  } catch (error) { next(error); }
+});
+
 export default router;

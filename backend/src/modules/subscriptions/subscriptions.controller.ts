@@ -18,6 +18,7 @@ export async function list(req: Request, res: Response): Promise<void> {
     search: typeof req.query.search === "string" ? req.query.search : undefined,
     from: req.query.from ? new Date(String(req.query.from)) : undefined,
     to: req.query.to ? new Date(String(req.query.to)) : undefined,
+    expiringInDays: req.query.expiringInDays ? Number(req.query.expiringInDays) : undefined,
   });
   sendData(res, rows, {
     page: pagination.page,

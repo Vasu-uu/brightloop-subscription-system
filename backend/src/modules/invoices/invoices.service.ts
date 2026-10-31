@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../../shared/prisma";
 import { AppError } from "../../shared/AppError";
 import { ParsedPagination } from "../../shared/pagination";
+import { sendMail } from "../../services/mail.service";
 
 export const detailInclude = {
   customer: true,
@@ -74,7 +75,28 @@ export async function listInvoicePayments(id: number) {
 
 export async function sendInvoice(id: number) {
   const invoice = await getInvoice(id);
-  // No SMTP configured in this environment: log instead of sending, per contract 1.1.
-  console.log(`[email] Invoice ${invoice.number} sent to ${invoice.customer.email}`);
+  // Imported lazily: invoices.pdf imports getInvoice from this module.
+  const { buildInvoicePdf } = await import("./invoices.pdf");
+  const pdf = await buildInvoicePdf(id);
+  const balance = Number(invoice.total) - Number(invoice.amountPaid);
+  try {
+    await sendMail({
+      to: invoice.customer.email,
+      subject: `Invoice ${invoice.number} from Brightloop`,
+      text: [
+        `Hi ${invoice.customer.name},`,
+        "",
+        `Your invoice ${invoice.number} is attached. Total ${Number(invoice.total).toFixed(2)}, balance due ${balance.toFixed(2)}.`,
+        `It is due on ${invoice.dueDate.toDateString()}.`,
+        "",
+        "Thank you,",
+        "Brightloop",
+      ].join("\n"),
+      attachments: [{ filename: pdf.filename, content: pdf.buffer, contentType: "application/pdf" }],
+    });
+  } catch (err) {
+    console.error("[email] invoice mail failed:", (err as Error).message);
+    throw new AppError(500, "INTERNAL_ERROR", "The invoice email could not be sent. Check the mail settings.");
+  }
   return prisma.invoice.update({ where: { id }, data: { sentAt: new Date() }, include: detailInclude });
 }

@@ -8,3 +8,4 @@ export const billingRouter = Router();
 billingRouter.use(requireAuth, requireRole("ADMIN", "STAFF"));
 
 billingRouter.post("/run", asyncHandler(controller.run));
+billingRouter.get("/status", asyncHandler(controller.status));
