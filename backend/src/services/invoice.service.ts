@@ -135,8 +135,53 @@ export async function createInvoiceFromSubscription(subscriptionId: number, peri
   });
 }
 
+const BILLING_BATCH_SIZE = 200;
+
 export async function runBilling(
   asOf: Date
 ): Promise<{ created: number; skipped: number; invoiceIds: number[] }> {
-  throw new Error("not implemented");
+  // Auto-close subscriptions whose plan.autoClose is true, once expiryDate has passed.
+  await prisma.subscription.updateMany({
+    where: { status: "ACTIVE", expiryDate: { lt: asOf }, plan: { autoClose: true } },
+    data: { status: "CLOSED" },
+  });
+
+  let created = 0;
+  let skipped = 0;
+  const invoiceIds: number[] = [];
+
+  while (true) {
+    const batch = await prisma.subscription.findMany({
+      where: {
+        status: "ACTIVE",
+        isPaused: false,
+        nextBillingDate: { lte: asOf },
+      },
+      orderBy: { id: "asc" },
+      take: BILLING_BATCH_SIZE,
+    });
+    if (batch.length === 0) break;
+
+    for (const subscription of batch) {
+      let periodStart = subscription.nextBillingDate;
+      while (periodStart && periodStart <= asOf && periodStart <= subscription.expiryDate) {
+        const existing = await prisma.invoice.findUnique({
+          where: { subscriptionId_periodStart: { subscriptionId: subscription.id, periodStart } },
+        });
+        if (existing) {
+          skipped++;
+          periodStart = existing.periodEnd;
+          continue;
+        }
+        const invoice = await createInvoiceFromSubscription(subscription.id, periodStart);
+        created++;
+        invoiceIds.push(invoice.id);
+        periodStart = invoice.periodEnd;
+      }
+    }
+
+    if (batch.length < BILLING_BATCH_SIZE) break;
+  }
+
+  return { created, skipped, invoiceIds };
 }
