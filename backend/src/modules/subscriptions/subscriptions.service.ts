@@ -2,7 +2,7 @@ import { Prisma, SubscriptionStatus } from "@prisma/client";
 import { prisma } from "../../shared/prisma";
 import { AppError } from "../../shared/AppError";
 import { ParsedPagination } from "../../shared/pagination";
-import { calculateLineTotals, LineInput } from "../../services/pricing.service.stub";
+import { calculateLineTotals, LineInput } from "../../services/pricing.service";
 import { z } from "zod";
 import { createSubscriptionSchema, fromTemplateSchema, updateSubscriptionSchema } from "./subscriptions.validation";
 
@@ -18,10 +18,13 @@ export const detailInclude = {
 } as const;
 
 async function nextSubscriptionNumber(tx: Prisma.TransactionClient): Promise<string> {
-  const rows = await tx.$queryRaw<{ maxNum: number | bigint | null }[]>(
-    Prisma.sql`SELECT MAX(CAST(SUBSTRING(number, 5) AS UNSIGNED)) as maxNum FROM Subscription FOR UPDATE`
+  // Locks only the last row via the primary key index (cheap, O(log n))
+  // instead of a MAX(...) aggregate scan over the whole table, which would
+  // otherwise lock and re-scan every row on every single creation.
+  const rows = await tx.$queryRaw<{ number: string }[]>(
+    Prisma.sql`SELECT number FROM Subscription ORDER BY id DESC LIMIT 1 FOR UPDATE`
   );
-  const next = Number(rows[0]?.maxNum ?? 0) + 1;
+  const next = (rows[0] ? parseInt(rows[0].number.slice(4), 10) : 0) + 1;
   return `SUB-${String(next).padStart(5, "0")}`;
 }
 
