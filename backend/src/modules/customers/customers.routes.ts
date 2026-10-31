@@ -13,7 +13,7 @@ customersRouter.get(
   asyncHandler(async (req, res) => {
     const pagination = parsePagination(req.query);
     const search = typeof req.query.search === "string" ? req.query.search : undefined;
-    const where = { role: "CUSTOMER" as const, ...(search ? { name: { contains: search } } : {}) };
+    const where = { role: "CUSTOMER" as const, ...(search ? { OR: [{ name: { contains: search } }, { email: { contains: search } }] } : {}) };
     const [rows, total] = await Promise.all([
       prisma.user.findMany({
         where,

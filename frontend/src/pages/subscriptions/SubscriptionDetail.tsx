@@ -83,7 +83,8 @@ export default function SubscriptionDetail() {
   useEffect(load, [id]);
 
   const plan = plans.find((p) => p.id === planId) ?? subscription?.plan;
-  const closed = subscription?.status === "CLOSED";
+  // Terms are only editable before the subscription is confirmed (the API enforces the same rule).
+  const closed = !!subscription && subscription.status !== "DRAFT" && subscription.status !== "QUOTATION";
 
   const preview = useMemo(() => {
     let subtotal = 0;

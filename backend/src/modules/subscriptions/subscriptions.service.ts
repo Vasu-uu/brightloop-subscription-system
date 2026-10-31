@@ -161,7 +161,10 @@ export async function createSubscription(input: CreateInput) {
 }
 
 export async function updateSubscription(id: number, input: UpdateInput) {
-  await getSubscription(id);
+  const existing = await getSubscription(id);
+  if (existing.status !== "DRAFT" && existing.status !== "QUOTATION") {
+    throw new AppError(400, "VALIDATION_ERROR", "Only draft or quotation subscriptions can be edited.");
+  }
   const plan = await assertPlanWindow(input.planId, input.startDate);
   const customer = await prisma.user.findUnique({ where: { id: input.customerId } });
   if (!customer) {
