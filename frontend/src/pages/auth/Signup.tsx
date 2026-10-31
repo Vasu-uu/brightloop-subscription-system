@@ -1,5 +1,7 @@
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AlertCircle, Check, Circle } from "lucide-react";
+import { AuthLayout } from "../../components/AuthLayout";
 import { useAuth } from "../../hooks/useAuth";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
@@ -44,44 +46,53 @@ export default function Signup() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <form onSubmit={handleSubmit} className="w-full max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h1 className="mb-4 text-lg font-semibold">Create your account</h1>
-        <div className="space-y-3">
-          <Input label="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-          <Input
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            error={emailError ?? undefined}
-            required
-          />
-          <Input
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <ul className="space-y-0.5 text-xs">
-            {RULES.map((rule) => (
-              <li key={rule.label} className={rule.test(password) ? "text-green-600" : "text-gray-400"}>
-                {rule.test(password) ? "✓" : "○"} {rule.label}
+    <AuthLayout title="Create your account" subtitle="Get started with Brightloop in seconds.">
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <Input label="Name" value={name} onChange={(e) => setName(e.target.value)} required autoFocus />
+        <Input
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          error={emailError ?? undefined}
+          required
+        />
+        <Input
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <ul className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs">
+          {RULES.map((rule) => {
+            const ok = rule.test(password);
+            return (
+              <li
+                key={rule.label}
+                className={`flex items-center gap-1 transition-colors ${ok ? "text-green-600 dark:text-green-400" : "text-gray-400"}`}
+              >
+                {ok ? <Check className="h-3 w-3" /> : <Circle className="h-2 w-2" />}
+                {rule.label}
               </li>
-            ))}
-          </ul>
-        </div>
-        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
-        <Button type="submit" className="mt-4 w-full" disabled={loading}>
+            );
+          })}
+        </ul>
+        {error && (
+          <div className="flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 animate-fade-in dark:bg-red-500/10 dark:text-red-400">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            {error}
+          </div>
+        )}
+        <Button type="submit" className="w-full" loading={loading}>
           Create account
         </Button>
-        <div className="mt-4 text-sm text-gray-500">
-          <Link to="/login" className="hover:text-gray-700">
+        <div className="pt-1 text-sm">
+          <Link to="/login" className="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300">
             Already have an account? Sign in
           </Link>
         </div>
       </form>
-    </div>
+    </AuthLayout>
   );
 }

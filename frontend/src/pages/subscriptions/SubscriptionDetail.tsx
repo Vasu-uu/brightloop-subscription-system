@@ -154,12 +154,12 @@ export default function SubscriptionDetail() {
       <PageHeader title={isNew ? "New Subscription" : subscription?.number ?? "Loading..."} />
 
       {subscription && (
-        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-lg border border-gray-200 bg-white p-4">
-          <div className="flex items-center gap-2">
+        <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-card animate-fade-in-up dark:border-gray-800 dark:bg-gray-900">
+          <div className="flex flex-wrap items-center gap-2">
             {SUBSCRIPTION_STATUSES.map((s, i) => (
-              <span key={s} className={`flex items-center gap-2 ${i > currentIndex ? "opacity-40" : ""}`}>
+              <span key={s} className={`flex items-center gap-2 transition-opacity ${i > currentIndex ? "opacity-40" : ""}`}>
                 <StatusBadge status={s} />
-                {i < SUBSCRIPTION_STATUSES.length - 1 && <span className="text-gray-300">→</span>}
+                {i < SUBSCRIPTION_STATUSES.length - 1 && <span className="text-gray-300 dark:text-gray-600">→</span>}
               </span>
             ))}
           </div>
@@ -191,7 +191,7 @@ export default function SubscriptionDetail() {
         </div>
       )}
 
-      <div className="grid max-w-4xl grid-cols-2 gap-4 rounded-lg border border-gray-200 bg-white p-6">
+      <div className="grid max-w-4xl grid-cols-2 gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-card animate-fade-in-up dark:border-gray-800 dark:bg-gray-900">
         <Select label="Customer" value={customerId} onChange={(e) => setCustomerId(Number(e.target.value))}>
           <option value="">Select a customer</option>
           {customers.map((c) => (
@@ -219,7 +219,7 @@ export default function SubscriptionDetail() {
 
         <div className="col-span-2">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Lines</span>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Lines</span>
             <Button
               variant="secondary"
               onClick={() => setLines((prev) => [...prev, { productId: 0, variantId: null, quantity: 1 }])}
@@ -229,19 +229,19 @@ export default function SubscriptionDetail() {
           </div>
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs uppercase text-gray-500">
-                <th className="pb-1">Product</th>
-                <th className="pb-1">Qty</th>
-                <th className="pb-1">Unit price</th>
-                <th className="pb-1">Tax %</th>
-                <th className="pb-1">Amount</th>
+              <tr className="text-left text-xs uppercase text-gray-500 dark:text-gray-400">
+                <th className="pb-1.5">Product</th>
+                <th className="pb-1.5">Qty</th>
+                <th className="pb-1.5">Unit price</th>
+                <th className="pb-1.5">Tax %</th>
+                <th className="pb-1.5">Amount</th>
                 <th />
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
               {preview.previewLines.map((line, i) => (
-                <tr key={i}>
-                  <td className="py-1 pr-2">
+                <tr key={i} className="animate-fade-in-up">
+                  <td className="py-2 pr-2">
                     <Select
                       value={line.productId}
                       onChange={(e) => updateLine(i, { productId: Number(e.target.value) })}
@@ -254,7 +254,7 @@ export default function SubscriptionDetail() {
                       ))}
                     </Select>
                   </td>
-                  <td className="py-1 pr-2">
+                  <td className="py-2 pr-2">
                     <Input
                       type="number"
                       value={line.quantity}
@@ -262,9 +262,9 @@ export default function SubscriptionDetail() {
                       className="w-20"
                     />
                   </td>
-                  <td className="py-1 pr-2">{line.unitPrice.toFixed(2)}</td>
-                  <td className="py-1 pr-2">{line.taxPercent}%</td>
-                  <td className="py-1 pr-2">{line.amount.toFixed(2)}</td>
+                  <td className="py-2 pr-2 tabular-nums text-gray-700 dark:text-gray-300">{line.unitPrice.toFixed(2)}</td>
+                  <td className="py-2 pr-2 tabular-nums text-gray-700 dark:text-gray-300">{line.taxPercent}%</td>
+                  <td className="py-2 pr-2 font-medium tabular-nums text-gray-900 dark:text-gray-100">{line.amount.toFixed(2)}</td>
                   <td>
                     <Button variant="danger" onClick={() => setLines((prev) => prev.filter((_, idx) => idx !== i))}>
                       Remove
@@ -275,18 +275,18 @@ export default function SubscriptionDetail() {
             </tbody>
           </table>
           <div className="mt-3 flex justify-end text-sm">
-            <div className="w-56 space-y-1">
+            <div className="w-56 space-y-1 text-gray-600 dark:text-gray-400">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>{preview.subtotal.toFixed(2)}</span>
+                <span className="tabular-nums">{preview.subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Tax</span>
-                <span>{preview.taxTotal.toFixed(2)}</span>
+                <span className="tabular-nums">{preview.taxTotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between font-semibold">
+              <div className="flex justify-between border-t border-gray-200 pt-1 font-semibold text-gray-900 dark:border-gray-800 dark:text-gray-100">
                 <span>Total</span>
-                <span>{preview.total.toFixed(2)}</span>
+                <span className="tabular-nums">{preview.total.toFixed(2)}</span>
               </div>
             </div>
           </div>

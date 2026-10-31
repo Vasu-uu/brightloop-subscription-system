@@ -18,32 +18,32 @@ export default function MySubscriptionDetail() {
   return (
     <div>
       <PageHeader title={subscription.number} />
-      <div className="max-w-2xl space-y-4 rounded-lg border border-gray-200 bg-white p-6">
+      <div className="max-w-2xl space-y-4 rounded-xl border border-gray-200 bg-white shadow-card animate-fade-in-up dark:border-gray-800 dark:bg-gray-900 p-6">
         <div className="flex items-center gap-2">
           <StatusBadge status={subscription.status} />
           {subscription.isPaused && <span className="text-xs text-amber-600">(paused)</span>}
         </div>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <p className="text-gray-500">Plan</p>
+            <p className="text-gray-500 dark:text-gray-400">Plan</p>
             <p>{subscription.plan?.name}</p>
           </div>
           <div>
-            <p className="text-gray-500">Start date</p>
+            <p className="text-gray-500 dark:text-gray-400">Start date</p>
             <p>{new Date(subscription.startDate).toLocaleDateString()}</p>
           </div>
           <div>
-            <p className="text-gray-500">Expiry date</p>
+            <p className="text-gray-500 dark:text-gray-400">Expiry date</p>
             <p>{new Date(subscription.expiryDate).toLocaleDateString()}</p>
           </div>
           <div>
-            <p className="text-gray-500">Next billing</p>
+            <p className="text-gray-500 dark:text-gray-400">Next billing</p>
             <p>{subscription.nextBillingDate ? new Date(subscription.nextBillingDate).toLocaleDateString() : "-"}</p>
           </div>
         </div>
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
+            <tr className="border-b border-gray-200 dark:border-gray-800 text-left text-xs uppercase text-gray-500 dark:text-gray-400">
               <th className="py-1">Product</th>
               <th className="py-1">Qty</th>
               <th className="py-1">Unit price</th>
@@ -52,7 +52,7 @@ export default function MySubscriptionDetail() {
           </thead>
           <tbody>
             {(subscription.lines ?? []).map((line) => (
-              <tr key={line.id} className="border-b border-gray-100">
+              <tr key={line.id} className="border-b border-gray-100 dark:border-gray-800">
                 <td className="py-1">{line.product?.name}</td>
                 <td className="py-1">{line.quantity}</td>
                 <td className="py-1">{Number(line.unitPrice).toFixed(2)}</td>

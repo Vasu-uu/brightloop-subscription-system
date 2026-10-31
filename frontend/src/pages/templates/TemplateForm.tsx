@@ -74,7 +74,7 @@ export default function TemplateForm() {
   return (
     <div>
       <PageHeader title={isEdit ? "Edit Template" : "New Template"} />
-      <div className="max-w-2xl space-y-4 rounded-lg border border-gray-200 bg-white p-6">
+      <div className="max-w-2xl space-y-4 rounded-xl border border-gray-200 bg-white shadow-card animate-fade-in-up dark:border-gray-800 dark:bg-gray-900 p-6">
         <Input label="Name" value={name} onChange={(e) => setName(e.target.value)} />
         <Select label="Plan" value={planId} onChange={(e) => setPlanId(Number(e.target.value))}>
           <option value="">Select a plan</option>
@@ -93,7 +93,7 @@ export default function TemplateForm() {
 
         <div>
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Lines</span>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Lines</span>
             <Button
               variant="secondary"
               onClick={() => setLines((prev) => [...prev, { productId: 0, variantId: null, quantity: 1 }])}

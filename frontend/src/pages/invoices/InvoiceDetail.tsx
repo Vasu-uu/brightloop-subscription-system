@@ -113,27 +113,27 @@ export default function InvoiceDetail() {
         />
       </div>
 
-      <div className="max-w-2xl rounded-lg border border-gray-200 bg-white p-8 print:border-0 print:shadow-none">
+      <div className="max-w-2xl rounded-xl border border-gray-200 bg-white shadow-card animate-fade-in-up dark:border-gray-800 dark:bg-gray-900 p-8 print:border-0 print:shadow-none">
         <div className="mb-6 flex items-start justify-between">
           <div>
             <h2 className="text-lg font-bold">Invoice {invoice.number}</h2>
-            <p className="text-sm text-gray-500">Status: <StatusBadge status={invoice.status} /></p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Status: <StatusBadge status={invoice.status} /></p>
           </div>
-          <div className="text-right text-sm text-gray-600">
+          <div className="text-right text-sm text-gray-600 dark:text-gray-400">
             <p>Issued: {new Date(invoice.issueDate).toLocaleDateString()}</p>
             <p>Due: {new Date(invoice.dueDate).toLocaleDateString()}</p>
           </div>
         </div>
 
         <div className="mb-6">
-          <p className="text-sm font-medium text-gray-700">Bill to</p>
-          <p className="text-sm text-gray-600">{invoice.customer?.name}</p>
-          <p className="text-sm text-gray-600">{invoice.customer?.email}</p>
+          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Bill to</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{invoice.customer?.name}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{invoice.customer?.email}</p>
         </div>
 
         <table className="mb-6 w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
+            <tr className="border-b border-gray-200 dark:border-gray-800 text-left text-xs uppercase text-gray-500 dark:text-gray-400">
               <th className="py-1">Description</th>
               <th className="py-1">Qty</th>
               <th className="py-1">Unit price</th>
@@ -143,7 +143,7 @@ export default function InvoiceDetail() {
           </thead>
           <tbody>
             {(invoice.lines ?? []).map((line) => (
-              <tr key={line.id} className="border-b border-gray-100">
+              <tr key={line.id} className="border-b border-gray-100 dark:border-gray-800">
                 <td className="py-1">{line.description}</td>
                 <td className="py-1">{line.quantity}</td>
                 <td className="py-1">{Number(line.unitPrice).toFixed(2)}</td>
@@ -156,9 +156,9 @@ export default function InvoiceDetail() {
 
         {invoice.discounts && invoice.discounts.length > 0 && (
           <div className="mb-4 text-sm">
-            <p className="font-medium text-gray-700">Discounts</p>
+            <p className="font-medium text-gray-700 dark:text-gray-300">Discounts</p>
             {invoice.discounts.map((d) => (
-              <div key={d.id} className="flex justify-between text-gray-600">
+              <div key={d.id} className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>{d.discount?.name}</span>
                 <span>-{Number(d.amount).toFixed(2)}</span>
               </div>
@@ -179,11 +179,11 @@ export default function InvoiceDetail() {
             <span>Tax</span>
             <span>{Number(invoice.taxTotal).toFixed(2)}</span>
           </div>
-          <div className="flex justify-between border-t border-gray-200 pt-1 font-semibold">
+          <div className="flex justify-between border-t border-gray-200 dark:border-gray-800 pt-1 font-semibold">
             <span>Total</span>
             <span>{Number(invoice.total).toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-gray-500">
+          <div className="flex justify-between text-gray-500 dark:text-gray-400">
             <span>Paid</span>
             <span>{Number(invoice.amountPaid).toFixed(2)}</span>
           </div>

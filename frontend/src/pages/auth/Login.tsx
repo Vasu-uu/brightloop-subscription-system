@@ -1,5 +1,7 @@
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AlertCircle } from "lucide-react";
+import { AuthLayout } from "../../components/AuthLayout";
 import { useAuth } from "../../hooks/useAuth";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
@@ -29,32 +31,34 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <form onSubmit={handleSubmit} className="w-full max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h1 className="mb-4 text-lg font-semibold">Sign in to Brightloop</h1>
-        <div className="space-y-3">
-          <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <Input
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
-        <Button type="submit" className="mt-4 w-full" disabled={loading}>
+    <AuthLayout title="Sign in to Brightloop" subtitle="Manage subscriptions, billing and revenue in one place.">
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoFocus />
+        <Input
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        {error && (
+          <div className="flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 animate-fade-in dark:bg-red-500/10 dark:text-red-400">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            {error}
+          </div>
+        )}
+        <Button type="submit" className="w-full" loading={loading}>
           Sign in
         </Button>
-        <div className="mt-4 flex justify-between text-sm text-gray-500">
-          <Link to="/signup" className="hover:text-gray-700">
+        <div className="flex justify-between pt-1 text-sm">
+          <Link to="/signup" className="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300">
             Create account
           </Link>
-          <Link to="/forgot-password" className="hover:text-gray-700">
+          <Link to="/forgot-password" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
             Forgot password?
           </Link>
         </div>
       </form>
-    </div>
+    </AuthLayout>
   );
 }

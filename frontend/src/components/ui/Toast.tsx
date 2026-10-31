@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useCallback, useContext, useState } from "react";
+import { CheckCircle2, XCircle } from "lucide-react";
 
 type Toast = { id: number; message: string; variant: "success" | "error" };
 type ToastContextValue = { push: (message: string, variant?: Toast["variant"]) => void };
@@ -9,7 +10,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const push = useCallback((message: string, variant: Toast["variant"] = "success") => {
-    const id = Date.now();
+    const id = Date.now() + Math.random();
     setToasts((prev) => [...prev, { id, message, variant }]);
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 4000);
   }, []);
@@ -17,14 +18,19 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={{ push }}>
       {children}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+      <div className="pointer-events-none fixed bottom-4 right-4 z-[100] flex flex-col gap-2">
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`rounded-md px-4 py-2 text-sm text-white shadow-lg ${
-              t.variant === "error" ? "bg-red-600" : "bg-gray-900"
+            className={`pointer-events-auto flex animate-slide-in-right items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white shadow-lg ring-1 ring-black/10 ${
+              t.variant === "error" ? "bg-red-600" : "bg-gray-900 dark:bg-gray-800"
             }`}
           >
+            {t.variant === "error" ? (
+              <XCircle className="h-4 w-4 shrink-0" />
+            ) : (
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-green-400" />
+            )}
             {t.message}
           </div>
         ))}
